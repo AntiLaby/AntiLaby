@@ -6,6 +6,9 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,10 +23,10 @@ import net.minecraft.server.v1_9_R1.PacketPlayOutCustomPayload;
 
 public class AntiLaby extends JavaPlugin implements Listener {
 
-	String version = " 1.0 ";
+	String version = " 1.1.0 ";
 	
 	public void onEnable() {
-		System.out.println("[AntiLaby1.9] Enabled AntiLaby by Nathan_N version" + version + "sucsessfully!");
+		System.out.println("[AntiLaby1.9/INFO] Enabled AntiLaby by Nathan_N version" + version + "sucsessfully!");
 		initConfig();
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
@@ -31,7 +34,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	
 	@Override
 	public void onDisable() {
-		System.out.println("[AntiLaby1.9] Disabled AntiLaby by Nathan_N" + version + "sucsessfully!");
+		System.out.println("[AntiLaby1.9/INFO] Disabled AntiLaby by Nathan_N" + version + "sucsessfully!");
 	}
 	
 	public void initConfig() {
@@ -52,10 +55,25 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	
+		if(cmd.getName().equalsIgnoreCase("antilaby")) {
+			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+			sender.sendMessage(ChatColor.BLUE + "AntiLaby1.9 plugin version" + version + "by Nathan_N" + ChatColor.RESET);
+			sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/antilaby-1-9-disable-labymod-functions.21345/" + ChatColor.RESET);
+			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+		}
+		return true;
+		
+	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
+		Player p = e.getPlayer();
 		
+		if(!p.hasPermission("antilaby.bypass")) {
 			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
 				list.put(EnumLabyModFeature.FOOD, false);
@@ -91,7 +109,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
 			}
 			setLabyModFeature(e.getPlayer(), list);
-		
+		} else {
+			System.out.println("[AntiLaby1.9/INFO] Player " + p.getName() + " (" + p.getUniqueId() + ") has the permission 'antilaby.bypass': no LabyMod functions disabled.");
+		}
 	}
 	
 	public void setLabyModFeature(Player p, HashMap<EnumLabyModFeature, Boolean> list) {
@@ -107,10 +127,10 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			PacketDataSerializer b = new PacketDataSerializer(a);
 			PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			System.out.print("[AntiLaby1.9] Disable some LabyMod functions for " + p.getName());
-			
+			System.out.print("[AntiLaby1.9/INFO] Disable some LabyMod functions for " + p.getName() + " (" + p.getUniqueId() + ")");
 		} catch (IOException e1) {
 			e1.printStackTrace();
+			System.out.println("[AntiLaby1.9/WARNING] An unknown error has occurred: can't send AntiLaby packages to " + p.getName() + " (" + p.getUniqueId() + ")!");
 		}
 	}
 
