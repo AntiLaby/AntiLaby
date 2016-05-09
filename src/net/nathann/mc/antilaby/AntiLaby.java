@@ -23,7 +23,7 @@ import net.minecraft.server.v1_9_R1.PacketPlayOutCustomPayload;
 
 public class AntiLaby extends JavaPlugin implements Listener {
 
-	String version = " 1.1.0 ";
+	String version = " 1.1.1 ";
 	
 	public void onEnable() {
 		System.out.println("[AntiLaby1.9/INFO] Enabled AntiLaby by Nathan_N version" + version + "sucsessfully!");
@@ -39,7 +39,8 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	
 	public void initConfig() {
 		this.reloadConfig();
-		this.getConfig().options().header("AntiLaby plugin for Minecraft 1.9 by Nathan_N, LabyMod by http://www.labymod.net/");
+		this.getConfig().options().header("AntiLaby plugin for Minecraft 1.9 by Nathan_N, https://www.spigotmc.org/resources/21345/");
+		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
 		this.getConfig().addDefault("AntiLaby.disable.FOOD", true);
 		this.getConfig().addDefault("AntiLaby.disable.GUI", true);
 		this.getConfig().addDefault("AntiLaby.disable.NICK", true);
@@ -61,18 +62,16 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	
 		if(cmd.getName().equalsIgnoreCase("antilaby")) {
 			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-			sender.sendMessage(ChatColor.BLUE + "AntiLaby1.9 plugin version" + version + "by Nathan_N" + ChatColor.RESET);
-			sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/antilaby-1-9-disable-labymod-functions.21345/" + ChatColor.RESET);
+			sender.sendMessage(ChatColor.BLUE + "AntiLaby-1.9 plugin version" + version + "by Nathan_N" + ChatColor.RESET);
+			sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/21345/" + ChatColor.RESET);
 			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 		}
 		return true;
-		
 	}
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		
 		if(!p.hasPermission("antilaby.bypass")) {
 			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
@@ -110,7 +109,45 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			}
 			setLabyModFeature(e.getPlayer(), list);
 		} else {
-			System.out.println("[AntiLaby1.9/INFO] Player " + p.getName() + " (" + p.getUniqueId() + ") has the permission 'antilaby.bypass': no LabyMod functions disabled.");
+			if(!this.getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
+				HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
+				if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
+					list.put(EnumLabyModFeature.FOOD, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.GUI")) {
+					list.put(EnumLabyModFeature.GUI, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.NICK")) {
+					list.put(EnumLabyModFeature.NICK, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD")) {
+					list.put(EnumLabyModFeature.BLOCKBUILD, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.CHAT")) {
+					list.put(EnumLabyModFeature.CHAT, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.EXTRAS")) {
+					list.put(EnumLabyModFeature.EXTRAS, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.ANIMATIONS")) {
+					list.put(EnumLabyModFeature.ANIMATIONS, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.POTIONS")) {
+					list.put(EnumLabyModFeature.POTIONS, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.ARMOR")) {
+					list.put(EnumLabyModFeature.ARMOR, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR")) {
+					list.put(EnumLabyModFeature.DAMAGEINDICATOR, false);
+				}
+				if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
+					list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
+				}
+				setLabyModFeature(e.getPlayer(), list);
+			} else {
+				System.out.println("[AntiLaby1.9/INFO] Player " + p.getName() + " (" + p.getUniqueId() + ") has the permission 'antilaby.bypass': no LabyMod functions disabled.");
+			}
 		}
 	}
 	
@@ -130,7 +167,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			System.out.print("[AntiLaby1.9/INFO] Disable some LabyMod functions for " + p.getName() + " (" + p.getUniqueId() + ")");
 		} catch (IOException e1) {
 			e1.printStackTrace();
-			System.out.println("[AntiLaby1.9/WARNING] An unknown error has occurred: can't send AntiLaby packages to " + p.getName() + " (" + p.getUniqueId() + ")!");
+			System.err.println("[AntiLaby1.9/WARNING] An unknown error has occurred: can't send AntiLaby packages to " + p.getName() + " (" + p.getUniqueId() + ")!");
 		}
 	}
 
