@@ -1,15 +1,16 @@
-name: AntiLaby-1.9
+name: AntiLaby
 author: Nathan_N
-version: 1.1.1
-website: https://www.spigotmc.org/members/nathan_n.112032/
-main: net.nathann.mc.antilaby.AntiLaby
+version: 1.2
+description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
+website: https://www.spigotmc.org/resources/21347/
+main: com.github.nathannr.antilaby.main.AntiLaby
 permission:
   antilaby.*:
-    description: antilaby permissions
+    description: Antilaby permissions
   antilaby.bypass:
-    description: allows you to bypass the protection
+    description: Allows you to bypass the protection
     default: OP
 commands:
   antilaby:
     usage: /antilaby
-    description: information about the plugin
+    description: Information about the plugin
