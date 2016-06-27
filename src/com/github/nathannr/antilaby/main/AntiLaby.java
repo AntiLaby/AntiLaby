@@ -1,10 +1,8 @@
 package com.github.nathannr.antilaby.main;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -13,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,16 +18,20 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.listener.Join;
+import com.github.nathannr.antilaby.versions.v1_10_R1;
+import com.github.nathannr.antilaby.versions.v1_8_R1;
+import com.github.nathannr.antilaby.versions.v1_8_R2;
+import com.github.nathannr.antilaby.versions.v1_8_R3;
+import com.github.nathannr.antilaby.versions.v1_9_R1;
+import com.github.nathannr.antilaby.versions.v1_9_R2;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import net.minecraft.server.v1_8_R2.PacketDataSerializer;
-import net.minecraft.server.v1_8_R2.PacketPlayOutCustomPayload;
 
 public class AntiLaby extends JavaPlugin implements Listener {
 
 	public static int resource = 21347;
+	public static String prefix = "§8[§1§lAntiLaby§8] §r";
 	public static String cprefix = "[AntiLaby/INFO] ";
+	public static String nmsver;
 	
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
@@ -38,6 +39,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		Bukkit.getPluginManager().registerEvents(new Join(this), this);
+		nmsver = Bukkit.getServer().getClass().getPackage().getName();
+		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
+		System.out.println(cprefix + nmsver);
 		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
@@ -129,7 +133,26 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
 				list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
 			}
-			setLabyModFeature(e.getPlayer(), list);
+			//diffrent nms versions
+			if(nmsver.equalsIgnoreCase("v1_8_R1")) {
+				v1_8_R1.setLabyModFeature(e.getPlayer(), list);
+			} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
+				v1_8_R2.setLabyModFeature(e.getPlayer(), list);
+			} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
+				v1_8_R3.setLabyModFeature(e.getPlayer(), list);
+			} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
+				v1_9_R1.setLabyModFeature(e.getPlayer(), list);
+			} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
+				v1_9_R2.setLabyModFeature(e.getPlayer(), list);
+			} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
+				v1_10_R1.setLabyModFeature(e.getPlayer(), list);
+			} else {
+				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
+				if(p.isOp()) {
+					p.sendMessage(prefix + "§cAntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
+				}
+			}
+			
 		} else {
 			if(!this.getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
 				HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
@@ -166,30 +189,28 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
 					list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
 				}
-				setLabyModFeature(e.getPlayer(), list);
+				if(nmsver.equalsIgnoreCase("v1_8_R1")) {
+					v1_8_R1.setLabyModFeature(e.getPlayer(), list);
+				} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
+					v1_8_R2.setLabyModFeature(e.getPlayer(), list);
+				} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
+					v1_8_R3.setLabyModFeature(e.getPlayer(), list);
+					System.out.println("Version v1_8_R3");
+				} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
+					v1_9_R1.setLabyModFeature(e.getPlayer(), list);
+				} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
+					v1_9_R2.setLabyModFeature(e.getPlayer(), list);
+				} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
+					v1_10_R1.setLabyModFeature(e.getPlayer(), list);
+				} else {
+					System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
+					if(p.isOp()) {
+						p.sendMessage(prefix + "§cAntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
+					}
+				}
 			} else {
 				System.out.println("[AntiLaby/INFO] Player " + p.getName() + " (" + p.getUniqueId() + ") has the permission 'antilaby.bypass': no LabyMod functions disabled.");
 			}
-		}
-	}
-	
-	public void setLabyModFeature(Player p, HashMap<EnumLabyModFeature, Boolean> list) {
-		try {
-			HashMap<String, Boolean> nList = new HashMap<String, Boolean>();
-			for(EnumLabyModFeature f : list.keySet()) {
-				nList.put(f.name(), list.get(f));
-			}
-			ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-			ObjectOutputStream out = new ObjectOutputStream(byteOut);
-			out.writeObject(nList);
-			ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
-			PacketDataSerializer b = new PacketDataSerializer(a);
-			PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
-			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for " + p.getName() + " (" + p.getUniqueId() + ")");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: can't send AntiLaby packages to " + p.getName() + " (" + p.getUniqueId() + ")!");
 		}
 	}
 
