@@ -70,7 +70,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				bw.write("NMS-version: " + nmsver);
 				bw.newLine();
 				bw.newLine();
-				bw.write("Compatibility: this version of AntiLaby is compatibly with your NMS-version :)");
+				bw.write("Compatibility: This version of AntiLaby is compatibly with your NMS-version :)");
 				bw.newLine();
 				bw.write(updateaviable);
 				bw.close();
@@ -92,7 +92,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				bw.write("NMS-version: " + nmsver);
 				bw.newLine();
 				bw.newLine();
-				bw.write("Compatibility: this version of AntiLaby is NOT compatibly with your NMS-version!");
+				bw.write("Compatibility: This version of AntiLaby is NOT compatibly with your NMS-version!");
 				bw.newLine();
 				
 				
@@ -108,10 +108,10 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		            if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
 		                bw.write("Update status: a new update is aviable! Possibly this version is compatible with your server! Download it here: " + "https://www.spigotmc.org/resources/" + resource + "/");
 		            } else {
-		            	bw.write("Update status: there is no update aviable :(");
+		            	bw.write("Update status: There is no update aviable :(");
 		            }
 		        } catch (Exception ex) {
-		           bw.write("Update status: failed to check for updates. Look here for updates: https://www.spigotmc.org/resources/" + resource + "/");
+		           bw.write("Update status: Failed to check for updates. Look here for updates: https://www.spigotmc.org/resources/" + resource + "/");
 		        }
 				
 				
@@ -302,14 +302,14 @@ public class AntiLaby extends JavaPlugin implements Listener {
             String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
             if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
                 System.err.println(cprefixinfo + "A new update is aviable: version " + version + ", download it here: " + "https://www.spigotmc.org/resources/" + resource + "/");
-                updateaviable = "Update status: a new update is aviable: version " + version + ", download it here: " + "https://www.spigotmc.org/resources/" + resource + "/";
+                updateaviable = "Update status: A new update is aviable: version " + version + ", download it here: " + "https://www.spigotmc.org/resources/" + resource + "/";
             } else {
-            	updateaviable = "Update status: this server is running the newest plugin version!";
+            	updateaviable = "Update status: This server is running the newest plugin version!";
             	System.out.println(cprefixinfo + "You're running the newest plugin version!");
             }
         } catch (Exception ex) {
            System.err.println(cprefixerr + "Failed to check for updates on spigotmc.org");
-           updateaviable = "Update status: failed to check for updates!";
+           updateaviable = "Update status: Failed to check for updates!";
         }
 	}
 	
@@ -345,7 +345,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
                             .getBytes("UTF-8"));
             String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
             if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
-                p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "§6Version §e" + version + "§6 of AntiLaby is aviable, download it here: §n" + "https://www.spigotmc.org/resources/" + resource + "/" + "§r" + "\n§7You can disable these notification in the config file§r"));
+                p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "§6Version §e" + version + "§6 of AntiLaby is aviable, download it here: §n" + "https://www.spigotmc.org/resources/" + resource + "/" + "§r" + "\n§7You can disable this notification in the config file§r"));
             }
         } catch (Exception ex) {}
 	}

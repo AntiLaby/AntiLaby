@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.main.AntiLaby.EnumLabyModFeature;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.minecraft.server.v1_8_R1.PacketPlayOutCustomPayload;
+import net.minecraft.server.v1_8_R1.PacketDataSerializer;
 
 public class v1_8_R1 {
 
@@ -24,9 +27,9 @@ public class v1_8_R1 {
 			ObjectOutputStream out = new ObjectOutputStream(byteOut);
 			out.writeObject(nList);
 			ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
-			net.minecraft.server.v1_8_R1.PacketDataSerializer b = new net.minecraft.server.v1_8_R1.PacketDataSerializer(a);
-			net.minecraft.server.v1_8_R1.PacketPlayOutCustomPayload packet = new net.minecraft.server.v1_8_R1.PacketPlayOutCustomPayload("LABYMOD", b);
-			((org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
+			PacketDataSerializer b = new PacketDataSerializer(a);
+			PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
+			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 			System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for " + p.getName() + " (" + p.getUniqueId() + ")");
 		} catch (IOException e1) {
 			e1.printStackTrace();
