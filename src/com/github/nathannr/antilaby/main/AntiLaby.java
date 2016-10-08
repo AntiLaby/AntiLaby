@@ -1,6 +1,11 @@
 package com.github.nathannr.antilaby.main;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -11,10 +16,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.listener.Join;
@@ -29,11 +34,11 @@ import com.github.nathannr.antilaby.versions.v1_9_R2;
 public class AntiLaby extends JavaPlugin implements Listener {
 
 	public static int resource = 21347;
-	public static String prefix = "§8[§1§lAntiLaby§8] §r";
+	public static String prefix = "§8[§e§lAntiLaby§8] §r";
 	public static String cprefixinfo = "[AntiLaby/INFO] ";
 	public static String cprefixerr = "[AntiLaby/ERROR] ";
 	public static String nmsver;
-	public static String updateaviable = "update checking was disabled in the config file";
+	public static String updateaviable = "Update checking was disabled in the config file";
 	
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
@@ -47,7 +52,10 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+	//		e.printStackTrace();
+		}
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			sendPackages(p);
 		}
 		if(this.getConfig().getBoolean("AntiLaby.Update.UpdateCheckOnStart")) {
 			checkUpdate();
@@ -146,28 +154,88 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		this.getConfig().addDefault("AntiLaby.Update.UpdateNotification", false);
+		this.getConfig().addDefault("AntiLaby.Update.UpdateNotification", true);
 		this.getConfig().addDefault("AntiLaby.Update.UpdateCheckOnStart", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+		
+		
+		
+		File file = new File("plugins/AntiLaby/language.yml");
+		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+		cfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		cfg.addDefault("AntiLaby.Language.NoPermission", "&cSorry, but you don't have permission to execute this command!&r");
+		cfg.options().copyDefaults(true);
+		try {
+			cfg.save(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
+			System.err.println("Your error ID: 'EAL101'");
+			System.err.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
+		}
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 	
 		if(cmd.getName().equalsIgnoreCase("antilaby")) {
-			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-			sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by Nathan_N" + ChatColor.RESET);
-			sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
-			playerCheckUpdate(sender);
-			sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+			if(args.length != 1) {
+				sendInfo(sender);
+			} else if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+				reloadPlugin(sender);
+			} else {
+				sendInfo(sender);
+			}
 		}
 		return true;
 	}
-
-	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
-		Player p = e.getPlayer();
+	
+	
+	public void reloadPlugin(CommandSender sender) {
+		if(sender instanceof Player) {
+			Player p = (Player) sender;
+			if(!p.hasPermission("antilaby.reload")) {
+				File file = new File("plugins/AntiLaby/language.yml");
+				FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + ") tried to reload AntiLaby: Permission 'healthindicator.reload' is missing!");
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + cfg.getString("AntiLaby.Language.NoPermission")));
+				return;
+			}
+		}
+		if(sender instanceof Player) {
+			Player p = (Player) sender;
+			p.sendMessage(prefix + "§aReloading AntiLaby...§r");
+			System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + "): Reloading AntiLaby...");
+		} else {
+			sender.sendMessage(cprefixinfo + "Reloading AntiLaby...");
+		}
+		initConfig();
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			sendPackages(p);
+		}
+		if(sender instanceof Player) {
+			Player p = (Player) sender;
+			p.sendMessage(prefix + "§aReload complete!§r");
+			System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + "): Reload complete!");
+		} else {
+			sender.sendMessage(cprefixinfo + "Reload complete!");
+			
+		}
+	}
+	
+	public void sendInfo(CommandSender sender) {
+		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by Nathan_N" + ChatColor.RESET);
+		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
+		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
+		playerCheckUpdate(sender);
+		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+	}
+	
+	
+	
+	public void sendPackages(Player p) {
 		if(!p.hasPermission("antilaby.bypass")) {
 			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
@@ -205,24 +273,23 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			}
 			//Dont't forget to update the info file after adding a new NMS-version!
 			if(nmsver.equalsIgnoreCase("v1_8_R1")) {
-				v1_8_R1.setLabyModFeature(e.getPlayer(), list);
+				v1_8_R1.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
-				v1_8_R2.setLabyModFeature(e.getPlayer(), list);
+				v1_8_R2.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
-				v1_8_R3.setLabyModFeature(e.getPlayer(), list);
+				v1_8_R3.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
-				v1_9_R1.setLabyModFeature(e.getPlayer(), list);
+				v1_9_R1.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
-				v1_9_R2.setLabyModFeature(e.getPlayer(), list);
+				v1_9_R2.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
-				v1_10_R1.setLabyModFeature(e.getPlayer(), list);
+				v1_10_R1.setLabyModFeature(p, list);
 			} else {
 				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
 				if(p.isOp()) {
 					p.sendMessage(prefix + "§cAntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
 				}
 			}
-			
 		} else {
 			if(!this.getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
 				HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
@@ -261,18 +328,18 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				}
 				//Dont't forget to update the info file after adding a new NMS-version!
 				if(nmsver.equalsIgnoreCase("v1_8_R1")) {
-					v1_8_R1.setLabyModFeature(e.getPlayer(), list);
+					v1_8_R1.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
-					v1_8_R2.setLabyModFeature(e.getPlayer(), list);
+					v1_8_R2.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
-					v1_8_R3.setLabyModFeature(e.getPlayer(), list);
+					v1_8_R3.setLabyModFeature(p, list);
 					System.out.println("Version v1_8_R3");
 				} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
-					v1_9_R1.setLabyModFeature(e.getPlayer(), list);
+					v1_9_R1.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
-					v1_9_R2.setLabyModFeature(e.getPlayer(), list);
+					v1_9_R2.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
-					v1_10_R1.setLabyModFeature(e.getPlayer(), list);
+					v1_10_R1.setLabyModFeature(p, list);
 				} else {
 					System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
 					if(p.isOp()) {
@@ -284,6 +351,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			}
 		}
 	}
+	
 
 	public enum EnumLabyModFeature {
 		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;

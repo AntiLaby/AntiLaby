@@ -18,6 +18,7 @@ public class Join implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
+		plugin.sendPackages(p);
 		if(p.isOp()) {
 			if(plugin.getConfig().getBoolean("AntiLaby.Update.UpdateNotification")) {
 				plugin.playerJoinCheckUpdate(p);
