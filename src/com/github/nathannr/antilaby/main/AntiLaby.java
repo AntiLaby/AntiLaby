@@ -22,7 +22,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.nathannr.antilaby.listener.Join;
+import com.github.nathannr.antilaby.features.Join;
+import com.github.nathannr.antilaby.features.TabComplete;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R2;
@@ -43,6 +44,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 		initConfig();
+		initCmds();
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		Bukkit.getPluginManager().registerEvents(new Join(this), this);
@@ -176,6 +178,10 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		}
 	}
 	
+	public void initCmds() {
+		getCommand("antilaby").setTabCompleter(new TabComplete());
+	}
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 	
@@ -232,7 +238,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		playerCheckUpdate(sender);
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
-	
 	
 	
 	public void sendPackages(Player p) {

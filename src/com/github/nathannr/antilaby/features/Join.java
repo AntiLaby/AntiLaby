@@ -1,4 +1,4 @@
-package com.github.nathannr.antilaby.listener;
+package com.github.nathannr.antilaby.features;
 
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
