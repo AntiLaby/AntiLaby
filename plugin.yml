@@ -17,4 +17,5 @@ permission:
 commands:
   antilaby:
     usage: /antilaby [reload]
-    description: Information about the plugin or reload the plugin
+    description: Information about the plugin or reload the plugin#
+    aliases: [al]
