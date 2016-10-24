@@ -1,13 +1,20 @@
 package com.github.nathannr.antilaby.main;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,7 +29,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.nathannr.antilaby.features.Join;
 import com.github.nathannr.antilaby.features.TabComplete;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
@@ -39,7 +45,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	public static String cprefixinfo = "[AntiLaby/INFO] ";
 	public static String cprefixerr = "[AntiLaby/ERROR] ";
 	public static String nmsver;
-	public static String updateaviable = "Update checking was disabled in the config file";
 	
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
@@ -47,7 +52,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		initCmds();
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
-		Bukkit.getPluginManager().registerEvents(new Join(this), this);
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
 		try {
@@ -59,11 +63,11 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			sendPackages(p);
 		}
-		if(this.getConfig().getBoolean("AntiLaby.Update.UpdateCheckOnStart")) {
+	/*	if(this.getConfig().getBoolean("AntiLaby.Update.UpdateCheckOnStart")) {
 			checkUpdate();
 		} else {
 			System.out.println("[AntiLaby] Update checking on start is disabled in the config file! There may be a newer version: https://www.spigotmc.org/resources/" + resource + "/");
-		}
+		}*/
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1")) {
 			//Dont't forget to update this after adding a new NMS-version!
@@ -81,15 +85,12 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				bw.newLine();
 				bw.newLine();
 				bw.write("Compatibility: This version of AntiLaby is compatibly with your NMS-version :)");
-				bw.newLine();
-				bw.write(updateaviable);
 				bw.close();
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		} else {
 			System.err.println(cprefixerr + "Your server is not compatible with this version of AntiLaby! Your NMS-version: '" + nmsver + "', your AntiLaby version: '" + this.getDescription().getVersion() + "'. Look into the file '" + "plugins/status.txt" + "' for more information!");
-			
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
@@ -103,9 +104,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 				bw.newLine();
 				bw.newLine();
 				bw.write("Compatibility: This version of AntiLaby is NOT compatibly with your NMS-version!");
-				bw.newLine();
-				
-				
+			/*	bw.newLine();
 				try {
 		            HttpURLConnection con = (HttpURLConnection) new URL(
 		                    "http://www.spigotmc.org/api/general.php").openConnection();
@@ -115,28 +114,31 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		                    .write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource)
 		                            .getBytes("UTF-8"));
 		            String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-		            if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
+		             if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
 		                bw.write("Update status: a new update is aviable! Possibly this version is compatible with your server! Download it here: " + "https://www.spigotmc.org/resources/" + resource + "/");
 		            } else {
 		            	bw.write("Update status: There is no update aviable :(");
 		            }
 		        } catch (Exception ex) {
 		           bw.write("Update status: Failed to check for updates. Look here for updates: https://www.spigotmc.org/resources/" + resource + "/");
-		        }
-				
-				
-				
+		        }*/
 				bw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 			this.getPluginLoader().disablePlugin(this);
 		}
 	}
 	
 	@Override
 	public void onDisable() {
+		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+			if(updateAviable()) {
+				downloadUpdate();
+			}
+		} else {
+			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+		}
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 	}
 	
@@ -156,8 +158,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		this.getConfig().addDefault("AntiLaby.Update.UpdateNotification", true);
-		this.getConfig().addDefault("AntiLaby.Update.UpdateCheckOnStart", true);
+		this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
+//		this.getConfig().addDefault("AntiLaby.Update.UpdateNotification", true);
+//		this.getConfig().addDefault("AntiLaby.Update.UpdateCheckOnStart", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 		
@@ -172,9 +175,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			cfg.save(file);
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
-			System.err.println("Your error ID: 'EAL101'");
-			System.err.println("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
 		}
 	}
 	
@@ -188,15 +188,29 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		if(cmd.getName().equalsIgnoreCase("antilaby")) {
 			if(args.length != 1) {
 				sendInfo(sender);
-			} else if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
-				reloadPlugin(sender);
+			} else if(args.length == 1) {
+				if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
+					reloadPlugin(sender);
+				} else if(args[0].equalsIgnoreCase("info")) {
+					sendInfo(sender);
+				} else {
+					sendUsage(sender);
+				}
 			} else {
-				sendInfo(sender);
+				sendUsage(sender);
 			}
 		}
 		return true;
 	}
 	
+	public void sendUsage(CommandSender sender) {
+		if(sender instanceof Player) {
+			Player p = (Player) sender;				
+			p.sendMessage(prefix + "§cUsage: /antilaby <info|reload>§r");
+		} else {
+			sender.sendMessage(cprefixinfo + "Usage: /antilaby <info|reload>");
+		}
+	}
 	
 	public void reloadPlugin(CommandSender sender) {
 		if(sender instanceof Player) {
@@ -204,7 +218,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			if(!p.hasPermission("antilaby.reload")) {
 				File file = new File("plugins/AntiLaby/language.yml");
 				FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-				System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + ") tried to reload AntiLaby: Permission 'healthindicator.reload' is missing!");
+				System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + cfg.getString("AntiLaby.Language.NoPermission")));
 				return;
 			}
@@ -226,7 +240,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + "): Reload complete!");
 		} else {
 			sender.sendMessage(cprefixinfo + "Reload complete!");
-			
 		}
 	}
 	
@@ -235,10 +248,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by Nathan_N" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
-		playerCheckUpdate(sender);
+//		playerCheckUpdate(sender);
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
-	
 	
 	public void sendPackages(Player p) {
 		if(!p.hasPermission("antilaby.bypass")) {
@@ -357,12 +369,92 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		}
 	}
 	
-
 	public enum EnumLabyModFeature {
 		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
 	}
 	
-	public void checkUpdate() {
+	public boolean downloadUpdate() {
+		File aljar = new File("plugins/AntiLaby.jar");
+		if(!aljar.exists()) {
+			System.err.println(cprefixerr + "Auto-update failed!");
+			int i = 5;
+			while(i >= 0) {
+				System.err.println(cprefixerr + "PLEASE RENAME THE ANTILABY PLUGIN BACK TO 'AntiLaby.jar'! OTHERWISE AUTO-UPDATE WON'T WORK! IF YOU DON'T WANT TO USE AUTO-UPDATE DISABLE IT IN THE CONFIG FILE!");
+				i--;
+			}
+			return false;
+		}
+		System.out.println(cprefixinfo + "Downloading update...");
+		URL url;
+		try {
+			
+			url = new URL("http://adf.ly/1f1ZEn");
+			final URLConnection conn = url.openConnection();
+			final InputStream is = new BufferedInputStream(conn.getInputStream());
+			if(is != null) {
+				final OutputStream os = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.tmp"));
+				byte[] chunk = new byte[1024];
+				int chunkSize;
+				while ((chunkSize = is.read(chunk)) != -1) {
+					os.write(chunk, 0, chunkSize);
+				}
+				os.close();
+				File newfile = new File("plugins/AntiLaby.tmp");
+				long newlength = newfile.length();
+				if(newlength <= 10000) {
+					newfile.delete();
+					System.err.println(cprefixerr + "Auto-update failed! Update server down? You still have version " + this.getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + resource + "/!");
+				} else {
+				/*	oldfile.deleteOnExit();
+					newfile.renameTo(new File("plugins/AntiLaby.jar"));*/
+					System.out.println(cprefixinfo + "Download complete.");
+					System.out.println(cprefixinfo + "Installing update...");
+					
+					final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
+					
+					final OutputStream os2 = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.jar"));
+					byte[] chunk2 = new byte[1024];
+					int chunkSize2;
+					while ((chunkSize2 = is2.read(chunk2)) != -1) {
+						os2.write(chunk2, 0, chunkSize2);
+					}
+					is2.close();
+					os2.close();
+					
+					System.out.println(cprefixinfo + "Installation complete.");
+					System.out.println(cprefixinfo + "Auto-update complete!");
+				}
+			}
+			
+		} catch (IOException e) {
+			System.err.println(cprefixerr + "Auto-update failed! You still have version " + this.getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + resource + "/!");
+		}
+		File tmp = new File("plugins/AntiLaby.tmp");
+		tmp.delete();
+		return false;
+	}
+	
+	public boolean updateAviable() {
+		System.out.println(cprefixinfo + "Checking for updates on spigotmc.org...");
+		try {
+            HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
+            con.setDoOutput(true);
+            con.setRequestMethod("POST");
+            con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
+            String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+            if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
+            	System.out.println(cprefixinfo + "Update found! Version " + version + " is aviable.");
+            	return true;
+            } else {
+            	System.out.println(cprefixinfo + "No update found. You are running the newest version.");
+            	return false;
+            }
+        } catch (Exception ex) {}
+    	System.err.println(cprefixerr + "Failed to check for updates on spigotmc.org!");
+		return false;
+	}
+	
+	/*public void checkUpdate() {
 		try {
 			System.out.println(cprefixinfo + "Checking for updates...");
             HttpURLConnection con = (HttpURLConnection) new URL(
@@ -384,9 +476,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
            System.err.println(cprefixerr + "Failed to check for updates on spigotmc.org");
            updateaviable = "Update status: Failed to check for updates!";
         }
-	}
+	}*/
 	
-	public void playerCheckUpdate(CommandSender sender) {
+	/*public void playerCheckUpdate(CommandSender sender) {
 		sender.sendMessage(ChatColor.BLUE + "Checking for updates..." + ChatColor.RESET);
 		try {
             HttpURLConnection con = (HttpURLConnection) new URL(
@@ -405,9 +497,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
         } catch (Exception ex) {
            sender.sendMessage("§cFailed to check for updates on spigotmc.org§r");
         }
-	}
+	}*/
 	
-	public void playerJoinCheckUpdate(Player p) {
+/*	public void playerJoinCheckUpdate(Player p) {
 		try {
             HttpURLConnection con = (HttpURLConnection) new URL(
                     "http://www.spigotmc.org/api/general.php").openConnection();
@@ -421,6 +513,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
                 p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + "§6Version §e" + version + "§6 of AntiLaby is aviable, download it here: §n" + "https://www.spigotmc.org/resources/" + resource + "/" + "§r" + "\n§7You can disable this notification in the config file§r"));
             }
         } catch (Exception ex) {}
-	}
+	}*/
 
 }
