@@ -393,6 +393,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 					is2.close();
 					os2.close();
 					
+					File tmp = new File("plugins/AntiLaby.tmp");
+					tmp.delete();
+					
 					System.out.println(cprefixinfo + "Auto-update complete!");
 					return true;
 				}
@@ -402,7 +405,9 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			System.err.println(cprefixerr + "Auto-update failed! You still have version " + this.getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + resource + "/!");
 		}
 		File tmp = new File("plugins/AntiLaby.tmp");
-		tmp.delete();
+		if(tmp.exists()) {
+			tmp.delete();
+		}
 		return false;
 	}
 	
