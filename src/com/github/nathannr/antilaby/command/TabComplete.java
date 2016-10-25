@@ -1,4 +1,4 @@
-package com.github.nathannr.antilaby.features;
+package com.github.nathannr.antilaby.command;
 
 import java.util.ArrayList;
 import java.util.List;

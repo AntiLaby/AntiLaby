@@ -21,7 +21,6 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -29,7 +28,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.github.nathannr.antilaby.features.TabComplete;
+import com.github.nathannr.antilaby.command.AntiLabyCommand;
+import com.github.nathannr.antilaby.command.TabComplete;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R2;
@@ -40,11 +40,11 @@ import com.github.nathannr.antilaby.versions.v1_9_R2;
 
 public class AntiLaby extends JavaPlugin implements Listener {
 
-	public static int resource = 21347;
-	public static String prefix = "§8[§e§lAntiLaby§8] §r";
-	public static String cprefixinfo = "[AntiLaby/INFO] ";
-	public static String cprefixerr = "[AntiLaby/ERROR] ";
-	public static String nmsver;
+	public int resource = 21347;
+	public String prefix = "§8[§e§lAntiLaby§8] §r";
+	public String cprefixinfo = "[AntiLaby/INFO] ";
+	public String cprefixerr = "[AntiLaby/ERROR] ";
+	public String nmsver;
 	
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
@@ -155,37 +155,8 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public void initCmds() {
+		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
 		getCommand("antilaby").setTabCompleter(new TabComplete());
-	}
-	
-	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-	
-		if(cmd.getName().equalsIgnoreCase("antilaby")) {
-			if(args.length != 1) {
-				sendInfo(sender);
-			} else if(args.length == 1) {
-				if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-					reloadPlugin(sender);
-				} else if(args[0].equalsIgnoreCase("info")) {
-					sendInfo(sender);
-				} else {
-					sendUsage(sender);
-				}
-			} else {
-				sendUsage(sender);
-			}
-		}
-		return true;
-	}
-	
-	public void sendUsage(CommandSender sender) {
-		if(sender instanceof Player) {
-			Player p = (Player) sender;				
-			p.sendMessage(prefix + "§cUsage: /antilaby <info|reload>§r");
-		} else {
-			sender.sendMessage(cprefixinfo + "Usage: /antilaby <info|reload>");
-		}
 	}
 	
 	public void reloadPlugin(CommandSender sender) {
