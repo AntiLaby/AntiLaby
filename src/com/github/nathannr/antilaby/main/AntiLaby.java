@@ -49,6 +49,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 		initConfig();
+		initLanguage();
 		initCmds();
 		Bukkit.getPluginManager().registerEvents(this, this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
@@ -139,16 +140,48 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+	}
+	
+	public void initLanguage() {
 		
+		File oldLang = new File("plugins/AntiLaby/language.yml");
+		if(oldLang.exists()) {
+			oldLang.delete();
+		}
 		
+		String en_US = "en_US";
+		File en_USfile = new File("plugins/AntiLaby/language/" + en_US + ".yml");
+		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
+		en_UScfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		en_UScfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
+		en_UScfg.options().copyDefaults(true);
 		
-		File file = new File("plugins/AntiLaby/language.yml");
-		FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-		cfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
-		cfg.addDefault("AntiLaby.Language.NoPermission", "&cSorry, but you don't have permission to execute this command!&r");
-		cfg.options().copyDefaults(true);
+		String de_DE = "de_DE";
+		File de_DEfile = new File("plugins/AntiLaby/language/" + de_DE + ".yml");
+		FileConfiguration de_DEcfg = YamlConfiguration.loadConfiguration(de_DEfile);
+		de_DEcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		de_DEcfg.addDefault("AntiLaby.Language.NoPermission", "&cDu hast nicht die benötigte Berechtigung, diesen Befehl auszuführen&r");
+		de_DEcfg.options().copyDefaults(true);
+		
+		String en_GB = "en_GB";
+		File en_GBfile = new File("plugins/AntiLaby/language/" + en_GB + ".yml");
+		FileConfiguration en_GBcfg = YamlConfiguration.loadConfiguration(en_GBfile);
+		en_GBcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		en_GBcfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
+		en_GBcfg.options().copyDefaults(true);
+		
+		String fr_FR = "fr_FR";
+		File fr_FRfile = new File("plugins/AntiLaby/language/" + fr_FR + ".yml");
+		FileConfiguration fr_FRcfg = YamlConfiguration.loadConfiguration(fr_FRfile);
+		fr_FRcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		fr_FRcfg.addDefault("AntiLaby.Language.NoPermission", "&cVous n'avez pas la permission d'utiliser cette commande&r");
+		fr_FRcfg.options().copyDefaults(true);
+		
 		try {
-			cfg.save(file);
+			en_UScfg.save(en_USfile);
+			de_DEcfg.save(de_DEfile);
+			en_GBcfg.save(en_GBfile);
+			fr_FRcfg.save(fr_FRfile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -159,14 +192,56 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		getCommand("antilaby").setTabCompleter(new TabComplete());
 	}
 	
+	public void sendMultiLanguageMessage(Player p, String path, Boolean translateAlternateColorCodes) {
+		initLanguage();
+		File file = new File("plugins/AntiLaby/language/" + p.spigot().getLocale() + ".yml");
+		File fallbackFile = new File("plugins/AntiLaby/language/" + "en_US" + ".yml");
+		FileConfiguration fallbackCfg = YamlConfiguration.loadConfiguration(fallbackFile);
+		if(path.isEmpty() || path == null) {
+			p.sendMessage("§cInternal error§r");
+			System.err.println(cprefixerr + "MultiLanguageMessage error: Plugin tried to send a MultiLanguageMessage with an empty or null path. Please report this bug here: " + "https://github.com/NathanNr/AntiLaby/issues");
+			return;
+		}
+		if(file.exists()) {
+			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+			if(cfg.getString(path) != null) {
+				if(translateAlternateColorCodes == true) {
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString(path)));
+				} else {
+					p.sendMessage(cfg.getString(path));
+				}
+			} else {
+				if(fallbackCfg.getString(path) != null) {
+					if(translateAlternateColorCodes == true) {
+						p.sendMessage(ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path)));
+					} else {
+						p.sendMessage(fallbackCfg.getString(path));
+					}
+				} else {
+					p.sendMessage("§cInternal error§r");
+					System.err.println(cprefixerr + "MultiLanguageMessage error: Path '" + path + "' does not exists in the fallback language file. Please report this bug here: " + "https://github.com/NathanNr/AntiLaby/issues");
+				}
+			}
+		} else {
+			if(fallbackCfg.getString(path) != null) {
+				if(translateAlternateColorCodes == true) {
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path)));
+				} else {
+					p.sendMessage(fallbackCfg.getString(path));
+				}
+			} else {
+				p.sendMessage("§cInternal error§r");
+				System.err.println(cprefixerr + "MultiLanguageMessage error: Path '" + path + "' does not exists in the fallback language file. Please report this bug here: " + "https://github.com/NathanNr/AntiLaby/issues");
+			}
+		}
+	}
+	
 	public void reloadPlugin(CommandSender sender) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 			if(!p.hasPermission("antilaby.reload")) {
-				File file = new File("plugins/AntiLaby/language.yml");
-				FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+				sendMultiLanguageMessage(p, "AntiLaby.Language.NoPermission", true);
 				System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + cfg.getString("AntiLaby.Language.NoPermission")));
 				return;
 			}
 		}
