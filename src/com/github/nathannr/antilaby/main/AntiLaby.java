@@ -1,20 +1,9 @@
 package com.github.nathannr.antilaby.main;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.TabComplete;
+import com.github.nathannr.antilaby.update.UpdateDownload;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R2;
@@ -46,6 +36,17 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	public String cprefixerr = "[AntiLaby/ERROR] ";
 	public String nmsver;
 	
+	public static AntiLaby instance;
+	public static AntiLaby getInstance(){
+	  return instance;
+	}
+	
+	@Override
+	public void onLoad() {
+		instance = this;
+	}
+	
+	@Override
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 		initConfig();
@@ -107,17 +108,16 @@ public class AntiLaby extends JavaPlugin implements Listener {
 			}
 			this.getPluginLoader().disablePlugin(this);
 		}
+		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+			UpdateDownload ud = new UpdateDownload();
+			ud.start();
+		} else {
+			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+		}
 	}
 	
 	@Override
 	public void onDisable() {
-		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-			if(updateAviable()) {
-				downloadUpdate();
-			}
-		} else {
-			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
-		}
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 	}
 	
@@ -392,89 +392,6 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	
 	public enum EnumLabyModFeature {
 		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
-	}
-	
-	public boolean downloadUpdate() {
-		File aljar = new File("plugins/AntiLaby.jar");
-		if(!aljar.exists()) {
-			System.err.println(cprefixerr + "Auto-update failed!");
-			int i = 5;
-			while(i >= 0) {
-				System.err.println(cprefixerr + "PLEASE RENAME THE ANTILABY PLUGIN BACK TO 'AntiLaby.jar'! OTHERWISE AUTO-UPDATE WON'T WORK! IF YOU DON'T WANT TO USE AUTO-UPDATE DISABLE IT IN THE CONFIG FILE!");
-				i--;
-			}
-			return false;
-		}
-		System.out.println(cprefixinfo + "Downloading update...");
-		URL url;
-		try {
-			
-			url = new URL("http://adf.ly/1f1ZEn");
-			final URLConnection conn = url.openConnection();
-			final InputStream is = new BufferedInputStream(conn.getInputStream());
-			if(is != null) {
-				final OutputStream os = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.tmp"));
-				byte[] chunk = new byte[1024];
-				int chunkSize;
-				while ((chunkSize = is.read(chunk)) != -1) {
-					os.write(chunk, 0, chunkSize);
-				}
-				os.close();
-				File newfile = new File("plugins/AntiLaby.tmp");
-				long newlength = newfile.length();
-				if(newlength <= 10000) {
-					newfile.delete();
-					System.err.println(cprefixerr + "Auto-update failed! Update server down? You still have version " + this.getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + resource + "/!");
-				} else {
-					System.out.println(cprefixinfo + "Installing update...");
-					
-					final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
-					
-					final OutputStream os2 = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.jar"));
-					byte[] chunk2 = new byte[1024];
-					int chunkSize2;
-					while ((chunkSize2 = is2.read(chunk2)) != -1) {
-						os2.write(chunk2, 0, chunkSize2);
-					}
-					is2.close();
-					os2.close();
-					
-					File tmp = new File("plugins/AntiLaby.tmp");
-					tmp.delete();
-					
-					System.out.println(cprefixinfo + "Auto-update complete!");
-					return true;
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println(cprefixerr + "Auto-update failed! You still have version " + this.getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + resource + "/!");
-		}
-		File tmp = new File("plugins/AntiLaby.tmp");
-		if(tmp.exists()) {
-			tmp.delete();
-		}
-		return false;
-	}
-	
-	public boolean updateAviable() {
-		System.out.println(cprefixinfo + "Checking for updates on spigotmc.org...");
-		try {
-            HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
-            con.setDoOutput(true);
-            con.setRequestMethod("POST");
-            con.getOutputStream().write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource=" + resource).getBytes("UTF-8"));
-            String version = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-            if (!version.equalsIgnoreCase(this.getDescription().getVersion())) {
-            	System.out.println(cprefixinfo + "Update found! Version " + version + " is aviable.");
-            	return true;
-            } else {
-            	System.out.println(cprefixinfo + "No update found. You are running the newest version.");
-            	return false;
-            }
-        } catch (Exception ex) {}
-    	System.err.println(cprefixerr + "Failed to check for updates on spigotmc.org!");
-		return false;
 	}
 
 }
