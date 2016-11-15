@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
@@ -52,7 +53,7 @@ public class AntiLaby extends JavaPlugin {
 		initConfig();
 		initLanguage();
 		initCmds();
-		Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
+		initEvents();
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
@@ -119,6 +120,11 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
+	}
+	
+	public void initEvents() {
+		PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new PlayerJoin(this), this);
 	}
 	
 	private void initConfig() {
