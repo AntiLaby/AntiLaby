@@ -14,11 +14,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.TabComplete;
+import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.update.UpdateDownload;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
@@ -28,7 +28,7 @@ import com.github.nathannr.antilaby.versions.v1_9_R1;
 import com.github.nathannr.antilaby.versions.v1_9_R2;
 
 
-public class AntiLaby extends JavaPlugin implements Listener {
+public class AntiLaby extends JavaPlugin {
 
 	public int resource = 21347;
 	public String prefix = "§8[§e§lAntiLaby§8] §r";
@@ -52,7 +52,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		initConfig();
 		initLanguage();
 		initCmds();
-		Bukkit.getPluginManager().registerEvents(this, this);
+		Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
@@ -122,6 +122,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	private void initConfig() {
+		//Init config
 		this.reloadConfig();
 		this.getConfig().options().header("AntiLaby plugin by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
 		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
@@ -144,6 +145,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	
 	public void initLanguage() {
 		
+		//Delete the old language file frome older versions of this plugin
 		File oldLang = new File("plugins/AntiLaby/language.yml");
 		if(oldLang.exists()) {
 			oldLang.delete();
@@ -178,6 +180,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 		fr_FRcfg.options().copyDefaults(true);
 		
 		try {
+			//Save language files
 			en_UScfg.save(en_USfile);
 			de_DEcfg.save(de_DEfile);
 			en_GBcfg.save(en_GBfile);
@@ -188,6 +191,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public void initCmds() {
+		//Init /antilaby command
 		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
 		getCommand("antilaby").setTabCompleter(new TabComplete());
 	}
@@ -237,6 +241,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public void reloadPlugin(CommandSender sender) {
+		//Reload this plugin
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 			if(!p.hasPermission("antilaby.reload")) {
@@ -266,6 +271,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public void sendInfo(CommandSender sender) {
+		//Send information about this plugin to a command sender (console / player)
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by Nathan_N" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
@@ -274,6 +280,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public void sendPackages(Player p) {
+		//Send AntiLaby packages to a player
 		if(!p.hasPermission("antilaby.bypass")) {
 			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
@@ -391,6 +398,7 @@ public class AntiLaby extends JavaPlugin implements Listener {
 	}
 	
 	public enum EnumLabyModFeature {
+		//The LabyMod functions
 		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
 	}
 

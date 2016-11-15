@@ -30,10 +30,10 @@ public class v1_9_R1 {
 			PacketDataSerializer b = new PacketDataSerializer(a);
 			PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
 			((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-			System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for " + p.getName() + " (" + p.getUniqueId() + ")");
+			System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for player " + p.getName() + " (" + p.getUniqueId() + ")");
 		} catch (IOException e1) {
 			e1.printStackTrace();
-			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: can't send AntiLaby packages to " + p.getName() + " (" + p.getUniqueId() + ")!");
+			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: can't send AntiLaby packages to player " + p.getName() + " (" + p.getUniqueId() + ")!");
 		}
 	}
 	
