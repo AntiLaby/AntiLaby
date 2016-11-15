@@ -31,10 +31,14 @@ import com.github.nathannr.antilaby.versions.v1_9_R2;
 
 public class AntiLaby extends JavaPlugin {
 
+	//Spigot resource id
 	public int resource = 21347;
+	//Prefix
 	public String prefix = "§8[§e§lAntiLaby§8] §r";
+	//Console prefix
 	public String cprefixinfo = "[AntiLaby/INFO] ";
 	public String cprefixerr = "[AntiLaby/ERROR] ";
+	//NMS-version
 	public String nmsver;
 	
 	public static AntiLaby instance;
@@ -50,24 +54,30 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
+		//Init files, commands and events
 		initConfig();
 		initLanguage();
 		initCmds();
 		initEvents();
+		//Register plugin channel
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
+		//Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
+		//Start plugin metrics
 		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
-	//		e.printStackTrace();
+			//e.printStackTrace();
 		}
+		//Resend AntiLaby packages on reload
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			sendPackages(p);
 		}
 		
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
+		//Check if the server is compatible with AntiLaby
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1")) {
 			//Dont't forget to update this after adding a new NMS-version!
 			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
@@ -110,6 +120,7 @@ public class AntiLaby extends JavaPlugin {
 			this.getPluginLoader().disablePlugin(this);
 		}
 		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+			//Check and install updates async
 			UpdateDownload ud = new UpdateDownload();
 			ud.start();
 		} else {
@@ -123,6 +134,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initEvents() {
+		//Register PlayerJoinEvent to send AntiLaby packages on join
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerJoin(this), this);
 	}
@@ -157,6 +169,7 @@ public class AntiLaby extends JavaPlugin {
 			oldLang.delete();
 		}
 		
+		//Create lang files in diffrent languages
 		String en_US = "en_US";
 		File en_USfile = new File("plugins/AntiLaby/language/" + en_US + ".yml");
 		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
@@ -203,6 +216,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void sendMultiLanguageMessage(Player p, String path, Boolean translateAlternateColorCodes) {
+		//Send a message in player's language
 		initLanguage();
 		File file = new File("plugins/AntiLaby/language/" + p.spigot().getLocale() + ".yml");
 		File fallbackFile = new File("plugins/AntiLaby/language/" + "en_US" + ".yml");
@@ -286,8 +300,9 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void sendPackages(Player p) {
-		//Send AntiLaby packages to a player
+		//Ignore players with the bypass permission if enabled in the config file
 		if(!p.hasPermission("antilaby.bypass")) {
+			//Send AntiLaby packages to a player
 			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
 				list.put(EnumLabyModFeature.FOOD, false);
@@ -342,6 +357,7 @@ public class AntiLaby extends JavaPlugin {
 				}
 			}
 		} else {
+			//Ignore players with the bypass permission if enabled in the config file
 			if(!this.getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
 				HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
 				if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {

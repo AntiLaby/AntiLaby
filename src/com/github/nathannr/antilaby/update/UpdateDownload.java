@@ -22,6 +22,7 @@ public class UpdateDownload extends Thread {
 	
 	@SuppressWarnings("deprecation")
 	@Override
+	//Start update function async
 	public void run() {
 		//Check for update
 		System.out.println(AntiLaby.getInstance().cprefixinfo + "Checking for updates on spigotmc.org...");
