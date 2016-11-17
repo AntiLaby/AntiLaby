@@ -363,7 +363,7 @@ public class AntiLaby extends JavaPlugin {
 			} else {
 				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
 				if(p.isOp()) {
-					p.sendMessage(prefix + "§cAntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
+					p.sendMessage(prefix + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
 				}
 			}
 		} else {
