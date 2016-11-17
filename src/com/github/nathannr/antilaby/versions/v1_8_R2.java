@@ -33,7 +33,7 @@ public class v1_8_R2 {
 			System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for player " + p.getName() + " (" + p.getUniqueId() + ")");
 		} catch (IOException e1) {
 			e1.printStackTrace();
-			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: can't send AntiLaby packages to player " + p.getName() + " (" + p.getUniqueId() + ")!");
+			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: Can't send AntiLaby packages to player " + p.getName() + " (" + p.getUniqueId() + ")!");
 		}
 	}
 	
