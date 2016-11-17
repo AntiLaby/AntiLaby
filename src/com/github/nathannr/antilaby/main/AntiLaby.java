@@ -22,6 +22,7 @@ import com.github.nathannr.antilaby.command.TabComplete;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.update.UpdateDownload;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
+import com.github.nathannr.antilaby.versions.v1_11_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R2;
 import com.github.nathannr.antilaby.versions.v1_8_R3;
@@ -87,8 +88,8 @@ public class AntiLaby extends JavaPlugin {
 		
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
 		//Check if the server is compatible with AntiLaby
-		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1")) {
-			//Dont't forget to update this after adding a new NMS-version!
+		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1") || nmsver.equalsIgnoreCase("v1_11_R1")) {
+			//TODO: Dont't forget to update this after adding a new NMS-version!
 			compatible = true;
 			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
 			try {
@@ -347,7 +348,7 @@ public class AntiLaby extends JavaPlugin {
 			if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
 				list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
 			}
-			//Dont't forget to update the info file after adding a new NMS-version!
+			//TODO: Dont't forget to update the info file after adding a new NMS-version!
 			if(nmsver.equalsIgnoreCase("v1_8_R1")) {
 				v1_8_R1.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
@@ -360,6 +361,8 @@ public class AntiLaby extends JavaPlugin {
 				v1_9_R2.setLabyModFeature(p, list);
 			} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
 				v1_10_R1.setLabyModFeature(p, list);
+			} else if(nmsver.equalsIgnoreCase("v1_11_R1")) {
+				v1_11_R1.setLabyModFeature(p, list);
 			} else {
 				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
 				if(p.isOp()) {
@@ -403,7 +406,7 @@ public class AntiLaby extends JavaPlugin {
 				if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
 					list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
 				}
-				//Dont't forget to update the info file after adding a new NMS-version!
+				//TODO: Dont't forget to update the info file after adding a new NMS-version!
 				if(nmsver.equalsIgnoreCase("v1_8_R1")) {
 					v1_8_R1.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
@@ -417,10 +420,12 @@ public class AntiLaby extends JavaPlugin {
 					v1_9_R2.setLabyModFeature(p, list);
 				} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
 					v1_10_R1.setLabyModFeature(p, list);
+				} else if(nmsver.equalsIgnoreCase("v1_11_R1")) {
+					v1_11_R1.setLabyModFeature(p, list);
 				} else {
 					System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
 					if(p.isOp()) {
-						p.sendMessage(prefix + "§cAntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
+						p.sendMessage(prefix + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
 					}
 				}
 			} else {

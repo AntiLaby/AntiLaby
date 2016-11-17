@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="C:/Users/Nathan/OneDrive/Games/Minecraft/Libarys/Spigot/1.9.2/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Nathan/OneDrive/Games/Minecraft/Libarys/Spigot/1.9.4/spigot.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Nathan/OneDrive/Games/Minecraft/Libarys/Spigot/1.8/spigot.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Nathan/OneDrive/Games/Minecraft/Libarys/Spigot/1.11/spigot.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
