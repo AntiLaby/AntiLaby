@@ -103,7 +103,7 @@ public class UpdateDownload extends Thread {
 				tmp.delete();
 			}
 		}
-		
+		AntiLaby.getInstance().disableIfNotCompatible();
 		this.stop();
 	}
 	

@@ -40,6 +40,8 @@ public class AntiLaby extends JavaPlugin {
 	public String cprefixerr = "[AntiLaby/ERROR] ";
 	//NMS-version
 	public String nmsver;
+	//Compatible?
+	public boolean compatible;
 	
 	public static AntiLaby instance;
 	public static AntiLaby getInstance(){
@@ -49,6 +51,13 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		instance = this;
+		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+			//Check and install updates async
+			UpdateDownload ud = new UpdateDownload();
+			ud.start();
+		} else {
+			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+		}
 	}
 	
 	@Override
@@ -80,6 +89,7 @@ public class AntiLaby extends JavaPlugin {
 		//Check if the server is compatible with AntiLaby
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1")) {
 			//Dont't forget to update this after adding a new NMS-version!
+			compatible = true;
 			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
@@ -99,6 +109,7 @@ public class AntiLaby extends JavaPlugin {
 				e.printStackTrace();
 			}
 		} else {
+			compatible = false;
 			System.err.println(cprefixerr + "Your server is not compatible with this version of AntiLaby! Your NMS-version: '" + nmsver + "', your AntiLaby version: '" + this.getDescription().getVersion() + "'. Look into the file '" + "plugins/status.txt" + "' for more information!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
@@ -117,20 +128,19 @@ public class AntiLaby extends JavaPlugin {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			this.getPluginLoader().disablePlugin(this);
-		}
-		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-			//Check and install updates async
-			UpdateDownload ud = new UpdateDownload();
-			ud.start();
-		} else {
-			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
 		}
 	}
 	
 	@Override
 	public void onDisable() {
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
+	}
+	
+	public void disableIfNotCompatible() {
+		if(!compatible) {
+			this.onDisable();
+			this.getPluginLoader().disablePlugin(this);
+		}
 	}
 	
 	public void initEvents() {
