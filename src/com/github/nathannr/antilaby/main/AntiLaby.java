@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.TabComplete;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
+import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.update.UpdateDownload;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
@@ -82,8 +83,11 @@ public class AntiLaby extends JavaPlugin {
 		} catch (IOException e) {
 			//e.printStackTrace();
 		}
-		com.github.nathannr.antilaby.metrics.BStats bstats = new com.github.nathannr.antilaby.metrics.BStats(this);
-		//Resend AntiLaby packages on reload
+		
+		//Start plugin metrics for bStats.org
+		initBMetrics();
+		
+		//Resend AntiLaby packages (on reload)
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			sendPackages(p);
 		}
@@ -138,6 +142,26 @@ public class AntiLaby extends JavaPlugin {
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
 	}
 	
+	public void initBMetrics() {
+		//Start plugin metrics for bStats.org
+		com.github.nathannr.antilaby.metrics.BStats bstats = new com.github.nathannr.antilaby.metrics.BStats(this);
+		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled") {
+			//Auto-update enabled?
+			@Override
+			public String getValue() {
+				return AntiLaby.getInstance().getConfig().getString("AntiLaby.Update.AutoUpdate");
+			}
+		});
+		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled") {
+			//Bypass with permission enabled?
+			@Override
+			public String getValue() {
+				return AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission");
+			}
+		});
+	}
+	
+	//Disable the plugin if not compatible
 	public void disableIfNotCompatible() {
 		if(!compatible) {
 			this.onDisable();
