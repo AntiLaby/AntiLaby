@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.TabComplete;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
+import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.update.UpdateDownload;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_11_R1;
@@ -74,18 +75,18 @@ public class AntiLaby extends JavaPlugin {
 		//Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
-		//Start plugin metrics
+		//Start plugin metrics for MCStats.org
 		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {
 			//e.printStackTrace();
 		}
+		com.github.nathannr.antilaby.metrics.BStats bstats = new com.github.nathannr.antilaby.metrics.BStats(this);
 		//Resend AntiLaby packages on reload
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			sendPackages(p);
 		}
-		
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
 		//Check if the server is compatible with AntiLaby
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1") || nmsver.equalsIgnoreCase("v1_11_R1")) {
