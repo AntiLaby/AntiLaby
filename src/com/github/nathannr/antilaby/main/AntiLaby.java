@@ -18,7 +18,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
-import com.github.nathannr.antilaby.command.TabComplete;
+import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
@@ -201,7 +201,6 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.CHAT", true);
 		this.getConfig().addDefault("AntiLaby.disable.EXTRAS", true);
 		this.getConfig().addDefault("AntiLaby.disable.ANIMATIONS", true);
-		this.getConfig().addDefault("AntiLaby.disable.ANIMATIONS", true);
 		this.getConfig().addDefault("AntiLaby.disable.POTIONS", true);
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
@@ -213,7 +212,7 @@ public class AntiLaby extends JavaPlugin {
 	
 	public void initLanguage() {
 		
-		//Delete the old language file frome older versions of this plugin
+		//Delete the old language file from older versions of this plugin
 		File oldLang = new File("plugins/AntiLaby/language.yml");
 		if(oldLang.exists()) {
 			oldLang.delete();
@@ -262,7 +261,7 @@ public class AntiLaby extends JavaPlugin {
 	public void initCmds() {
 		//Init /antilaby command
 		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
-		getCommand("antilaby").setTabCompleter(new TabComplete());
+		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 	}
 	
 	public void sendMultiLanguageMessage(Player p, String path, Boolean translateAlternateColorCodes) {
