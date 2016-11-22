@@ -34,6 +34,10 @@ import com.github.nathannr.antilaby.versions.v1_9_R2;
 
 public class AntiLaby extends JavaPlugin {
 
+	/**
+	* @author NathanNr
+	*/
+	
 	//Spigot resource id
 	public int resource = 21347;
 	//Prefix
