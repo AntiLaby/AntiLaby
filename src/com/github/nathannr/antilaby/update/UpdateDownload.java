@@ -91,7 +91,7 @@ public class UpdateDownload extends Thread {
 						File tmp = new File("plugins/AntiLaby.tmp");
 						tmp.delete();
 						
-						System.out.println(AntiLaby.getInstance().cprefixinfo + "Auto-update complete!");
+						System.out.println(AntiLaby.getInstance().cprefixinfo + "Auto-update complete! Reload / restart your server to activate the new version.");
 					}
 				}
 				
