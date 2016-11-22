@@ -149,14 +149,24 @@ public class AntiLaby extends JavaPlugin {
 			//Auto-update enabled?
 			@Override
 			public String getValue() {
-				return AntiLaby.getInstance().getConfig().getString("AntiLaby.Update.AutoUpdate");
+				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.Update.AutoUpdate");
+				if(r.equalsIgnoreCase("true") || r.equalsIgnoreCase("false")) {
+					return r;
+				} else {
+					return "unknown";
+				}
 			}
 		});
 		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled") {
 			//Bypass with permission enabled?
 			@Override
 			public String getValue() {
-				return AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission");
+				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission");
+				if(r.equalsIgnoreCase("true") || r.equalsIgnoreCase("false")) {
+					return r;
+				} else {
+					return "unknown";
+				}
 			}
 		});
 	}
