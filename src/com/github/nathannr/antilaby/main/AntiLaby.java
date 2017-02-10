@@ -19,10 +19,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
+import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.update.UpdateDownload;
+import com.github.nathannr.antilaby.utils.Convert;
 import com.github.nathannr.antilaby.versions.v1_10_R1;
 import com.github.nathannr.antilaby.versions.v1_11_R1;
 import com.github.nathannr.antilaby.versions.v1_8_R1;
@@ -173,6 +175,35 @@ public class AntiLaby extends JavaPlugin {
 				}
 			}
 		});
+		bstats.addCustomChart(new BStats.AdvancedPie("disabled_functions") {
+			//Disabled functions
+			@Override
+			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+				int FOOD = (AntiLaby.getInstance().getConfig().getBoolean("") ? 1 : 0);
+				int GUI = Convert.convert(Config.getFOOD());
+				int NICK = Convert.convert(Config.getNICK());
+				int BLOCKBUILD = Convert.convert(Config.getBLOCKBUILD());
+				int CHAT = Convert.convert(Config.getCHAT());
+				int EXTRAS = Convert.convert(Config.getEXTRAS());
+				int ANIMATIONS = Convert.convert(Config.getANIMATIONS());
+				int POTIONS = Convert.convert(Config.getPOTIONS());
+				int ARMOR = Convert.convert(Config.getARMOR());
+				int DAMAGEINDICATOR = Convert.convert(Config.getDAMAGEINDICATOR());
+				int MINIMAP_RADAR = Convert.convert(Config.getMINIMAP_RADAR());
+				valueMap.put("FOOD", FOOD);
+				valueMap.put("GUI", GUI);
+				valueMap.put("NICK", NICK);
+				valueMap.put("BLOCKBUILD", BLOCKBUILD);
+				valueMap.put("CHAT", CHAT);
+				valueMap.put("EXTRAS", EXTRAS);
+				valueMap.put("ANIMATIONS", ANIMATIONS);
+				valueMap.put("POTIONS", POTIONS);
+				valueMap.put("ARMOR", ARMOR);
+				valueMap.put("DAMAGEINDICATOR", DAMAGEINDICATOR);
+				valueMap.put("MINIMAP_RADAR", MINIMAP_RADAR);
+				return valueMap;
+			}
+		});
 	}
 	
 	//Disable the plugin if not compatible
@@ -211,7 +242,6 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initLanguage() {
-		
 		//Delete the old language file from older versions of this plugin
 		File oldLang = new File("plugins/AntiLaby/language.yml");
 		if(oldLang.exists()) {
@@ -473,7 +503,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public enum EnumLabyModFeature {
-		//The LabyMod functions
+		// The LabyMod functions
 		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
 	}
 
