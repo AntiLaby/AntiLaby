@@ -25,6 +25,8 @@ import java.util.zip.GZIPOutputStream;
  */
 public class BStats {
 
+	public static boolean enabled = false;
+	
     // The version of this bStats class
     public static final int B_STATS_VERSION = 1;
 
@@ -85,6 +87,7 @@ public class BStats {
         serverUUID = config.getString("serverUuid");
         logFailedRequests = config.getBoolean("logFailedRequests", false);
         if (config.getBoolean("enabled", true)) {
+        	enabled = true;
             boolean found = false;
             // Search for all other bStats Metrics classes to see if we are the first one
             for (Class<?> service : Bukkit.getServicesManager().getKnownServices()) {

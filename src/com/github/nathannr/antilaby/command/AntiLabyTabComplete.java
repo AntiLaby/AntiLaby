@@ -11,7 +11,7 @@ public class AntiLabyTabComplete implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
-		
+		// Tab-complete for the AntiLaby debug command
 		if(cmd.getName().equalsIgnoreCase("antilaby") && args.length == 1) {
 			List<String> list = new ArrayList<>();
 			list.add("info");

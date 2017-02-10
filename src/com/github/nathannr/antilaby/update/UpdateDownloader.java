@@ -16,7 +16,7 @@ import java.net.URLConnection;
 
 import com.github.nathannr.antilaby.main.AntiLaby;
 
-public class UpdateDownload extends Thread {
+public class UpdateDownloader extends Thread {
 
 	boolean updateAvailable;
 	

@@ -17,40 +17,37 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
+import com.github.nathannr.antilaby.api.util.Boolean2Int;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
-import com.github.nathannr.antilaby.update.UpdateDownload;
-import com.github.nathannr.antilaby.utils.Convert;
-import com.github.nathannr.antilaby.versions.v1_10_R1;
-import com.github.nathannr.antilaby.versions.v1_11_R1;
-import com.github.nathannr.antilaby.versions.v1_8_R1;
-import com.github.nathannr.antilaby.versions.v1_8_R2;
-import com.github.nathannr.antilaby.versions.v1_8_R3;
-import com.github.nathannr.antilaby.versions.v1_9_R1;
-import com.github.nathannr.antilaby.versions.v1_9_R2;
+import com.github.nathannr.antilaby.update.UpdateDownloader;
 
 
 public class AntiLaby extends JavaPlugin {
 
 	/**
+	 * Main class of AntiLaby Spigot plugin
 	* @author NathanNr
 	*/
 	
-	//Spigot resource id
-	public int resource = 21347;
-	//Prefix
+	// Spigot resource id
+	public final int resource = 21347;
+	// Prefix
 	public String prefix = "§8[§e§lAntiLaby§8] §r";
-	//Console prefix
-	public String cprefixinfo = "[AntiLaby/INFO] ";
-	public String cprefixerr = "[AntiLaby/ERROR] ";
-	//NMS-version
+	// Console prefix
+	public final String cprefixinfo = "[AntiLaby/INFO] ";
+	public final String cprefixerr = "[AntiLaby/ERROR] ";
+	// NMS-version
 	public String nmsver;
-	//Compatible?
+	// Compatible?
 	public boolean compatible;
+	// Metrics
+	public Metrics metrics;
 	
 	public static AntiLaby instance;
 	public static AntiLaby getInstance(){
@@ -61,8 +58,8 @@ public class AntiLaby extends JavaPlugin {
 	public void onLoad() {
 		instance = this;
 		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-			//Check and install updates async
-			UpdateDownload ud = new UpdateDownload();
+			// Check and install updates async
+			UpdateDownloader ud = new UpdateDownloader();
 			ud.start();
 		} else {
 			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
@@ -71,36 +68,33 @@ public class AntiLaby extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
-		//Init files, commands and events
+		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by NathanNr version " + this.getDescription().getVersion() + " sucsessfully!");
+		// Init files, commands and events
 		initConfig();
 		initLanguage();
 		initCmds();
 		initEvents();
-		//Register plugin channel
+		// Register plugin channel
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
-		//Get NMS-version
+		// Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
-		//Start plugin metrics for MCStats.org
+		// Start plugin metrics for MCStats.org
 		try {
-			Metrics metrics = new Metrics(this);
+			metrics = new Metrics(this);
 			metrics.start();
-		} catch (IOException e) {
-			//e.printStackTrace();
-		}
-		
+		} catch (IOException e) {}
 		//Start plugin metrics for bStats.org
 		initBMetrics();
-		
 		//Resend AntiLaby packages (on reload)
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			sendPackages(p);
+			AntiLabyPackager pack = new AntiLabyPackager(p);
+			pack.sendPackages();
 		}
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
-		//Check if the server is compatible with AntiLaby
+		// Check if the server is compatible with AntiLaby
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1") || nmsver.equalsIgnoreCase("v1_11_R1")) {
-			//TODO: Dont't forget to update this after adding a new NMS-version!
+			// TODO: Dont't forget to update this after adding a new NMS-version!
 			compatible = true;
 			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
 			try {
@@ -110,7 +104,7 @@ public class AntiLaby extends JavaPlugin {
 				bw.newLine();
 				bw.write("Link: https://www.spigotmc.org/resources/" + resource + "/");
 				bw.newLine();
-				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date()));
+				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date()) + " (" + System.currentTimeMillis() + ")");
 				bw.newLine();
 				bw.write("NMS-version: " + nmsver);
 				bw.newLine();
@@ -149,10 +143,10 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initBMetrics() {
-		//Start plugin metrics for bStats.org
+		// Start plugin metrics for bStats.org
 		com.github.nathannr.antilaby.metrics.BStats bstats = new com.github.nathannr.antilaby.metrics.BStats(this);
 		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled") {
-			//Auto-update enabled?
+			// Auto-update enabled?
 			@Override
 			public String getValue() {
 				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.Update.AutoUpdate");
@@ -164,7 +158,7 @@ public class AntiLaby extends JavaPlugin {
 			}
 		});
 		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled") {
-			//Bypass with permission enabled?
+			// Bypass with permission enabled?
 			@Override
 			public String getValue() {
 				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission");
@@ -176,20 +170,20 @@ public class AntiLaby extends JavaPlugin {
 			}
 		});
 		bstats.addCustomChart(new BStats.AdvancedPie("disabled_functions") {
-			//Disabled functions
+			// Disabled functions
 			@Override
 			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
 				int FOOD = (AntiLaby.getInstance().getConfig().getBoolean("") ? 1 : 0);
-				int GUI = Convert.convert(Config.getFOOD());
-				int NICK = Convert.convert(Config.getNICK());
-				int BLOCKBUILD = Convert.convert(Config.getBLOCKBUILD());
-				int CHAT = Convert.convert(Config.getCHAT());
-				int EXTRAS = Convert.convert(Config.getEXTRAS());
-				int ANIMATIONS = Convert.convert(Config.getANIMATIONS());
-				int POTIONS = Convert.convert(Config.getPOTIONS());
-				int ARMOR = Convert.convert(Config.getARMOR());
-				int DAMAGEINDICATOR = Convert.convert(Config.getDAMAGEINDICATOR());
-				int MINIMAP_RADAR = Convert.convert(Config.getMINIMAP_RADAR());
+				int GUI = Boolean2Int.convert(Config.getFOOD());
+				int NICK = Boolean2Int.convert(Config.getNICK());
+				int BLOCKBUILD = Boolean2Int.convert(Config.getBLOCKBUILD());
+				int CHAT = Boolean2Int.convert(Config.getCHAT());
+				int EXTRAS = Boolean2Int.convert(Config.getEXTRAS());
+				int ANIMATIONS = Boolean2Int.convert(Config.getANIMATIONS());
+				int POTIONS = Boolean2Int.convert(Config.getPOTIONS());
+				int ARMOR = Boolean2Int.convert(Config.getARMOR());
+				int DAMAGEINDICATOR = Boolean2Int.convert(Config.getDAMAGEINDICATOR());
+				int MINIMAP_RADAR = Boolean2Int.convert(Config.getMINIMAP_RADAR());
 				valueMap.put("FOOD", FOOD);
 				valueMap.put("GUI", GUI);
 				valueMap.put("NICK", NICK);
@@ -206,7 +200,7 @@ public class AntiLaby extends JavaPlugin {
 		});
 	}
 	
-	//Disable the plugin if not compatible
+	// Disable the plugin if not compatible
 	public void disableIfNotCompatible() {
 		if(!compatible) {
 			this.onDisable();
@@ -215,13 +209,13 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initEvents() {
-		//Register PlayerJoinEvent to send AntiLaby packages on join
+		// Register PlayerJoinEvent to send AntiLaby packages on join
 		PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerJoin(this), this);
+		pm.registerEvents(new PlayerJoin(), this);
 	}
 	
 	private void initConfig() {
-		//Init config
+		// Init config
 		this.reloadConfig();
 		this.getConfig().options().header("AntiLaby plugin by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
 		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
@@ -242,13 +236,13 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initLanguage() {
-		//Delete the old language file from older versions of this plugin
+		// Delete the old language file from older versions of this plugin
 		File oldLang = new File("plugins/AntiLaby/language.yml");
 		if(oldLang.exists()) {
 			oldLang.delete();
 		}
 		
-		//Create lang files in diffrent languages
+		// Create lang files in different languages
 		String en_US = "en_US";
 		File en_USfile = new File("plugins/AntiLaby/language/" + en_US + ".yml");
 		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
@@ -278,7 +272,7 @@ public class AntiLaby extends JavaPlugin {
 		fr_FRcfg.options().copyDefaults(true);
 		
 		try {
-			//Save language files
+			// Save language files
 			en_UScfg.save(en_USfile);
 			de_DEcfg.save(de_DEfile);
 			en_GBcfg.save(en_GBfile);
@@ -289,13 +283,13 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void initCmds() {
-		//Init /antilaby command
+		// Init /antilaby command
 		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 	}
 	
 	public void sendMultiLanguageMessage(Player p, String path, Boolean translateAlternateColorCodes) {
-		//Send a message in player's language
+		// Send a message in player's language
 		initLanguage();
 		File file = new File("plugins/AntiLaby/language/" + p.spigot().getLocale() + ".yml");
 		File fallbackFile = new File("plugins/AntiLaby/language/" + "en_US" + ".yml");
@@ -340,7 +334,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void reloadPlugin(CommandSender sender) {
-		//Reload this plugin
+		// Reload this plugin
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
 			if(!p.hasPermission("antilaby.reload")) {
@@ -358,7 +352,8 @@ public class AntiLaby extends JavaPlugin {
 		}
 		initConfig();
 		for(Player p : Bukkit.getOnlinePlayers()) {
-			sendPackages(p);
+			AntiLabyPackager pack = new AntiLabyPackager(p);
+			pack.sendPackages();
 		}
 		if(sender instanceof Player) {
 			Player p = (Player) sender;
@@ -370,141 +365,13 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void sendInfo(CommandSender sender) {
-		//Send information about this plugin to a command sender (console / player)
+		// Send information about this plugin to a command sender (console / player)
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by Nathan_N" + ChatColor.RESET);
+		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion() + " by NathanNr" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
 	
-	public void sendPackages(Player p) {
-		//Ignore players with the bypass permission if enabled in the config file
-		if(!p.hasPermission("antilaby.bypass")) {
-			//Send AntiLaby packages to a player
-			HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
-			if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
-				list.put(EnumLabyModFeature.FOOD, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.GUI")) {
-				list.put(EnumLabyModFeature.GUI, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.NICK")) {
-				list.put(EnumLabyModFeature.NICK, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD")) {
-				list.put(EnumLabyModFeature.BLOCKBUILD, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.CHAT")) {
-				list.put(EnumLabyModFeature.CHAT, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.EXTRAS")) {
-				list.put(EnumLabyModFeature.EXTRAS, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.ANIMATIONS")) {
-				list.put(EnumLabyModFeature.ANIMATIONS, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.POTIONS")) {
-				list.put(EnumLabyModFeature.POTIONS, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.ARMOR")) {
-				list.put(EnumLabyModFeature.ARMOR, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR")) {
-				list.put(EnumLabyModFeature.DAMAGEINDICATOR, false);
-			}
-			if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
-				list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
-			}
-			//TODO: Dont't forget to update the info file after adding a new NMS-version!
-			if(nmsver.equalsIgnoreCase("v1_8_R1")) {
-				v1_8_R1.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
-				v1_8_R2.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
-				v1_8_R3.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
-				v1_9_R1.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
-				v1_9_R2.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
-				v1_10_R1.setLabyModFeature(p, list);
-			} else if(nmsver.equalsIgnoreCase("v1_11_R1")) {
-				v1_11_R1.setLabyModFeature(p, list);
-			} else {
-				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
-				if(p.isOp()) {
-					p.sendMessage(prefix + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
-				}
-			}
-		} else {
-			//Ignore players with the bypass permission if enabled in the config file
-			if(!this.getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
-				HashMap<EnumLabyModFeature, Boolean> list = new HashMap<EnumLabyModFeature, Boolean>();
-				if(this.getConfig().getBoolean("AntiLaby.disable.FOOD")) {
-					list.put(EnumLabyModFeature.FOOD, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.GUI")) {
-					list.put(EnumLabyModFeature.GUI, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.NICK")) {
-					list.put(EnumLabyModFeature.NICK, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD")) {
-					list.put(EnumLabyModFeature.BLOCKBUILD, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.CHAT")) {
-					list.put(EnumLabyModFeature.CHAT, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.EXTRAS")) {
-					list.put(EnumLabyModFeature.EXTRAS, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.ANIMATIONS")) {
-					list.put(EnumLabyModFeature.ANIMATIONS, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.POTIONS")) {
-					list.put(EnumLabyModFeature.POTIONS, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.ARMOR")) {
-					list.put(EnumLabyModFeature.ARMOR, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR")) {
-					list.put(EnumLabyModFeature.DAMAGEINDICATOR, false);
-				}
-				if(this.getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
-					list.put(EnumLabyModFeature.MINIMAP_RADAR, false);
-				}
-				//TODO: Dont't forget to update the info file after adding a new NMS-version!
-				if(nmsver.equalsIgnoreCase("v1_8_R1")) {
-					v1_8_R1.setLabyModFeature(p, list);
-				} else if(nmsver.equalsIgnoreCase("v1_8_R2")) {
-					v1_8_R2.setLabyModFeature(p, list);
-				} else if(nmsver.equalsIgnoreCase("v1_8_R3")) {
-					v1_8_R3.setLabyModFeature(p, list);
-					System.out.println("Version v1_8_R3");
-				} else if(nmsver.equalsIgnoreCase("v1_9_R1")) {
-					v1_9_R1.setLabyModFeature(p, list);
-				} else if(nmsver.equalsIgnoreCase("v1_9_R2")) {
-					v1_9_R2.setLabyModFeature(p, list);
-				} else if(nmsver.equalsIgnoreCase("v1_10_R1")) {
-					v1_10_R1.setLabyModFeature(p, list);
-				} else if(nmsver.equalsIgnoreCase("v1_11_R1")) {
-					v1_11_R1.setLabyModFeature(p, list);
-				} else {
-					System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this plugin!");
-					if(p.isOp()) {
-						p.sendMessage(prefix + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + resource + "/§r");
-					}
-				}
-			} else {
-				System.out.println("[AntiLaby/INFO] Player " + p.getName() + " (" + p.getUniqueId() + ") has the permission 'antilaby.bypass': no LabyMod functions disabled.");
-			}
-		}
-	}
-	
-	public enum EnumLabyModFeature {
-		// The LabyMod functions
-		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
-	}
 
 }

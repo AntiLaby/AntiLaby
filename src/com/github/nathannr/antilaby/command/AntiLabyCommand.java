@@ -16,7 +16,7 @@ public class AntiLabyCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-	
+	// AntiLaby debug command
 		if(cmd.getName().equalsIgnoreCase("antilaby")) {
 			if(args.length != 1) {
 				sendUsage(sender);

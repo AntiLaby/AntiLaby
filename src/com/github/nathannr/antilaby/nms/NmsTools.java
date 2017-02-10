@@ -1,11 +1,11 @@
-package com.github.nathannr.antilaby.utils;
+package com.github.nathannr.antilaby.nms;
 
 import java.lang.reflect.Field;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class NMS {
+public class NmsTools {
 
 	static String getVersion() {
 		String name = Bukkit.getServer().getClass().getPackage().getName();
