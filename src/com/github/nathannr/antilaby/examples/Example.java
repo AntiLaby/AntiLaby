@@ -11,7 +11,11 @@ public class Example {
 
 	/**
 	 * Example class how to use the AntiLaby API
+	 * 
+	 * WARNING: It's highly recommended to use only methods from the package 'com.github.nathannr.antilaby.api'!
+	 * Other's may not be compatible for multiple Minecraft versions!
 	 */
+	
 	
 	/**
 	 * Example simple AntiLaby API method
