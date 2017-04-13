@@ -93,34 +93,14 @@ public class AntiLaby extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		update();
-		// Init files, commands and events
-		initConfig();
-		initLanguage();
-		// Register plugin channel
-		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		// Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
-		initCmds();
-		initEvents();
-		// Start plugin metrics for MCStats.org
-		try {
-			metrics = new Metrics(this);
-			metrics.start();
-		} catch (IOException e) {}
-		// Start plugin metrics for bStats.org
-		initBMetrics();
-		// Resend AntiLaby packages (on reload)
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			AntiLabyPackager pack = new AntiLabyPackager(p);
-			pack.sendPackages();
-		}
 		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
 		// Check if the server is compatible with AntiLaby
 		if(nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2") || nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1") || nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1") || nmsver.equalsIgnoreCase("v1_11_R1")) {
 			// TODO: Dont't forget to update this after adding a new NMS-version!
-			compatible = true;
+			this.compatible = true;
 			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
@@ -140,7 +120,7 @@ public class AntiLaby extends JavaPlugin {
 				e.printStackTrace();
 			}
 		} else {
-			compatible = false;
+			this.compatible = false;
 			System.err.println(cprefixerr + "Your server is not compatible with this version of AntiLaby! Your NMS-version: '" + nmsver + "', your AntiLaby version: '" + this.getDescription().getVersion() + "'. Look into the file '" + "plugins/status.txt" + "' for more information!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
@@ -160,6 +140,26 @@ public class AntiLaby extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
+		this.update();
+		// Init files, commands and events
+		this.initConfig();
+		this.initLanguage();
+		// Register plugin channel
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
+		this.initCmds();
+		this.initEvents();
+		// Start plugin metrics for MCStats.org
+		try {
+			metrics = new Metrics(this);
+			metrics.start();
+		} catch (IOException e) {}
+		// Start plugin metrics for bStats.org
+		initBMetrics();
+		// Resend AntiLaby packages (on reload)
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			AntiLabyPackager pack = new AntiLabyPackager(p);
+			pack.sendPackages();
+		}
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by NathanNr version " + this.getDescription().getVersion() + " sucsessfully!");
 	}
 	
@@ -169,12 +169,17 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	private void update() {
-		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-			// Check and install updates async
-			UpdateDownloader ud = new UpdateDownloader();
-			ud.start();
+		if(!this.getIsBeta()) {
+			if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+				// Check and install updates async
+				UpdateDownloader ud = new UpdateDownloader();
+				ud.start();
+			} else {
+				System.out.println(this.getCprefixinfo() + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+			}
 		} else {
-			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+			System.out.println(this.getCprefixinfo() + "You are running a beta version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/" + this.getResource() + "/");
+			this.disableIfNotCompatible();
 		}
 	}
 	
@@ -238,8 +243,7 @@ public class AntiLaby extends JavaPlugin {
 	
 	// Disable the plugin if not compatible
 	public void disableIfNotCompatible() {
-		if(!compatible) {
-			this.onDisable();
+		if(!this.compatible) {
 			this.getPluginLoader().disablePlugin(this);
 		}
 	}
@@ -253,7 +257,7 @@ public class AntiLaby extends JavaPlugin {
 	private void initConfig() {
 		// Init config
 		this.reloadConfig();
-		this.getConfig().options().header("AntiLaby plugin by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		this.getConfig().options().header("AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + this.getResource() + "/");
 		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
 		this.getConfig().addDefault("AntiLaby.disable.FOOD", true);
 		this.getConfig().addDefault("AntiLaby.disable.GUI", true);
@@ -266,7 +270,11 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
+		if(!this.getIsBeta()) {
+			this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
+		} else {
+			this.getConfig().set("AntiLaby.Update.AutoUpdate", "Auto-update is not available in beta versions! You can update manually: https://www.spigotmc.org/resources/" + this.getResource() + "/");
+		}
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 	}
@@ -386,7 +394,7 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			sender.sendMessage(cprefixinfo + "Reloading AntiLaby...");
 		}
-		initConfig();
+		this.initConfig();
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			AntiLabyPackager pack = new AntiLabyPackager(p);
 			pack.sendPackages();
