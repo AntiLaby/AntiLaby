@@ -19,7 +19,7 @@ public class Nms_v1_9_R1 {
 
 	public static boolean setLabyModFeature(Player p, HashMap<LabyModFeature, Boolean> list) throws IOException {
 		HashMap<String, Boolean> nList = new HashMap<String, Boolean>();
-		for(LabyModFeature f : list.keySet()) {
+		for (LabyModFeature f : list.keySet()) {
 			nList.put(f.name(), list.get(f));
 		}
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
@@ -29,8 +29,9 @@ public class Nms_v1_9_R1 {
 		PacketDataSerializer b = new PacketDataSerializer(a);
 		PacketPlayOutCustomPayload packet = new PacketPlayOutCustomPayload("LABYMOD", b);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
-		System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for player " + p.getName() + " (" + p.getUniqueId() + ")");
+		System.out.print("[AntiLaby/INFO] Disable some LabyMod functions for player " + p.getName() + " ("
+				+ p.getUniqueId() + ")");
 		return true;
 	}
-	
+
 }

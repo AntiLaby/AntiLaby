@@ -6,5 +6,5 @@ public class Boolean2Int {
 	public static int convert(boolean b) {
 		return (b) ? 1 : 0;
 	}
-	
+
 }
