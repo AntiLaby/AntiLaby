@@ -22,9 +22,9 @@ public class UpdateDownloader extends Thread {
 	
 	@SuppressWarnings("deprecation")
 	@Override
-	//Start update function async
+	// Start update function async
 	public void run() {
-		//Check for update
+		// Check for update
 		System.out.println(AntiLaby.getInstance().cprefixinfo + "Checking for updates on spigotmc.org...");
 		try {
             HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php").openConnection();
@@ -43,22 +43,12 @@ public class UpdateDownloader extends Thread {
         	System.err.println(AntiLaby.getInstance().cprefixerr + "Failed to check for updates on spigotmc.org!");
     		updateAvailable = false;
         }
-		//Download and install update if available
+		// Download and install update if available
 		if(updateAvailable == true) {
-			File aljar = new File("plugins/AntiLaby.jar");
-			if(!aljar.exists()) {
-				System.err.println(AntiLaby.getInstance().cprefixerr + "Auto-update failed!");
-				int i = 5;
-				while(i >= 0) {
-					System.err.println(AntiLaby.getInstance().cprefixerr + "PLEASE RENAME THE ANTILABY PLUGIN BACK TO 'AntiLaby.jar'! OTHERWISE AUTO-UPDATE WON'T WORK! IF YOU DON'T WANT TO USE AUTO-UPDATE DISABLE IT IN THE CONFIG FILE!");
-					i--;
-				}
-			}
 			System.out.println(AntiLaby.getInstance().cprefixinfo + "Downloading update...");
 			URL url;
 			try {
-				
-				url = new URL("http://adf.ly/1f1ZEn");
+				url = new URL("http://adf.ly/1f1ZEn"); // TODO Download from GitHub
 				final URLConnection conn = url.openConnection();
 				final InputStream is = new BufferedInputStream(conn.getInputStream());
 				if(is != null) {
@@ -79,7 +69,7 @@ public class UpdateDownloader extends Thread {
 						
 						final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
 						
-						final OutputStream os2 = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.jar"));
+						final OutputStream os2 = new BufferedOutputStream(new FileOutputStream(AntiLaby.getInstance().getPluginFile()));
 						byte[] chunk2 = new byte[1024];
 						int chunkSize2;
 						while ((chunkSize2 = is2.read(chunk2)) != -1) {
@@ -97,6 +87,7 @@ public class UpdateDownloader extends Thread {
 				
 			} catch (IOException e) {
 				System.err.println(AntiLaby.getInstance().cprefixerr + "Auto-update failed! You still have version " + AntiLaby.getInstance().getDescription().getVersion() + ". Please install the newest version manually from https://www.spigotmc.org/resources/" + AntiLaby.getInstance().resource + "/!");
+				e.printStackTrace();
 			}
 			File tmp = new File("plugins/AntiLaby.tmp");
 			if(tmp.exists()) {

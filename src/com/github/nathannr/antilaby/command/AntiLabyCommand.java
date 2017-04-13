@@ -17,16 +17,16 @@ public class AntiLabyCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 	// AntiLaby debug command
-		if(cmd.getName().equalsIgnoreCase("antilaby")) {
-			if(args.length != 1) {
+	if(cmd.getName().equalsIgnoreCase("antilaby")) {
+		if(args.length != 1) {
+			sendUsage(sender);
+		} else if(args.length == 1) {
+			if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
+				plugin.reloadPlugin(sender);
+			} else if(args[0].equalsIgnoreCase("info")) {
+				plugin.sendInfo(sender);
+			} else {
 				sendUsage(sender);
-			} else if(args.length == 1) {
-				if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) {
-					plugin.reloadPlugin(sender);
-				} else if(args[0].equalsIgnoreCase("info")) {
-					plugin.sendInfo(sender);
-				} else {
-					sendUsage(sender);
 				}
 			} else {
 				sendUsage(sender);
@@ -43,5 +43,4 @@ public class AntiLabyCommand implements CommandExecutor {
 			sender.sendMessage(plugin.cprefixinfo + "Usage: /antilaby <info|reload>");
 		}
 	}
-	
 }

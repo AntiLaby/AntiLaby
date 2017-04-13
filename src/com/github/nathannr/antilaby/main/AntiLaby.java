@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import com.github.nathannr.antilaby.update.UpdateDownloader;
 public class AntiLaby extends JavaPlugin {
 
 	/**
-	 * Main class of AntiLaby Spigot plugin
+	* Main class of AntiLaby Spigot plugin
 	* @author NathanNr
 	*/
 	
@@ -57,36 +58,29 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		instance = this;
-		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-			// Check and install updates async
-			UpdateDownloader ud = new UpdateDownloader();
-			ud.start();
-		} else {
-			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
-		}
 	}
 	
 	@Override
 	public void onEnable() {
-		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by NathanNr version " + this.getDescription().getVersion() + " sucsessfully!");
+		update();
 		// Init files, commands and events
 		initConfig();
 		initLanguage();
-		initCmds();
-		initEvents();
 		// Register plugin channel
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		// Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
+		initCmds();
+		initEvents();
 		// Start plugin metrics for MCStats.org
 		try {
 			metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {}
-		//Start plugin metrics for bStats.org
+		// Start plugin metrics for bStats.org
 		initBMetrics();
-		//Resend AntiLaby packages (on reload)
+		// Resend AntiLaby packages (on reload)
 		for(Player p : Bukkit.getOnlinePlayers()) {
 			AntiLabyPackager pack = new AntiLabyPackager(p);
 			pack.sendPackages();
@@ -100,7 +94,7 @@ public class AntiLaby extends JavaPlugin {
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write("AntiLaby plugin by Nathan_N, version " + this.getDescription().getVersion() + "");
+				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
 				bw.write("Link: https://www.spigotmc.org/resources/" + resource + "/");
 				bw.newLine();
@@ -120,7 +114,7 @@ public class AntiLaby extends JavaPlugin {
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
-				bw.write("AntiLaby plugin by Nathan_N, version " + this.getDescription().getVersion() + "");
+				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
 				bw.write("Link: https://www.spigotmc.org/resources/" + resource + "/");
 				bw.newLine();
@@ -135,11 +129,22 @@ public class AntiLaby extends JavaPlugin {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by NathanNr version " + this.getDescription().getVersion() + " sucsessfully!");
 	}
 	
 	@Override
 	public void onDisable() {
-		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by Nathan_N version " + this.getDescription().getVersion() + " sucsessfully!");
+		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by NathanNr version " + this.getDescription().getVersion() + " sucsessfully!");
+	}
+	
+	private void update() {
+		if(this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+			// Check and install updates async
+			UpdateDownloader ud = new UpdateDownloader();
+			ud.start();
+		} else {
+			System.out.println(cprefixinfo + "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/" + resource + "/!");
+		}
 	}
 	
 	public void initBMetrics() {
@@ -246,28 +251,28 @@ public class AntiLaby extends JavaPlugin {
 		String en_US = "en_US";
 		File en_USfile = new File("plugins/AntiLaby/language/" + en_US + ".yml");
 		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
-		en_UScfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		en_UScfg.options().header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
 		en_UScfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
 		en_UScfg.options().copyDefaults(true);
 		
 		String de_DE = "de_DE";
 		File de_DEfile = new File("plugins/AntiLaby/language/" + de_DE + ".yml");
 		FileConfiguration de_DEcfg = YamlConfiguration.loadConfiguration(de_DEfile);
-		de_DEcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		de_DEcfg.options().header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
 		de_DEcfg.addDefault("AntiLaby.Language.NoPermission", "&cDu hast nicht die benötigte Berechtigung, diesen Befehl auszuführen&r");
 		de_DEcfg.options().copyDefaults(true);
 		
 		String en_GB = "en_GB";
 		File en_GBfile = new File("plugins/AntiLaby/language/" + en_GB + ".yml");
 		FileConfiguration en_GBcfg = YamlConfiguration.loadConfiguration(en_GBfile);
-		en_GBcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		en_GBcfg.options().header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
 		en_GBcfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
 		en_GBcfg.options().copyDefaults(true);
 		
 		String fr_FR = "fr_FR";
 		File fr_FRfile = new File("plugins/AntiLaby/language/" + fr_FR + ".yml");
 		FileConfiguration fr_FRcfg = YamlConfiguration.loadConfiguration(fr_FRfile);
-		fr_FRcfg.options().header("Language file of AntiLaby by Nathan_N, https://www.spigotmc.org/resources/" + resource + "/");
+		fr_FRcfg.options().header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
 		fr_FRcfg.addDefault("AntiLaby.Language.NoPermission", "&cVous n'avez pas la permission d'utiliser cette commande&r");
 		fr_FRcfg.options().copyDefaults(true);
 		
@@ -371,6 +376,17 @@ public class AntiLaby extends JavaPlugin {
 		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/" + resource + "/" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
 		sender.sendMessage(ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
+	}
+	
+	public File getPluginFile() {
+		if (!(this instanceof JavaPlugin)) { return null; }
+		try {
+			Method method = JavaPlugin.class.getDeclaredMethod("getFile");
+			method.setAccessible(true);
+			return (File) method.invoke(this);
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException("Could not get plugin file", e);
+		}
 	}
 	
 
