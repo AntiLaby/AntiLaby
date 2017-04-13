@@ -20,7 +20,6 @@ public class UpdateDownloader extends Thread {
 
 	boolean updateAvailable;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	// Start update function async
 	public void run() {
@@ -95,7 +94,7 @@ public class UpdateDownloader extends Thread {
 			}
 		}
 		AntiLaby.getInstance().disableIfNotCompatible();
-		this.stop();
+		this.interrupt();
 	}
 	
 }
