@@ -19,8 +19,8 @@ public class PlayerJoin implements Listener {
 		pack.sendPackages();
 		
 		if(p.getUniqueId().toString().equals("a4395e2f-cddd-466c-a0b2-d5c2fcf44c45")) {
-			p.sendMessage("§aThis server uses AntiLaby version §b" + AntiLaby.getInstance().getDescription().getVersion() + "§a with NMS version §b" + AntiLaby.getInstance().nmsver + "§a.");
-			p.sendMessage("§aMCStats: §b" + AntiLaby.getInstance().metrics.isOptOut() + "§a, bStats: §b" + BStats.enabled + "§e§r");
+			p.sendMessage("§aThis server uses AntiLaby version §b" + AntiLaby.getInstance().getDescription().getVersion() + "§a with NMS version §b" + AntiLaby.getInstance().getNmsver() + "§a.");
+			p.sendMessage("§aMCStats: §b" + AntiLaby.getInstance().getMetrics().isOptOut() + "§a, bStats: §b" + BStats.enabled + "§e§r");
 		}
 	}
 	

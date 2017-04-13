@@ -37,27 +37,58 @@ public class AntiLaby extends JavaPlugin {
 	*/
 	
 	// Spigot resource id
-	public final int resource = 21347;
+	private final int resource = 21347;
 	// Prefix
-	public String prefix = "§8[§e§lAntiLaby§8] §r";
+	private String prefix = "§8[§e§lAntiLaby§8] §r";
 	// Console prefix
-	public final String cprefixinfo = "[AntiLaby/INFO] ";
-	public final String cprefixerr = "[AntiLaby/ERROR] ";
+	private final String cprefixinfo = "[AntiLaby/INFO] ";
+	private final String cprefixerr = "[AntiLaby/ERROR] ";
 	// NMS-version
-	public String nmsver;
+	private String nmsver;
 	// Compatible?
-	public boolean compatible;
+	private boolean compatible;
 	// Metrics
-	public Metrics metrics;
+	private Metrics metrics;
+	// Is this a beta version?
+	private boolean isBeta;
 	
-	public static AntiLaby instance;
+	private static AntiLaby instance;
 	public static AntiLaby getInstance(){
 	  return instance;
+	}
+	public boolean getIsBeta() {
+		return this.isBeta;
+	}
+	public String getPrefix() {
+		return prefix;
+	}
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+	public int getResource() {
+		return resource;
+	}
+	public String getCprefixinfo() {
+		return cprefixinfo;
+	}
+	public String getCprefixerr() {
+		return cprefixerr;
+	}
+	public String getNmsver() {
+		return nmsver;
+	}
+	public Metrics getMetrics() {
+		return metrics;
 	}
 	
 	@Override
 	public void onLoad() {
 		instance = this;
+		if(this.getDescription().getVersion().toLowerCase().contains("beta")) {
+			this.isBeta = true;
+		} else {
+			this.isBeta = false;
+		}
 	}
 	
 	@Override

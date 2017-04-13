@@ -38,9 +38,9 @@ public class AntiLabyCommand implements CommandExecutor {
 	public void sendUsage(CommandSender sender) {
 		if(sender instanceof Player) {
 			Player p = (Player) sender;				
-			p.sendMessage(plugin.prefix + "§cUsage: /antilaby <info|reload>§r");
+			p.sendMessage(plugin.getPrefix() + "§cUsage: /antilaby <info|reload>§r");
 		} else {
-			sender.sendMessage(plugin.cprefixinfo + "Usage: /antilaby <info|reload>");
+			sender.sendMessage(plugin.getCprefixinfo() + "Usage: /antilaby <info|reload>");
 		}
 	}
 }

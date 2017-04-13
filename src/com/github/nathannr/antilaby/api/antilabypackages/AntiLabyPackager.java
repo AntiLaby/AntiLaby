@@ -73,24 +73,24 @@ public class AntiLabyPackager {
 		}
 		// TODO: Dont't forget to update the info file after adding a new NMS-version!
 		try {
-			if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_8_R1")) {
+			if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_8_R1")) {
 				Nms_v1_8_R1.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_8_R2")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_8_R2")) {
 				Nms_v1_8_R2.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_8_R3")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_8_R3")) {
 				Nms_v1_8_R3.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_9_R1")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_9_R1")) {
 				Nms_v1_9_R1.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_9_R2")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_9_R2")) {
 				Nms_v1_9_R2.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_10_R1")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_10_R1")) {
 				Nms_v1_10_R1.setLabyModFeature(p, disabledLabyModFeatures);
-			} else if(AntiLaby.getInstance().nmsver.equalsIgnoreCase("v1_11_R1")) {
+			} else if(AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_11_R1")) {
 				Nms_v1_11_R1.setLabyModFeature(p, disabledLabyModFeatures);
 			} else {
 				System.err.println("[AntiLaby/ERROR] " + "Your server version is not compatible with this version of AntiLaby!");
 				if(p.isOp()) {
-					p.sendMessage(AntiLaby.getInstance().prefix + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + AntiLaby.getInstance().resource + "/§r");
+					p.sendMessage(AntiLaby.getInstance().getPrefix() + "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/" + AntiLaby.getInstance().getResource() + "/§r");
 				}
 				return false;
 			}
