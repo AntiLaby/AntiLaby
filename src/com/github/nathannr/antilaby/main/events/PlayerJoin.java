@@ -22,8 +22,19 @@ public class PlayerJoin implements Listener {
 			p.sendMessage(
 					"§aThis server uses AntiLaby version §b" + AntiLaby.getInstance().getDescription().getVersion()
 							+ "§a with NMS version §b" + AntiLaby.getInstance().getNmsver() + "§a.");
-			p.sendMessage("§aMCStats: §b" + AntiLaby.getInstance().getMetrics().isOptOut() + "§a, bStats: §b"
-					+ BStats.enabled + "§e§r");
+			String bStats;
+			String mcStats;
+			if (BStats.enabled) {
+				bStats = "enabled";
+			} else {
+				bStats = "disabled";
+			}
+			if (AntiLaby.getInstance().getMetrics().isOptOut()) {
+				mcStats = "disabled";
+			} else {
+				mcStats = "enabled";
+			}
+			p.sendMessage("§aMCStats: §b" + mcStats + "§a, bStats: §b" + bStats + "§e§r");
 		}
 	}
 
