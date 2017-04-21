@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.nathannr.antilaby.main.AntiLaby;
-import com.github.nathannr.antilaby.metrics.BStats;
 
 public class PlayerJoin implements Listener {
 
@@ -22,19 +21,6 @@ public class PlayerJoin implements Listener {
 			p.sendMessage(
 					"§aThis server uses AntiLaby version §b" + AntiLaby.getInstance().getDescription().getVersion()
 							+ "§a with NMS version §b" + AntiLaby.getInstance().getNmsver() + "§a.");
-			String bStats;
-			String mcStats;
-			if (BStats.enabled) {
-				bStats = "enabled";
-			} else {
-				bStats = "disabled";
-			}
-			if (AntiLaby.getInstance().getMetrics().isOptOut()) {
-				mcStats = "disabled";
-			} else {
-				mcStats = "enabled";
-			}
-			p.sendMessage("§aMCStats: §b" + mcStats + "§a, bStats: §b" + bStats + "§e§r");
 		}
 	}
 
