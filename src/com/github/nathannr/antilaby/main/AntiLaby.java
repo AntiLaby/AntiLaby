@@ -110,7 +110,7 @@ public class AntiLaby extends JavaPlugin {
 		if (nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2")
 				|| nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1")
 				|| nmsver.equalsIgnoreCase("v1_9_R2") || nmsver.equalsIgnoreCase("v1_10_R1")
-				|| nmsver.equalsIgnoreCase("v1_11_R1")) {
+				|| nmsver.equalsIgnoreCase("v1_11_R1") || nmsver.equalsIgnoreCase("v1_12_R1")) {
 			// TODO: Dont't forget to update this after adding a new
 			// NMS-version!
 			this.compatible = true;

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.nms.Nms_v1_10_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_11_R1;
+import com.github.nathannr.antilaby.nms.Nms_v1_12_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_8_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_8_R2;
 import com.github.nathannr.antilaby.nms.Nms_v1_8_R3;
@@ -96,6 +97,8 @@ public class AntiLabyPackager {
 				Nms_v1_10_R1.setLabyModFeature(p, disabledLabyModFeatures);
 			} else if (AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_11_R1")) {
 				Nms_v1_11_R1.setLabyModFeature(p, disabledLabyModFeatures);
+			} else if (AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_12_R1")) {
+				Nms_v1_12_R1.setLabyModFeature(p, disabledLabyModFeatures);
 			} else {
 				System.err.println(
 						"[AntiLaby/ERROR] " + "Your server version is not compatible with this version of AntiLaby!");
