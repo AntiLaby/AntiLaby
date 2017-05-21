@@ -1,4 +1,4 @@
-# Welcome to [AntiLaby](https://www.spigotmc.org/resources/21347/)!
+# Welcome to AntiLaby!
 ### AntiLaby is a [Spigot](https://www.spigotmc.org/) plugin by [NathanNr](https://github.com/NathanNr/) to disable [LabyMod](https://www.labymod.net/) functions
 
 Useful links:
