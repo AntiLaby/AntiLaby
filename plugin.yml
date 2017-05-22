@@ -1,6 +1,6 @@
 name: AntiLaby
 prefix: AntiLaby/INFO
-author: Nathan_N
+author: NathanNr
 version: 1.8.1
 description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
 website: https://www.spigotmc.org/resources/21347/
@@ -18,3 +18,4 @@ commands:
   antilaby:
     usage: /antilaby [reload]
     description: Information about the plugin or reload the plugin
+    aliases: [al]

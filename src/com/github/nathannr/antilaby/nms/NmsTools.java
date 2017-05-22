@@ -13,7 +13,7 @@ public class NmsTools {
 		return version;
 	}
 
-	public static Class<?> getNmsClass(String className) {
+	public static Class<?> getNMSClass(String className) {
 		String fullName = "net.minecraft.server." + getVersion() + className;
 		Class<?> clazz = null;
 		try {
@@ -24,7 +24,7 @@ public class NmsTools {
 		return clazz;
 	}
 
-	public static Object getNmsPlayer(Player p) {
+	public static Object getNMSPlayer(Player p) {
 		try {
 			return p.getClass().getMethod("getHandle").invoke(p);
 		} catch (Exception e) {
