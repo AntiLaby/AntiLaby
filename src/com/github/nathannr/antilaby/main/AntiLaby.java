@@ -27,6 +27,7 @@ import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.update.UpdateDownloader;
+import com.github.nathannr.antilaby.update.VersionType;
 
 public class AntiLaby extends JavaPlugin {
 
@@ -50,7 +51,7 @@ public class AntiLaby extends JavaPlugin {
 	// Metrics
 	private Metrics metrics;
 	// Is this a beta version?
-	private boolean isBeta;
+	private VersionType versionType;
 
 	private static AntiLaby instance;
 
@@ -58,8 +59,8 @@ public class AntiLaby extends JavaPlugin {
 		return instance;
 	}
 
-	public boolean getIsBeta() {
-		return this.isBeta;
+	public VersionType getVersionType() {
+		return this.versionType;
 	}
 
 	public String getPrefix() {
@@ -93,10 +94,18 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onLoad() {
 		instance = this;
-		if (this.getDescription().getVersion().toLowerCase().contains("beta")) {
-			this.isBeta = true;
+		if (this.getDescription().getVersion().toLowerCase().contains("pre")) {
+			this.versionType = VersionType.PRE_RELEASE;
+		} else if (this.getDescription().getVersion().toLowerCase().contains("beta")) {
+			this.versionType = VersionType.BETA;
+		} else if (this.getDescription().getVersion().toLowerCase().contains("alpha")) {
+			this.versionType = VersionType.ALPHA;
+		} else if (this.getDescription().getVersion().toLowerCase().contains("dev")) {
+			this.versionType = VersionType.DEV;
+		} else if (this.getDescription().getVersion().toLowerCase().contains("custom")) {
+			this.versionType = VersionType.CUSTOM;
 		} else {
-			this.isBeta = false;
+			this.versionType = VersionType.RELEASE;
 		}
 	}
 
@@ -189,7 +198,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	private void update() {
-		if (!this.getIsBeta()) {
+		if (this.getVersionType().equals(VersionType.RELEASE)) {
 			if (this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
 				// Check and install updates async
 				UpdateDownloader ud = new UpdateDownloader();
@@ -201,7 +210,7 @@ public class AntiLaby extends JavaPlugin {
 			}
 		} else {
 			System.out.println(this.getCprefixinfo()
-					+ "You are running a beta version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/"
+					+ "You are running a " + this.getVersionType().toString().toLowerCase() + " version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/"
 					+ this.getResource() + "/");
 			this.disableIfNotCompatible();
 		}
@@ -295,18 +304,18 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		if (!this.getIsBeta()) {
+		if (this.getVersionType().equals(VersionType.RELEASE)) {
 			this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
 		} else {
 			this.getConfig().set("AntiLaby.Update.AutoUpdate",
-					"Auto-update is not available in beta versions! You can update manually: https://www.spigotmc.org/resources/"
+					"Auto-update is not available in " + this.getVersionType().toString().toLowerCase() + " versions! You can update manually: https://www.spigotmc.org/resources/"
 							+ this.getResource() + "/");
 		}
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 		if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true")) {
 			if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false")) {
-				if(this.getIsBeta() == false) {
+				if(this.getVersionType().equals(VersionType.RELEASE)) {
 					this.getConfig().set("AntiLaby.Update.AutoUpdate", true);
 					this.saveConfig();
 				}
