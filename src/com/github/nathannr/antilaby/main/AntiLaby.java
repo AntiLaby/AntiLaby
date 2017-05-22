@@ -304,6 +304,14 @@ public class AntiLaby extends JavaPlugin {
 		}
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
+		if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true")) {
+			if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false")) {
+				if(this.getIsBeta() == false) {
+					this.getConfig().set("AntiLaby.Update.AutoUpdate", true);
+					this.saveConfig();
+				}
+			}
+		}
 	}
 
 	public void initLanguage() {
