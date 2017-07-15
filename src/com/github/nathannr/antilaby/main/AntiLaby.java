@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,6 +27,7 @@ import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
+import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.nathannr.antilaby.update.UpdateDownloader;
 import com.github.nathannr.antilaby.update.VersionType;
 
@@ -170,8 +172,9 @@ public class AntiLaby extends JavaPlugin {
 		// Init files, commands and events
 		this.initConfig();
 		this.initLanguage();
-		// Register plugin channel
+		// Register plugin channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, "LABYMOD", new IncomingPluginChannel());
 		this.initCmds();
 		this.initEvents();
 		// Start plugin metrics for MCStats.org
@@ -225,9 +228,9 @@ public class AntiLaby extends JavaPlugin {
 			public String getValue() {
 				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.Update.AutoUpdate");
 				if (r.equalsIgnoreCase("true") || r.equalsIgnoreCase("false")) {
-					return r;
+					return r.toLowerCase();
 				} else {
-					return "unknown";
+					return "false";
 				}
 			}
 		});
@@ -237,12 +240,25 @@ public class AntiLaby extends JavaPlugin {
 			public String getValue() {
 				String r = AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission");
 				if (r.equalsIgnoreCase("true") || r.equalsIgnoreCase("false")) {
-					return r;
+					return r.toLowerCase();
 				} else {
-					return "unknown";
+					return "false";
 				}
 			}
 		});
+		bstats.addCustomChart(new BStats.SimplePie("kick_enabled") {
+			// LabyMod player kick enabled?
+			@Override
+			public String getValue() {
+				boolean b = Config.getLabyModPlayersKickEnable();
+				if (!String.valueOf(b).equals("null")) {
+					return String.valueOf(b);
+				} else {
+					return "false";
+				}
+			}
+		});
+		// TODO: Change to bar charts
 		bstats.addCustomChart(new BStats.AdvancedPie("disabled_functions") {
 			// Disabled functions
 			@Override
@@ -304,6 +320,8 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
+		this.getConfig().addDefault("AntiLaby.LabyModPlayersKick.Enable", false);
+		this.getConfig().addDefault("AntiLaby.LabyModPlayersKick.KickMessage", "&cYou are not allowed to use LabyMod!&r");
 		if (this.getVersionType().equals(VersionType.RELEASE)) {
 			this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
 		} else {

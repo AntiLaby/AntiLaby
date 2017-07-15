@@ -4,6 +4,19 @@ import com.github.nathannr.antilaby.main.AntiLaby;
 
 public class Config {
 
+	public static boolean getEnableBypassWithPermission() {
+		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.EnableBypassWithPermission");
+	}
+	
+	public static boolean getLabyModPlayersKickEnable() {
+		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.LabyModPlayersKick.Enable");
+	}
+	
+	public static String getLabyModPlayersKickMessage() {
+		return AntiLaby.getInstance().getConfig().getString("AntiLaby.LabyModPlayersKick.KickMessage");
+	}
+	
+	
 	public static boolean getFOOD() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.FOOD");
 	}
