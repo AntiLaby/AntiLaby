@@ -18,8 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.nathannr.antilaby.api.Boolean2Int;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.nathannr.antilaby.api.util.Boolean2Int;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;

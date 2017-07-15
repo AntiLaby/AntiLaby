@@ -8,7 +8,7 @@ import java.util.HashMap;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager.LabyModFeature;
+import com.github.nathannr.antilaby.api.LabyModFeature;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

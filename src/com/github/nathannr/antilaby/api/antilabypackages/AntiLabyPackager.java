@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
+import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.nms.Nms_v1_10_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_11_R1;
@@ -159,16 +160,6 @@ public class AntiLabyPackager {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, false);
 		}
 		return disabledLabyModFeaturesConfig;
-	}
-
-	/**
-	 * Every configurable LabyMod feature
-	 * 
-	 * @author NathanNr
-	 */
-	public static enum LabyModFeature {
-		// The LabyMod functions
-		FOOD, GUI, NICK, BLOCKBUILD, CHAT, EXTRAS, ANIMATIONS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR;
 	}
 
 }
