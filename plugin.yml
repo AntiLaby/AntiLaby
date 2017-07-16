@@ -1,7 +1,7 @@
 name: AntiLaby
 prefix: AntiLaby/INFO
 author: NathanNr
-version: 1.9-dev
+version: 2.0-dev
 description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
 website: https://www.spigotmc.org/resources/21347/
 main: com.github.nathannr.antilaby.main.AntiLaby
@@ -10,6 +10,9 @@ permission:
     description: Antilaby permission
   antilaby.bypass:
     description: Allows you to bypass the protection
+    default: OP
+  antilaby.bypasscommands:
+    description: Allows you to bypass the join commands if you are using LabyMod
     default: OP
   antilaby.reload:
     description: Allows you to reload the plugin

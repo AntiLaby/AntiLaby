@@ -13,8 +13,6 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +23,7 @@ import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.main.events.PlayerJoin;
+import com.github.nathannr.antilaby.messagemanager.MultiLanguage;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
@@ -54,6 +53,8 @@ public class AntiLaby extends JavaPlugin {
 	private Metrics metrics;
 	// Is this a beta version?
 	private VersionType versionType;
+	// MultiLanguage
+	private MultiLanguage multiLanguage;
 
 	private static AntiLaby instance;
 
@@ -66,7 +67,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	public String getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	public void setPrefix(String prefix) {
@@ -74,23 +75,27 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	public int getResource() {
-		return resource;
+		return this.resource;
 	}
 
 	public String getCprefixinfo() {
-		return cprefixinfo;
+		return this.cprefixinfo;
 	}
 
 	public String getCprefixerr() {
-		return cprefixerr;
+		return this.cprefixerr;
 	}
 
 	public String getNmsver() {
-		return nmsver;
+		return this.nmsver;
 	}
 
 	public Metrics getMetrics() {
-		return metrics;
+		return this.metrics;
+	}
+
+	public MultiLanguage getMultiLanguage() {
+		return this.multiLanguage;
 	}
 
 	@Override
@@ -171,7 +176,6 @@ public class AntiLaby extends JavaPlugin {
 		this.update();
 		// Init files, commands and events
 		this.initConfig();
-		this.initLanguage();
 		// Register plugin channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, "LABYMOD", new IncomingPluginChannel());
@@ -185,9 +189,11 @@ public class AntiLaby extends JavaPlugin {
 		}
 		// Start plugin metrics for bStats.org
 		initBMetrics();
+		// Init MultiLanguage system
+		multiLanguage = new MultiLanguage(getInstance(), this.getCprefixinfo(), this.getResource());
 		// Resend AntiLaby packages (on reload)
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			AntiLabyPackager pack = new AntiLabyPackager(p);
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();
 		}
 		System.out.println("[AntiLaby/INFO] Enabled AntiLaby by NathanNr version " + this.getDescription().getVersion()
@@ -212,9 +218,10 @@ public class AntiLaby extends JavaPlugin {
 						+ resource + "/!");
 			}
 		} else {
-			System.out.println(this.getCprefixinfo()
-					+ "You are running a " + this.getVersionType().toString().toLowerCase() + " version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/"
-					+ this.getResource() + "/");
+			System.out.println(
+					this.getCprefixinfo() + "You are running a " + this.getVersionType().toString().toLowerCase()
+							+ " version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/"
+							+ this.getResource() + "/");
 			this.disableIfNotCompatible();
 		}
 	}
@@ -250,7 +257,7 @@ public class AntiLaby extends JavaPlugin {
 			// LabyMod player kick enabled?
 			@Override
 			public String getValue() {
-				boolean b = Config.getLabyModPlayersKickEnable();
+				boolean b = Config.getLabyModPlayerKickEnable();
 				if (!String.valueOf(b).equals("null")) {
 					return String.valueOf(b);
 				} else {
@@ -309,6 +316,7 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().options()
 				.header("AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + this.getResource() + "/");
 		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
+		this.getConfig().addDefault("AntiLaby.LabyModPlayerKick.Enable", false);
 		this.getConfig().addDefault("AntiLaby.disable.FOOD", true);
 		this.getConfig().addDefault("AntiLaby.disable.GUI", true);
 		this.getConfig().addDefault("AntiLaby.disable.NICK", true);
@@ -320,77 +328,31 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		this.getConfig().addDefault("AntiLaby.LabyModPlayersKick.Enable", false);
-		this.getConfig().addDefault("AntiLaby.LabyModPlayersKick.KickMessage", "&cYou are not allowed to use LabyMod!&r");
+		List<String> labyModPlayerCommands = getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
+		labyModPlayerCommands.add("#These commands will be executed once if a player with LabyMod joins the server.");
+		labyModPlayerCommands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
+		labyModPlayerCommands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
+		labyModPlayerCommands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
+		if(this.getConfig().getList("AntiLaby.LabyModPlayerCommands") == null) {
+			this.getConfig().set("AntiLaby.LabyModPlayerCommands", labyModPlayerCommands);
+		}
 		if (this.getVersionType().equals(VersionType.RELEASE)) {
 			this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
 		} else {
 			this.getConfig().set("AntiLaby.Update.AutoUpdate",
-					"Auto-update is not available in " + this.getVersionType().toString().toLowerCase() + " versions! You can update manually: https://www.spigotmc.org/resources/"
+					"Auto-update is not available in " + this.getVersionType().toString().toLowerCase()
+							+ " versions! You can update manually: https://www.spigotmc.org/resources/"
 							+ this.getResource() + "/");
 		}
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
-		if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true")) {
-			if(!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false")) {
-				if(this.getVersionType().equals(VersionType.RELEASE)) {
+		if (!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true")) {
+			if (!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false")) {
+				if (this.getVersionType().equals(VersionType.RELEASE)) {
 					this.getConfig().set("AntiLaby.Update.AutoUpdate", true);
 					this.saveConfig();
 				}
 			}
-		}
-	}
-
-	public void initLanguage() {
-		// Delete the old language file from older versions of this plugin
-		File oldLang = new File("plugins/AntiLaby/language.yml");
-		if (oldLang.exists()) {
-			oldLang.delete();
-		}
-
-		// Create lang files in different languages
-		String en_US = "en_US";
-		File en_USfile = new File("plugins/AntiLaby/language/" + en_US + ".yml");
-		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
-		en_UScfg.options()
-				.header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
-		en_UScfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
-		en_UScfg.options().copyDefaults(true);
-
-		String de_DE = "de_DE";
-		File de_DEfile = new File("plugins/AntiLaby/language/" + de_DE + ".yml");
-		FileConfiguration de_DEcfg = YamlConfiguration.loadConfiguration(de_DEfile);
-		de_DEcfg.options()
-				.header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
-		de_DEcfg.addDefault("AntiLaby.Language.NoPermission",
-				"&cDu hast nicht die benötigte Berechtigung, diesen Befehl auszuführen&r");
-		de_DEcfg.options().copyDefaults(true);
-
-		String en_GB = "en_GB";
-		File en_GBfile = new File("plugins/AntiLaby/language/" + en_GB + ".yml");
-		FileConfiguration en_GBcfg = YamlConfiguration.loadConfiguration(en_GBfile);
-		en_GBcfg.options()
-				.header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
-		en_GBcfg.addDefault("AntiLaby.Language.NoPermission", "&cYou do not have permission to use this command&r");
-		en_GBcfg.options().copyDefaults(true);
-
-		String fr_FR = "fr_FR";
-		File fr_FRfile = new File("plugins/AntiLaby/language/" + fr_FR + ".yml");
-		FileConfiguration fr_FRcfg = YamlConfiguration.loadConfiguration(fr_FRfile);
-		fr_FRcfg.options()
-				.header("Language file of AntiLaby by NathanNr, https://www.spigotmc.org/resources/" + resource + "/");
-		fr_FRcfg.addDefault("AntiLaby.Language.NoPermission",
-				"&cVous n'avez pas la permission d'utiliser cette commande&r");
-		fr_FRcfg.options().copyDefaults(true);
-
-		try {
-			// Save language files
-			en_UScfg.save(en_USfile);
-			de_DEcfg.save(de_DEfile);
-			en_GBcfg.save(en_GBfile);
-			fr_FRcfg.save(fr_FRfile);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -400,84 +362,33 @@ public class AntiLaby extends JavaPlugin {
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 	}
 
-	public void sendMultiLanguageMessage(Player p, String path, Boolean translateAlternateColorCodes) {
-		// Send a message in player's language
-		initLanguage();
-		File file = new File("plugins/AntiLaby/language/" + p.spigot().getLocale() + ".yml");
-		File fallbackFile = new File("plugins/AntiLaby/language/" + "en_US" + ".yml");
-		FileConfiguration fallbackCfg = YamlConfiguration.loadConfiguration(fallbackFile);
-		if (path.isEmpty() || path == null) {
-			p.sendMessage("§cInternal error§r");
-			System.err.println(cprefixerr
-					+ "MultiLanguageMessage error: Plugin tried to send a MultiLanguageMessage with an empty or null path. Please report this bug here: "
-					+ "https://github.com/NathanNr/AntiLaby/issues");
-			return;
-		}
-		if (file.exists()) {
-			FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
-			if (cfg.getString(path) != null) {
-				if (translateAlternateColorCodes == true) {
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', cfg.getString(path)));
-				} else {
-					p.sendMessage(cfg.getString(path));
-				}
-			} else {
-				if (fallbackCfg.getString(path) != null) {
-					if (translateAlternateColorCodes == true) {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path)));
-					} else {
-						p.sendMessage(fallbackCfg.getString(path));
-					}
-				} else {
-					p.sendMessage("§cInternal error§r");
-					System.err.println(cprefixerr + "MultiLanguageMessage error: Path '" + path
-							+ "' does not exists in the fallback language file. Please report this bug here: "
-							+ "https://github.com/NathanNr/AntiLaby/issues");
-				}
-			}
-		} else {
-			if (fallbackCfg.getString(path) != null) {
-				if (translateAlternateColorCodes == true) {
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path)));
-				} else {
-					p.sendMessage(fallbackCfg.getString(path));
-				}
-			} else {
-				p.sendMessage("§cInternal error§r");
-				System.err.println(cprefixerr + "MultiLanguageMessage error: Path '" + path
-						+ "' does not exists in the fallback language file. Please report this bug here: "
-						+ "https://github.com/NathanNr/AntiLaby/issues");
-			}
-		}
-	}
-
 	public void reloadPlugin(CommandSender sender) {
 		// Reload this plugin
 		if (sender instanceof Player) {
-			Player p = (Player) sender;
-			if (!p.hasPermission("antilaby.reload")) {
-				sendMultiLanguageMessage(p, "AntiLaby.Language.NoPermission", true);
-				System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId()
+			Player player = (Player) sender;
+			if (!player.hasPermission("antilaby.reload")) {
+				player.sendMessage(this.multiLanguage.getMultiLanguageMessage(player, "NoPermission", true));
+				System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId()
 						+ ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				return;
 			}
 		}
 		if (sender instanceof Player) {
-			Player p = (Player) sender;
-			p.sendMessage(prefix + "§aReloading AntiLaby...§r");
-			System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + "): Reloading AntiLaby...");
+			Player player = (Player) sender;
+			player.sendMessage(prefix + "§aReloading AntiLaby...§r");
+			System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else {
 			sender.sendMessage(cprefixinfo + "Reloading AntiLaby...");
 		}
 		this.initConfig();
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			AntiLabyPackager pack = new AntiLabyPackager(p);
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();
 		}
 		if (sender instanceof Player) {
-			Player p = (Player) sender;
-			p.sendMessage(prefix + "§aReload complete!§r");
-			System.out.println(cprefixinfo + p.getName() + " (" + p.getUniqueId() + "): Reload complete!");
+			Player player = (Player) sender;
+			player.sendMessage(prefix + "§aReload complete!§r");
+			System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else {
 			sender.sendMessage(cprefixinfo + "Reload complete!");
 		}

@@ -2,6 +2,7 @@ package com.github.nathannr.antilaby.api.util;
 
 public class Permission {
 
-	public static final String BYPASS_PERMISSION = "antilaby.bypass";
+	public static final String bypassPermission = "antilaby.bypass";
+	public static final String bypassCommandsPermission = "antilaby.bypasscommands";
 	
 }

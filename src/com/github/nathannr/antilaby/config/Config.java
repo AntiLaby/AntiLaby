@@ -1,5 +1,7 @@
 package com.github.nathannr.antilaby.config;
 
+import java.util.List;
+
 import com.github.nathannr.antilaby.main.AntiLaby;
 
 public class Config {
@@ -8,12 +10,17 @@ public class Config {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.EnableBypassWithPermission");
 	}
 	
-	public static boolean getLabyModPlayersKickEnable() {
-		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.LabyModPlayersKick.Enable");
+	public static boolean getLabyModPlayerKickEnable() {
+		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 	}
 	
+	@Deprecated
 	public static String getLabyModPlayersKickMessage() {
 		return AntiLaby.getInstance().getConfig().getString("AntiLaby.LabyModPlayersKick.KickMessage");
+	}
+	
+	public static List<String> getLabyModPlayerCommands() {
+		return AntiLaby.getInstance().getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
 	}
 	
 	
