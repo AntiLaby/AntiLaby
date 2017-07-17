@@ -1,4 +1,4 @@
-package com.github.nathannr.antilaby.main.events;
+package com.github.nathannr.antilaby.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

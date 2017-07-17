@@ -15,6 +15,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.github.nathannr.antilaby.api.util.Prefix;
+import com.github.nathannr.antilaby.api.util.Resource;
 import com.github.nathannr.antilaby.main.AntiLaby;
 
 public class UpdateDownloader extends Thread {
@@ -26,7 +28,7 @@ public class UpdateDownloader extends Thread {
 	// Start update function async
 	public void run() {
 		// Check for updates
-		System.out.println(AntiLaby.getInstance().getCprefixinfo() + "Checking for updates on spigotmc.org...");
+		System.out.println(Prefix.CPREFIXINFO + "Checking for updates on spigotmc.org...");
 		try {
 			HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php")
 					.openConnection();
@@ -34,37 +36,34 @@ public class UpdateDownloader extends Thread {
 			con.setRequestMethod("POST");
 			con.getOutputStream()
 					.write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource="
-							+ AntiLaby.getInstance().getResource()).getBytes("UTF-8"));
+							+ Resource.RESOURCE_ID).getBytes("UTF-8"));
 			this.newVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
 			if (!this.newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
-				System.out.println(AntiLaby.getInstance().getCprefixinfo() + "Update found! Version " + this.newVersion
-						+ " is aviable.");
+				System.out.println(Prefix.CPREFIXINFO + "Update found! Version " + this.newVersion + " is available.");
 				this.updateAvailable = true;
 			} else {
-				System.out.println(AntiLaby.getInstance().getCprefixinfo()
-						+ "No update found. You are running the newest version.");
+				System.out.println(Prefix.CPREFIXINFO + "No update found. You are running the newest version.");
 				this.updateAvailable = false;
 			}
 		} catch (Exception ex) {
-			System.err.println(AntiLaby.getInstance().getCprefixerr() + "Failed to check for updates on spigotmc.org!");
+			System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org!");
 			this.updateAvailable = false;
 		}
 		// Download and install update if available
 		if (updateAvailable == true) {
 			if (this.installUpdate(
 					"https://github.com/NathanNr/AntiLaby/releases/download/" + this.newVersion + "/AntiLaby.jar", 1)) {
-				System.out.println(AntiLaby.getInstance().getCprefixinfo()
+				System.out.println(Prefix.CPREFIXINFO
 						+ "Auto-update complete! Reload / restart your server to activate the new version.");
 			} else {
-				System.err.println(
-						AntiLaby.getInstance().getCprefixerr() + "Failed to download update from download server 1!");
+				System.err.println(Prefix.CPREFIXERROR + "Failed to download update from download server 1!");
 				if (this.installUpdate("http://adf.ly/1f1ZEn", 2)) {
-					System.out.println(AntiLaby.getInstance().getCprefixinfo()
+					System.out.println(Prefix.CPREFIXINFO
 							+ "Auto-update complete! Reload / restart your server to activate the new version.");
 				} else {
-					System.err.println(AntiLaby.getInstance().getCprefixerr()
+					System.err.println(Prefix.CPREFIXERROR
 							+ "Failed to install update from download server 1 and 2! Please install the newest version manually from https://www.spigotmc.org/resources/"
-							+ AntiLaby.getInstance().getResource() + "/!");
+							+ Resource.RESOURCE_ID + "/!");
 				}
 			}
 			File tmp = new File("plugins/AntiLaby.tmp");
@@ -77,8 +76,7 @@ public class UpdateDownloader extends Thread {
 	}
 
 	private boolean installUpdate(String urlString, int urlId) {
-		System.out.println(
-				AntiLaby.getInstance().getCprefixinfo() + "Downloading update from download server " + urlId + "...");
+		System.out.println(Prefix.CPREFIXINFO + "Downloading update from download server " + urlId + "...");
 		try {
 			URL url = new URL(urlString);
 			final URLConnection conn = url.openConnection();
@@ -96,7 +94,7 @@ public class UpdateDownloader extends Thread {
 				newfile.delete();
 				return false;
 			} else {
-				System.out.println(AntiLaby.getInstance().getCprefixinfo() + "Installing update...");
+				System.out.println(Prefix.CPREFIXINFO + "Installing update...");
 
 				final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
 

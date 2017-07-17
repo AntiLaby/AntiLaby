@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyModFeature;
+import com.github.nathannr.antilaby.api.util.Prefix;
+import com.github.nathannr.antilaby.api.util.Resource;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.nms.Nms_v1_10_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_11_R1;
@@ -104,9 +106,9 @@ public class AntiLabyPackager {
 				System.err.println(
 						"[AntiLaby/ERROR] " + "Your server version is not compatible with this version of AntiLaby!");
 				if (p.isOp()) {
-					p.sendMessage(AntiLaby.getInstance().getPrefix()
-							+ "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: https://www.spigotmc.org/resources/"
-							+ AntiLaby.getInstance().getResource() + "/§r");
+					p.sendMessage(Prefix.PREFIX
+							+ "§4AntiLaby is not compatible with your server version! A newer version of AntiLaby is maybe compatible with your server, check for updates here: "
+							+ Resource.RESOURCE_LINK + "§r");
 				}
 				return false;
 			}

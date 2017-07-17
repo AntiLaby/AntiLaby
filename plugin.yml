@@ -17,8 +17,15 @@ permission:
   antilaby.reload:
     description: Allows you to reload the plugin
     default: OP
+  antilaby.labyinfo:
+    description: Allows you to use /labyinfo
+    default: OP
 commands:
   antilaby:
     usage: /antilaby [reload]
     description: Information about the plugin or reload the plugin
     aliases: [al]
+  labyinfo:
+    usage: /labyinfo \<player\>
+    description: Check if a player uses LabyMod
+    aliases: [li, labymod]

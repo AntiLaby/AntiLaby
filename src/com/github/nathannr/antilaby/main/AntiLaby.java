@@ -19,10 +19,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.api.Boolean2Int;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
+import com.github.nathannr.antilaby.api.util.PluginChannel;
+import com.github.nathannr.antilaby.api.util.Prefix;
+import com.github.nathannr.antilaby.api.util.Resource;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;
-import com.github.nathannr.antilaby.main.events.PlayerJoin;
+import com.github.nathannr.antilaby.events.PlayerJoin;
 import com.github.nathannr.antilaby.messagemanager.MultiLanguage;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
@@ -38,18 +41,11 @@ public class AntiLaby extends JavaPlugin {
 	 * @author NathanNr
 	 */
 
-	// Spigot resource id
-	private final int resource = 21347;
-	// Prefix
-	private String prefix = "§8[§e§lAntiLaby§8] §r";
-	// Console prefix
-	private final String cprefixinfo = "[AntiLaby/INFO] ";
-	private final String cprefixerr = "[AntiLaby/ERROR] ";
 	// NMS-version
 	private String nmsver;
 	// Compatible?
 	private boolean compatible;
-	// Metrics
+	// MCStats.org Metrics
 	private Metrics metrics;
 	// Is this a beta version?
 	private VersionType versionType;
@@ -66,24 +62,28 @@ public class AntiLaby extends JavaPlugin {
 		return this.versionType;
 	}
 
+	@Deprecated
 	public String getPrefix() {
-		return this.prefix;
+		return Prefix.PREFIX;
 	}
 
+	@Deprecated
 	public void setPrefix(String prefix) {
-		this.prefix = prefix;
 	}
 
+	@Deprecated
 	public int getResource() {
-		return this.resource;
+		return Resource.RESOURCE_ID;
 	}
 
+	@Deprecated
 	public String getCprefixinfo() {
-		return this.cprefixinfo;
+		return Prefix.CPREFIXINFO;
 	}
 
+	@Deprecated
 	public String getCprefixerr() {
-		return this.cprefixerr;
+		return Prefix.CPREFIXERROR;
 	}
 
 	public String getNmsver() {
@@ -121,7 +121,7 @@ public class AntiLaby extends JavaPlugin {
 		// Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
-		System.out.println(cprefixinfo + "Your NMS-version: " + nmsver);
+		System.out.println(Prefix.CPREFIXINFO + "Your NMS-version: " + nmsver);
 		// Check if the server is compatible with AntiLaby
 		if (nmsver.equalsIgnoreCase("v1_8_R1") || nmsver.equalsIgnoreCase("v1_8_R2")
 				|| nmsver.equalsIgnoreCase("v1_8_R3") || nmsver.equalsIgnoreCase("v1_9_R1")
@@ -130,13 +130,13 @@ public class AntiLaby extends JavaPlugin {
 			// TODO: Dont't forget to update this after adding a new
 			// NMS-version!
 			this.compatible = true;
-			System.out.println(cprefixinfo + "Your server is compatible with AntiLaby!");
+			System.out.println(Prefix.CPREFIXINFO + "Your server is compatible with AntiLaby!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
-				bw.write("Link: https://www.spigotmc.org/resources/" + resource + "/");
+				bw.write("Link: https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
 				bw.newLine();
 				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date())
 						+ " (" + System.currentTimeMillis() + ")");
@@ -151,16 +151,16 @@ public class AntiLaby extends JavaPlugin {
 			}
 		} else {
 			this.compatible = false;
-			System.err.println(
-					cprefixerr + "Your server is not compatible with this version of AntiLaby! Your NMS-version: '"
-							+ nmsver + "', your AntiLaby version: '" + this.getDescription().getVersion()
-							+ "'. Look into the file '" + "plugins/status.txt" + "' for more information!");
+			System.err.println(Prefix.CPREFIXERROR
+					+ "Your server is not compatible with this version of AntiLaby! Your NMS-version: '" + nmsver
+					+ "', your AntiLaby version: '" + this.getDescription().getVersion() + "'. Look into the file '"
+					+ "plugins/status.txt" + "' for more information!");
 			try {
 				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
-				bw.write("Link: https://www.spigotmc.org/resources/" + resource + "/");
+				bw.write("Link: https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
 				bw.newLine();
 				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date()));
 				bw.newLine();
@@ -177,8 +177,8 @@ public class AntiLaby extends JavaPlugin {
 		// Init files, commands and events
 		this.initConfig();
 		// Register plugin channels
-		Bukkit.getMessenger().registerOutgoingPluginChannel(this, "LABYMOD");
-		Bukkit.getMessenger().registerIncomingPluginChannel(this, "LABYMOD", new IncomingPluginChannel());
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL);
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL, new IncomingPluginChannel());
 		this.initCmds();
 		this.initEvents();
 		// Start plugin metrics for MCStats.org
@@ -215,7 +215,7 @@ public class AntiLaby extends JavaPlugin {
 			} else {
 				System.out.println(this.getCprefixinfo()
 						+ "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/"
-						+ resource + "/!");
+						+ Resource.RESOURCE_ID + "/!");
 			}
 		} else {
 			System.out.println(
@@ -330,10 +330,11 @@ public class AntiLaby extends JavaPlugin {
 		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
 		List<String> labyModPlayerCommands = getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
 		labyModPlayerCommands.add("#These commands will be executed once if a player with LabyMod joins the server.");
-		labyModPlayerCommands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
+		labyModPlayerCommands
+				.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
 		labyModPlayerCommands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
 		labyModPlayerCommands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
-		if(this.getConfig().getList("AntiLaby.LabyModPlayerCommands") == null) {
+		if (this.getConfig().getList("AntiLaby.LabyModPlayerCommands") == null) {
 			this.getConfig().set("AntiLaby.LabyModPlayerCommands", labyModPlayerCommands);
 		}
 		if (this.getVersionType().equals(VersionType.RELEASE)) {
@@ -368,17 +369,18 @@ public class AntiLaby extends JavaPlugin {
 			Player player = (Player) sender;
 			if (!player.hasPermission("antilaby.reload")) {
 				player.sendMessage(this.multiLanguage.getMultiLanguageMessage(player, "NoPermission", true));
-				System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId()
+				System.out.println(Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId()
 						+ ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				return;
 			}
 		}
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			player.sendMessage(prefix + "§aReloading AntiLaby...§r");
-			System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
+			player.sendMessage(Prefix.PREFIX + "§aReloading AntiLaby...§r");
+			System.out.println(
+					Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else {
-			sender.sendMessage(cprefixinfo + "Reloading AntiLaby...");
+			sender.sendMessage(Prefix.CPREFIXINFO + "Reloading AntiLaby...");
 		}
 		this.initConfig();
 		for (Player all : Bukkit.getOnlinePlayers()) {
@@ -387,10 +389,11 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
-			player.sendMessage(prefix + "§aReload complete!§r");
-			System.out.println(cprefixinfo + player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
+			player.sendMessage(Prefix.PREFIX + "§aReload complete!§r");
+			System.out.println(
+					Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else {
-			sender.sendMessage(cprefixinfo + "Reload complete!");
+			sender.sendMessage(Prefix.CPREFIXINFO + "Reload complete!");
 		}
 	}
 
@@ -401,9 +404,11 @@ public class AntiLaby extends JavaPlugin {
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + this.getDescription().getVersion()
 				+ " by NathanNr" + ChatColor.RESET);
-		sender.sendMessage(ChatColor.BLUE + "More information about the plugin: https://www.spigotmc.org/resources/"
-				+ resource + "/" + ChatColor.RESET);
+		sender.sendMessage(
+				ChatColor.BLUE + "More information about the plugin: " + Resource.RESOURCE_LINK + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
+		sender.sendMessage(
+				ChatColor.BLUE + "Use '/labyinfo <player>' to check if a player uses LabyMod." + ChatColor.RESET);
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
