@@ -136,15 +136,34 @@ public class AntiLaby extends JavaPlugin {
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
-				bw.write("Link: https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
+				bw.write("Disable LabyMod functions! Bukkit, Spigot + BungeeCord support");
+				bw.newLine();
 				bw.newLine();
 				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date())
 						+ " (" + System.currentTimeMillis() + ")");
 				bw.newLine();
 				bw.write("NMS-version: " + nmsver);
 				bw.newLine();
+				bw.write("Compatibility: This version of AntiLaby is compatibly with your Minecraft version :)");
 				bw.newLine();
-				bw.write("Compatibility: This version of AntiLaby is compatibly with your NMS-version :)");
+				bw.newLine();
+				bw.write("Commands:");
+				bw.newLine();
+				bw.write(
+						" - /antilaby <info|reload>: Information about the plugin or reload the plugin, required permission to reload 'antilaby.reload'");
+				bw.newLine();
+				bw.write(
+						" - /labyinfo <player>: Check if a player uses LabyMod, required permission: 'antilaby.labyinfo'");
+				bw.newLine();
+				bw.newLine();
+				bw.write(
+						"Other permission:");
+				bw.newLine();
+				bw.write(
+						" - antilaby.bypasscommands: Allows you to bypass the join commands if you are using LabyMod");
+				bw.newLine();
+				bw.newLine();
+				bw.write("Find more information about AntiLaby and how to use it: " + Resource.RESOURCE_LINK);
 				bw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -160,14 +179,17 @@ public class AntiLaby extends JavaPlugin {
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
-				bw.write("Link: https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
+				bw.write("Disable LabyMod functions! Bukkit, Spigot + BungeeCord support");
+				bw.newLine();
 				bw.newLine();
 				bw.write("Date / time: " + new SimpleDateFormat("E yyyy.MM.dd 'at' hh:mm:ss a zzz").format(new Date()));
 				bw.newLine();
 				bw.write("NMS-version: " + nmsver);
 				bw.newLine();
+				bw.write("Compatibility: This version of AntiLaby is NOT compatibly with your Minecraft version!");
 				bw.newLine();
-				bw.write("Compatibility: This version of AntiLaby is NOT compatibly with your NMS-version!");
+				bw.newLine();
+				bw.write("Find more information about AntiLaby and how to use it: " + Resource.RESOURCE_LINK);
 				bw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -178,7 +200,8 @@ public class AntiLaby extends JavaPlugin {
 		this.initConfig();
 		// Register plugin channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL);
-		Bukkit.getMessenger().registerIncomingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL, new IncomingPluginChannel());
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL,
+				new IncomingPluginChannel());
 		this.initCmds();
 		this.initEvents();
 		// Start plugin metrics for MCStats.org

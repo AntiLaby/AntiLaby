@@ -22,7 +22,7 @@ permission:
     default: OP
 commands:
   antilaby:
-    usage: /antilaby [reload]
+    usage: /antilaby <info|reload>
     description: Information about the plugin or reload the plugin
     aliases: [al]
   labyinfo:
