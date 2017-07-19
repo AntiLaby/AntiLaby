@@ -61,7 +61,7 @@ public class MessageManager {
 	}
 	
 	public static String getNoPermissionMessage(Player player) {
-		return getAsChatMessage(AntiLaby.getInstance().getMultiLanguage().getMultiLanguageMessage(player, "NoPermission", true));
+		return AntiLaby.getInstance().getMultiLanguage().getMultiLanguageMessage(player, "NoPermission", true);
 	}
 
 }

@@ -35,16 +35,19 @@ public class LabyInfoCommand implements CommandExecutor {
 						Player player = (Player) sender;
 						if (player.hasPermission(Permission.LABYINFO_PERMISSION)) {
 							if (labyPlayer.usesLabyMod()) {
-								player.sendMessage(MessageManager.getAsChatMessage(AntiLaby.getInstance()
-										.getMultiLanguage().getMultiLanguageMessage(player, "LabyInfo.LabyMod", true), player));
+								player.sendMessage(
+										MessageManager.getAsChatMessage(AntiLaby.getInstance().getMultiLanguage()
+												.getMultiLanguageMessage(player, "LabyInfo.LabyMod", true), player));
 							} else {
 								player.sendMessage(
 										MessageManager.getAsChatMessage(AntiLaby.getInstance().getMultiLanguage()
 												.getMultiLanguageMessage(player, "LabyInfo.NoLabyMod", true), player));
 							}
 						} else {
-							player.sendMessage(AntiLaby.getInstance().getMultiLanguage().getMultiLanguageMessage(player,
-									"NoPermission", true));
+							player.sendMessage(MessageManager.getNoPermissionMessage(player));
+							System.out.println(
+									Prefix.CPREFIXINFO + "Player " + player.getName() + " (" + player.getUniqueId()
+											+ ") to use LabyInfo: Permission 'antilaby.labyinfo' is missing!");
 						}
 					} else {
 						if (labyPlayer.usesLabyMod()) {
@@ -57,7 +60,7 @@ public class LabyInfoCommand implements CommandExecutor {
 					if (sender instanceof Player) {
 						Player player = (Player) sender;
 						player.sendMessage(MessageManager.getAsChatMessage(AntiLaby.getInstance().getMultiLanguage()
-								.getMultiLanguageMessage(player, "LabyInfo.PlayerOffline", true)));
+								.getMultiLanguageMessage(player, "LabyInfo.PlayerOffline", true), player));
 					} else {
 						sender.sendMessage(Prefix.CPREFIXERROR + "Player '" + args[0] + "' is offline!");
 					}

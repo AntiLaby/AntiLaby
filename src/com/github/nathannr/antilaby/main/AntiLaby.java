@@ -54,6 +54,8 @@ public class AntiLaby extends JavaPlugin {
 	// MultiLanguage
 	private MultiLanguage multiLanguage;
 
+	private UpdateDownloader ud;
+
 	private static AntiLaby instance;
 
 	public static AntiLaby getInstance() {
@@ -69,6 +71,9 @@ public class AntiLaby extends JavaPlugin {
 		return Prefix.PREFIX;
 	}
 
+	/**
+	 * No longer available.
+	 */
 	@Deprecated
 	public void setPrefix(String prefix) {
 	}
@@ -214,7 +219,7 @@ public class AntiLaby extends JavaPlugin {
 		// Start plugin metrics for bStats.org
 		initBMetrics();
 		// Init MultiLanguage system
-		multiLanguage = new MultiLanguage(getInstance(), this.getCprefixinfo(), this.getResource());
+		multiLanguage = new MultiLanguage(getInstance(), Prefix.CPREFIXINFO, Resource.RESOURCE_ID);
 		// Resend AntiLaby packages (on reload)
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			AntiLabyPackager pack = new AntiLabyPackager(all);
@@ -226,6 +231,10 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		// Kill update task if it's running
+		if (ud != null) {
+			ud.interrupt();
+		}
 		DataManager.saveData();
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by NathanNr version " + this.getDescription().getVersion()
 				+ " sucsessfully!");
@@ -235,7 +244,7 @@ public class AntiLaby extends JavaPlugin {
 		if (this.getVersionType().equals(VersionType.RELEASE)) {
 			if (this.getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
 				// Check and install updates async
-				UpdateDownloader ud = new UpdateDownloader();
+				ud = new UpdateDownloader();
 				ud.start();
 			} else {
 				System.out.println(this.getCprefixinfo()
@@ -243,10 +252,9 @@ public class AntiLaby extends JavaPlugin {
 						+ Resource.RESOURCE_ID + "/!");
 			}
 		} else {
-			System.out.println(
-					this.getCprefixinfo() + "You are running a " + this.getVersionType().toString().toLowerCase()
-							+ " version! Auto-update is not available. You can update manually: https://www.spigotmc.org/resources/"
-							+ this.getResource() + "/");
+			System.out.println(Prefix.CPREFIXINFO + "You are running a "
+					+ this.getVersionType().toString().toLowerCase()
+					+ " version! Auto-update is not available. You can update manually: " + Resource.RESOURCE_LINK);
 			this.disableIfNotCompatible();
 		}
 	}
@@ -396,7 +404,7 @@ public class AntiLaby extends JavaPlugin {
 			Player player = (Player) sender;
 			if (!player.hasPermission("antilaby.reload")) {
 				player.sendMessage(this.multiLanguage.getMultiLanguageMessage(player, "NoPermission", true));
-				System.out.println(Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId()
+				System.out.println(Prefix.CPREFIXINFO + "Player " + player.getName() + " (" + player.getUniqueId()
 						+ ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				return;
 			}
