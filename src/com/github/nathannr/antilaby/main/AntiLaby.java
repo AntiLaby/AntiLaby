@@ -26,6 +26,8 @@ import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.events.PlayerJoin;
+import com.github.nathannr.antilaby.features.labyinfo.DataManager;
+import com.github.nathannr.antilaby.features.labyinfo.LabyInfoCommand;
 import com.github.nathannr.antilaby.messagemanager.MultiLanguage;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
@@ -114,6 +116,7 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			this.versionType = VersionType.RELEASE;
 		}
+		LabyInfoCommand.setCommandAvailability();
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class AntiLaby extends JavaPlugin {
 			this.compatible = true;
 			System.out.println(Prefix.CPREFIXINFO + "Your server is compatible with AntiLaby!");
 			try {
-				FileWriter fw = new FileWriter("plugins/AntiLaby/info.txt");
+				FileWriter fw = new FileWriter(this.getDataFolder() + "/info.txt");
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write("AntiLaby plugin by NathanNr, version " + this.getDescription().getVersion() + "");
 				bw.newLine();
@@ -156,17 +159,14 @@ public class AntiLaby extends JavaPlugin {
 						" - /labyinfo <player>: Check if a player uses LabyMod, required permission: 'antilaby.labyinfo'");
 				bw.newLine();
 				bw.newLine();
-				bw.write(
-						"Other permission:");
+				bw.write("Other permission:");
 				bw.newLine();
-				bw.write(
-						" - antilaby.bypasscommands: Allows you to bypass the join commands if you are using LabyMod");
+				bw.write(" - antilaby.bypasscommands: Allows you to bypass the join commands if you are using LabyMod");
 				bw.newLine();
 				bw.newLine();
 				bw.write("Find more information about AntiLaby and how to use it: " + Resource.RESOURCE_LINK);
 				bw.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		} else {
 			this.compatible = false;
@@ -204,6 +204,7 @@ public class AntiLaby extends JavaPlugin {
 				new IncomingPluginChannel());
 		this.initCmds();
 		this.initEvents();
+		DataManager.loadData();
 		// Start plugin metrics for MCStats.org
 		try {
 			metrics = new Metrics(this);
@@ -225,6 +226,7 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		DataManager.saveData();
 		System.out.println("[AntiLaby/INFO] Disabled AntiLaby by NathanNr version " + this.getDescription().getVersion()
 				+ " sucsessfully!");
 	}
@@ -331,6 +333,7 @@ public class AntiLaby extends JavaPlugin {
 		// Register PlayerJoinEvent to send AntiLaby packages on join
 		PluginManager pm = Bukkit.getPluginManager();
 		pm.registerEvents(new PlayerJoin(), this);
+		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
 
 	private void initConfig() {
@@ -384,10 +387,11 @@ public class AntiLaby extends JavaPlugin {
 		// Init /antilaby command
 		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
+		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
 	}
 
 	public void reloadPlugin(CommandSender sender) {
-		// Reload this plugin
+		// Reload the plugin
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			if (!player.hasPermission("antilaby.reload")) {

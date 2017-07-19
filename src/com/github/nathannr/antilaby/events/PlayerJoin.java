@@ -22,5 +22,5 @@ public class PlayerJoin implements Listener {
 					"§aThis server uses AntiLaby version §b" + AntiLaby.getInstance().getDescription().getVersion()
 							+ "§a with NMS version §b" + AntiLaby.getInstance().getNmsver() + "§a.");
 		}
-	}	
+	}
 }

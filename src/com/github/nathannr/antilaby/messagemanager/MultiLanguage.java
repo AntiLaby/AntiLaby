@@ -9,6 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.nathannr.antilaby.api.util.Prefix;
+
 public class MultiLanguage {
 
 	private boolean languageLoaded = false;
@@ -50,7 +52,7 @@ public class MultiLanguage {
 	}
 
 	public void initLanguage() {
-		// Create lang files in different languages
+		// Create language files for different languages
 		String en_US = "en_us";
 		File en_USfile = new File(this.plugin.getDataFolder() + "/language/" + en_US + ".yml");
 		FileConfiguration en_UScfg = YamlConfiguration.loadConfiguration(en_USfile);
@@ -59,6 +61,9 @@ public class MultiLanguage {
 
 		en_UScfg.addDefault("NoPermission", "&cYou do not have permission to use this command&r");
 		en_UScfg.addDefault("LabyModPlayerKick", "&cYou are not allowed to use LabyMod!&r");
+		en_UScfg.addDefault("LabyInfo.LabyMod", "&6The player &o%PLAYER%&6 uses LabyMod.&r");
+		en_UScfg.addDefault("LabyInfo.NoLabyMod", "&6The player &o%PLAYER%&6 &ldoes't&6 use LabyMod.&r");
+		en_UScfg.addDefault("LabyInfo.PlayerOffline", "&cThe player &o%PLAYER%&c is offline.&r");
 
 		en_UScfg.options().copyDefaults(true);
 
@@ -69,7 +74,10 @@ public class MultiLanguage {
 				+ " by NathanNr, https://www.spigotmc.org/resources/" + this.resource + "/");
 
 		de_DEcfg.addDefault("NoPermission", "&cDu hast nicht die benötigte Berechtigung, diesen Befehl auszuführen&r");
-		de_DEcfg.addDefault("LabyModPlayerKick", "&cDu darfst nicht mit LabyMod spielen!&r");
+		de_DEcfg.addDefault("LabyModPlayerKick", "&cDu hast nicht die Berechtigung mit LabyMod zu spielen!&r");
+		de_DEcfg.addDefault("LabyInfo.LabyMod", "&6Der Spieler &o%PLAYER%&6 spielt mit LabyMod.&r");
+		de_DEcfg.addDefault("LabyInfo.NoLabyMod", "&6Der Spieler &o%PLAYER%&6 spielt &lnicht&6 mit LabyMod.&r");
+		de_DEcfg.addDefault("LabyInfo.PlayerOffline", "&cDer Spieler &o%PLAYER%&c ist offline.&r");
 
 		de_DEcfg.options().copyDefaults(true);
 
@@ -81,6 +89,9 @@ public class MultiLanguage {
 
 		fr_FRcfg.addDefault("NoPermission", "&cVous n'avez pas la permission d'utiliser cette commande&r");
 		fr_FRcfg.addDefault("LabyModPlayerKick", "&cVous ne pouvez pas jouer avec LabyMod!&r");
+		fr_FRcfg.addDefault("LabyInfo.LabyMod", "&6Le joueur &o%PLAYER%&6 utilise LabyMod.&r");
+		fr_FRcfg.addDefault("LabyInfo.NoLabyMod", "&6Le joueur &o%PLAYER%&6 &ln'utilise pas&6 LabyMod.&r");
+		fr_FRcfg.addDefault("LabyInfo.PlayerOffline", "&cLe joueur &o%PLAYER%&c est offline.&r");
 
 		fr_FRcfg.options().copyDefaults(true);
 
@@ -144,6 +155,36 @@ public class MultiLanguage {
 						+ "' does not exists in the fallback language file.");
 			}
 		}
+	}
+	
+	public String getFallbackLanguageMessage(String path, boolean translateAlternateColorCodes) {
+		// Get a message in the fallback language
+		File fallbackFile = new File(this.plugin.getDataFolder() + "/language/" + this.fallbackFile + ".yml");
+		FileConfiguration fallbackCfg = YamlConfiguration.loadConfiguration(fallbackFile);
+		if (fallbackCfg.getString(path) == null) {
+			this.initLanguage();
+		}
+		if (fallbackCfg.getString(path) != null) {
+			if (translateAlternateColorCodes == true) {
+				return ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path));
+			} else {
+				return fallbackCfg.getString(path);
+			}
+		} else {
+			throw new MultiLanguageException(this.cprefix + "MultiLanguageMessage error: Path '" + path
+					+ "' does not exists in the fallback language file.");
+		}
+	}
+	
+	public String getConsoleMessage(String path, boolean error) {
+		String message = this.getFallbackLanguageMessage(path, true);
+		message = ChatColor.stripColor(message);
+		if(error) {
+			message = Prefix.CPREFIXERROR + message;
+		} else {
+			message = Prefix.CPREFIXINFO + message;
+		}
+		return message;
 	}
 
 }

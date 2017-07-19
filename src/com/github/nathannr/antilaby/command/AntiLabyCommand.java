@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.util.Prefix;
 import com.github.nathannr.antilaby.main.AntiLaby;
+import com.github.nathannr.antilaby.messagemanager.MessageManager;
 
 public class AntiLabyCommand implements CommandExecutor {
 
@@ -40,7 +41,7 @@ public class AntiLabyCommand implements CommandExecutor {
 	public void sendUsage(CommandSender sender) {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
-			p.sendMessage(Prefix.PREFIX + "§cUsage: /antilaby <info|reload>§r");
+			p.sendMessage(MessageManager.getAsChatMessage("§cUsage: /antilaby <info|reload>§r"));
 		} else {
 			sender.sendMessage(Prefix.CPREFIXINFO + "Usage: /antilaby <info|reload>");
 		}
