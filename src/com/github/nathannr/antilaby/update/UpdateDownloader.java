@@ -2,21 +2,19 @@ package com.github.nathannr.antilaby.update;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 import com.github.nathannr.antilaby.api.util.Prefix;
 import com.github.nathannr.antilaby.api.util.Resource;
+import com.github.nathannr.antilaby.io.ReadUrl;
 import com.github.nathannr.antilaby.main.AntiLaby;
 
 public class UpdateDownloader extends Thread {
@@ -30,23 +28,27 @@ public class UpdateDownloader extends Thread {
 		// Check for updates
 		System.out.println(Prefix.CPREFIXINFO + "Checking for updates on spigotmc.org...");
 		try {
-			HttpURLConnection con = (HttpURLConnection) new URL("http://www.spigotmc.org/api/general.php")
-					.openConnection();
-			con.setDoOutput(true);
-			con.setRequestMethod("POST");
-			con.getOutputStream()
-					.write(("key=98BE0FE67F88AB82B4C197FAF1DC3B69206EFDCC4D3B80FC83A00037510B99B4&resource="
-							+ Resource.RESOURCE_ID).getBytes("UTF-8"));
-			this.newVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
-			if (!this.newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
-				System.out.println(Prefix.CPREFIXINFO + "Update found! Version " + this.newVersion + " is available.");
-				this.updateAvailable = true;
+			this.newVersion = ReadUrl.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Resource.RESOURCE_ID);
+			if(newVersion != null) {
+				if(!newVersion.contains(" ") || !newVersion.contains("!")) {
+					if (!this.newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
+						System.out.println(Prefix.CPREFIXINFO + "Update found! Version " + this.newVersion + " is available.");
+						this.updateAvailable = true;
+					} else {
+						System.out.println(Prefix.CPREFIXINFO + "No update found. You are running the newest version.");
+						this.updateAvailable = false;
+					}
+				} else {
+					System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (Invalid value received)");
+					System.err.println(newVersion);
+					this.updateAvailable = false;
+				}
 			} else {
-				System.out.println(Prefix.CPREFIXINFO + "No update found. You are running the newest version.");
+				System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (No information received)");
 				this.updateAvailable = false;
 			}
 		} catch (Exception ex) {
-			System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org!");
+			System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (" + ex.getMessage() + ")");
 			this.updateAvailable = false;
 		}
 		// Download and install update if available
@@ -54,12 +56,12 @@ public class UpdateDownloader extends Thread {
 			if (this.installUpdate(
 					"https://github.com/NathanNr/AntiLaby/releases/download/" + this.newVersion + "/AntiLaby.jar", 1)) {
 				System.out.println(Prefix.CPREFIXINFO
-						+ "Auto-update complete! Reload / restart your server to activate the new version.");
+						+ "Auto-update complete! Reload or restart your server to activate the new version.");
 			} else {
 				System.err.println(Prefix.CPREFIXERROR + "Failed to download update from download server 1!");
 				if (this.installUpdate("http://adf.ly/1f1ZEn", 2)) {
 					System.out.println(Prefix.CPREFIXINFO
-							+ "Auto-update complete! Reload / restart your server to activate the new version.");
+							+ "Auto-update complete! Reload or restart your server to activate the new version.");
 				} else {
 					System.err.println(Prefix.CPREFIXERROR
 							+ "Failed to install update from download server 1 and 2! Please install the newest version manually from https://www.spigotmc.org/resources/"

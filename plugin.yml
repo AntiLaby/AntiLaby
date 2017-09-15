@@ -1,7 +1,7 @@
 name: AntiLaby
 prefix: AntiLaby/INFO
 author: NathanNr
-version: 1.9
+version: 1.9.1
 description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
 website: https://www.spigotmc.org/resources/21347/
 main: com.github.nathannr.antilaby.main.AntiLaby
