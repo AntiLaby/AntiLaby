@@ -28,27 +28,32 @@ public class UpdateDownloader extends Thread {
 		// Check for updates
 		System.out.println(Prefix.CPREFIXINFO + "Checking for updates on spigotmc.org...");
 		try {
-			this.newVersion = ReadUrl.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Resource.RESOURCE_ID);
-			if(newVersion != null) {
-				if(!newVersion.contains(" ") || !newVersion.contains("!")) {
+			this.newVersion = ReadUrl
+					.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Resource.RESOURCE_ID);
+			if (newVersion != null) {
+				if (!newVersion.contains(" ") || !newVersion.contains("!")) {
 					if (!this.newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
-						System.out.println(Prefix.CPREFIXINFO + "Update found! Version " + this.newVersion + " is available.");
+						System.out.println(
+								Prefix.CPREFIXINFO + "Update found! Version " + this.newVersion + " is available.");
 						this.updateAvailable = true;
 					} else {
 						System.out.println(Prefix.CPREFIXINFO + "No update found. You are running the newest version.");
 						this.updateAvailable = false;
 					}
 				} else {
-					System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (Invalid value received)");
+					System.err.println(Prefix.CPREFIXERROR
+							+ "Failed to check for updates on spigotmc.org! (Invalid value received)");
 					System.err.println(newVersion);
 					this.updateAvailable = false;
 				}
 			} else {
-				System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (No information received)");
+				System.err.println(
+						Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (No information received)");
 				this.updateAvailable = false;
 			}
 		} catch (Exception ex) {
-			System.err.println(Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (" + ex.getMessage() + ")");
+			System.err.println(
+					Prefix.CPREFIXERROR + "Failed to check for updates on spigotmc.org! (" + ex.getMessage() + ")");
 			this.updateAvailable = false;
 		}
 		// Download and install update if available
@@ -58,15 +63,9 @@ public class UpdateDownloader extends Thread {
 				System.out.println(Prefix.CPREFIXINFO
 						+ "Auto-update complete! Reload or restart your server to activate the new version.");
 			} else {
-				System.err.println(Prefix.CPREFIXERROR + "Failed to download update from download server 1!");
-				if (this.installUpdate("http://adf.ly/1f1ZEn", 2)) {
-					System.out.println(Prefix.CPREFIXINFO
-							+ "Auto-update complete! Reload or restart your server to activate the new version.");
-				} else {
-					System.err.println(Prefix.CPREFIXERROR
-							+ "Failed to install update from download server 1 and 2! Please install the newest version manually from https://www.spigotmc.org/resources/"
-							+ Resource.RESOURCE_ID + "/!");
-				}
+				System.err.println(Prefix.CPREFIXERROR
+						+ "Failed to install update from download server 1! Please install the newest version manually from https://www.spigotmc.org/resources/"
+						+ Resource.RESOURCE_ID + "/!");
 			}
 			File tmp = new File("plugins/AntiLaby.tmp");
 			if (tmp.exists()) {
