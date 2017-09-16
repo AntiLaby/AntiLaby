@@ -9,9 +9,11 @@ public class ReadUrl {
 
 	/**
 	 * Get the text from a web page
-	 * @param urlString URL as a String
+	 * 
+	 * @param urlString
+	 *            URL as a String
 	 * @return the text
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static String readUrl(String urlString) throws IOException {
 		BufferedReader reader = null;
@@ -23,7 +25,6 @@ public class ReadUrl {
 			char[] chars = new char[1024];
 			while ((read = reader.read(chars)) != -1)
 				buffer.append(chars, 0, read);
-
 			return buffer.toString();
 		} finally {
 			if (reader != null)

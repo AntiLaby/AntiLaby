@@ -1,5 +1,6 @@
 # Welcome to AntiLaby!
-### AntiLaby is a [Spigot](https://www.spigotmc.org/) plugin by [NathanNr](https://github.com/NathanNr/) to disable [LabyMod](https://www.labymod.net/) functions
+### AntiLaby is a Spigot plugin by [NathanNr](https://github.com/NathanNr/) to disable functions of the [LabyMod](https://www.labymod.net/)
+Download this plugin on [SpigotMC](https://www.spigotmc.org/resources/antilaby-1-8-1-12-1-disable-labymod-functions-api.21347/)
 
 Useful links:
 * [More information and download](https://www.spigotmc.org/resources/21347/)
