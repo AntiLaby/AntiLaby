@@ -9,23 +9,23 @@ permission:
   antilaby.*:
     description: Antilaby permission
   antilaby.bypass:
-    description: Allows you to bypass the protection
+    description: Allows you to use all LabyMod functions.
     default: OP
   antilaby.bypasscommands:
-    description: Allows you to bypass the join commands if you are using LabyMod
+    description: Allows you to bypass the join commands if you are using LabyMod.
     default: OP
   antilaby.reload:
-    description: Allows you to reload the plugin
+    description: Allows you to reload the plugin.
     default: OP
   antilaby.labyinfo:
-    description: Allows you to use /labyinfo
+    description: Allows you to use the command /labyinfo.
     default: OP
 commands:
   antilaby:
     usage: /antilaby <info|reload>
-    description: Information about the plugin or reload the plugin
+    description: Get Information about the plugin or reload the plugin.
     aliases: [al]
   labyinfo:
     usage: /labyinfo \<player\>
-    description: Check if a player uses LabyMod
+    description: Check if a player uses LabyMod.
     aliases: [li, labymod]
