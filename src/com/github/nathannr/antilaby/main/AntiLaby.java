@@ -72,7 +72,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	/**
-	 * No longer available.
+	 * Not longer available.
 	 */
 	@Deprecated
 	public void setPrefix(String prefix) {
@@ -247,7 +247,7 @@ public class AntiLaby extends JavaPlugin {
 				ud = new UpdateDownloader();
 				ud.start();
 			} else {
-				System.out.println(this.getCprefixinfo()
+				System.out.println(Prefix.CPREFIXINFO
 						+ "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/"
 						+ Resource.RESOURCE_ID + "/!");
 			}
@@ -347,8 +347,8 @@ public class AntiLaby extends JavaPlugin {
 	private void initConfig() {
 		// Init config
 		this.reloadConfig();
-		this.getConfig().options()
-				.header("AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + this.getResource() + "/");
+		this.getConfig().options().header(
+				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
 		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
 		this.getConfig().addDefault("AntiLaby.LabyModPlayerKick.Enable", false);
 		this.getConfig().addDefault("AntiLaby.disable.FOOD", true);
@@ -377,7 +377,7 @@ public class AntiLaby extends JavaPlugin {
 			this.getConfig().set("AntiLaby.Update.AutoUpdate",
 					"Auto-update is not available in " + this.getVersionType().toString().toLowerCase()
 							+ " versions! You can update manually: https://www.spigotmc.org/resources/"
-							+ this.getResource() + "/");
+							+ Resource.RESOURCE_ID + "/");
 		}
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();

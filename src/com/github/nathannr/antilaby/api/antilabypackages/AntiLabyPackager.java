@@ -83,7 +83,7 @@ public class AntiLabyPackager {
 		if (ignorePlayer) {
 			return false;
 		}
-		// TODO: Dont't forget to update the info file after adding a new
+		// TODO: Don't forget to update the info file after adding a new
 		// NMS-version!
 		try {
 			if (AntiLaby.getInstance().getNmsver().equalsIgnoreCase("v1_8_R1")) {
