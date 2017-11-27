@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +24,8 @@ import com.github.nathannr.antilaby.api.util.Resource;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
 import com.github.nathannr.antilaby.config.Config;
+import com.github.nathannr.antilaby.config.ConfigFile;
+import com.github.nathannr.antilaby.config.InitConfig;
 import com.github.nathannr.antilaby.events.PlayerJoin;
 import com.github.nathannr.antilaby.features.labyinfo.DataManager;
 import com.github.nathannr.antilaby.features.labyinfo.LabyInfoCommand;
@@ -43,6 +44,11 @@ public class AntiLaby extends JavaPlugin {
 	 * @author NathanNr
 	 */
 
+	
+	// TODO: Fix bypass permission
+	// TODO: Invite beta-testers
+	
+	
 	// NMS-version
 	private String nmsver;
 	// Compatible?
@@ -345,50 +351,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	private void initConfig() {
-		// Init config
-		this.reloadConfig();
-		this.getConfig().options().header(
-				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
-		this.getConfig().addDefault("AntiLaby.EnableBypassWithPermission", false);
-		this.getConfig().addDefault("AntiLaby.LabyModPlayerKick.Enable", false);
-		this.getConfig().addDefault("AntiLaby.disable.FOOD", true);
-		this.getConfig().addDefault("AntiLaby.disable.GUI", true);
-		this.getConfig().addDefault("AntiLaby.disable.NICK", true);
-		this.getConfig().addDefault("AntiLaby.disable.BLOCKBUILD", true);
-		this.getConfig().addDefault("AntiLaby.disable.CHAT", true);
-		this.getConfig().addDefault("AntiLaby.disable.EXTRAS", true);
-		this.getConfig().addDefault("AntiLaby.disable.ANIMATIONS", true);
-		this.getConfig().addDefault("AntiLaby.disable.POTIONS", true);
-		this.getConfig().addDefault("AntiLaby.disable.ARMOR", true);
-		this.getConfig().addDefault("AntiLaby.disable.DAMAGEINDICATOR", true);
-		this.getConfig().addDefault("AntiLaby.disable.MINIMAP_RADAR", true);
-		List<String> labyModPlayerCommands = getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
-		labyModPlayerCommands.add("#These commands will be executed once if a player with LabyMod joins the server.");
-		labyModPlayerCommands
-				.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
-		labyModPlayerCommands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
-		labyModPlayerCommands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
-		if (this.getConfig().getList("AntiLaby.LabyModPlayerCommands") == null) {
-			this.getConfig().set("AntiLaby.LabyModPlayerCommands", labyModPlayerCommands);
-		}
-		if (this.getVersionType().equals(VersionType.RELEASE)) {
-			this.getConfig().addDefault("AntiLaby.Update.AutoUpdate", true);
-		} else {
-			this.getConfig().set("AntiLaby.Update.AutoUpdate",
-					"Auto-update is not available in " + this.getVersionType().toString().toLowerCase()
-							+ " versions! You can update manually: https://www.spigotmc.org/resources/"
-							+ Resource.RESOURCE_ID + "/");
-		}
-		this.getConfig().options().copyDefaults(true);
-		this.saveConfig();
-		if (!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true")) {
-			if (!getConfig().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false")) {
-				if (this.getVersionType().equals(VersionType.RELEASE)) {
-					this.getConfig().set("AntiLaby.Update.AutoUpdate", true);
-					this.saveConfig();
-				}
-			}
-		}
+		new InitConfig(getInstance()).init();
 	}
 
 	public void initCmds() {
@@ -417,7 +380,7 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			sender.sendMessage(Prefix.CPREFIXINFO + "Reloading AntiLaby...");
 		}
-		this.initConfig();
+		ConfigFile.reloadFile();
 		for (Player all : Bukkit.getOnlinePlayers()) {
 			AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();

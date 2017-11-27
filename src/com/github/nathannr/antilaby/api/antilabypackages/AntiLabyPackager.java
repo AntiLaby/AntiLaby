@@ -3,11 +3,13 @@ package com.github.nathannr.antilaby.api.antilabypackages;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.api.util.Prefix;
 import com.github.nathannr.antilaby.api.util.Resource;
+import com.github.nathannr.antilaby.config.ConfigFile;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.nms.Nms_v1_10_R1;
 import com.github.nathannr.antilaby.nms.Nms_v1_11_R1;
@@ -62,12 +64,13 @@ public class AntiLabyPackager {
 	 * @author NathanNr
 	 */
 	public boolean sendPackages() {
+		FileConfiguration cfg = ConfigFile.getCfg();
 		boolean ignorePlayer;
 		if (!forceIgnoreBypassPermission) {
 			// Ignore players with the bypass permission if enabled in the
 			// config file
 			if (p.hasPermission("antilaby.bypass")) {
-				if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.EnableBypassWithPermission")) {
+				if (cfg.getBoolean("AntiLaby.EnableBypassWithPermission")) {
 					ignorePlayer = true;
 					System.out.println("[AntiLaby/INFO] Player " + p.getName() + " (" + p.getUniqueId()
 							+ ") has the permission 'antilaby.bypass' and has been ignored.");
@@ -127,40 +130,81 @@ public class AntiLabyPackager {
 	 * @author NathanNr
 	 */
 	public HashMap<LabyModFeature, Boolean> getConfigLabyModSettings() {
+		
+		FileConfiguration cfg = ConfigFile.getCfg();
+		
 		HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<LabyModFeature, Boolean>();
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.FOOD")) {
+
+		// Old features:
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.FOOD")) {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.FOOD, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.GUI")) {
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.FOOD, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.GUI")) {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.NICK")) {
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.NICK")) {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.NICK, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.NICK, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.EXTRAS")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.EXTRAS, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.EXTRAS, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.POTIONS")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.POTIONS, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.POTIONS, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.ARMOR")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.ARMOR, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.ARMOR, false);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.DAMAGEINDICATOR, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.DAMAGEINDICATOR, true);
+		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, false);
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, true);
+
+		// New features/Disable:
+		if (cfg.getBoolean("AntiLaby.Features.Disable.SATURATION_BAR")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.SATURATION_BAR, false);
 		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.CHAT")) {
+		if (cfg.getBoolean("AntiLaby.Features.Disable.CHAT")) {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.CHAT, false);
 		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.EXTRAS")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.EXTRAS, false);
+		if (cfg.getBoolean("AntiLaby.Features.Disable.GUI_ALL")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI_ALL, false);
 		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ANIMATIONS")) {
+		if (cfg.getBoolean("AntiLaby.Features.Disable.GUI_POTION_EFFECTS")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI_POTION_EFFECTS, false);
+		}
+		if (cfg.getBoolean("AntiLaby.Features.Disable.GUI_ARMOR_HUD")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI_ARMOR_HUD, false);
+		}
+		if (cfg.getBoolean("AntiLaby.Features.Disable.GUI_ITEM_HUD")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.GUI_ITEM_HUD, false);
+		}
+		if (cfg.getBoolean("AntiLaby.Features.Disable.TAGS")) {
+			disabledLabyModFeaturesConfig.put(LabyModFeature.TAGS, false);
+		}
+		if (cfg.getBoolean("AntiLaby.Features.Disable.ANIMATIONS")) {
 			disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.POTIONS")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.POTIONS, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ARMOR")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.ARMOR, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.DAMAGEINDICATOR, false);
-		}
-		if (AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR")) {
-			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, false);
-		}
+		} else
+			disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, true);
+
+		// New features/Enable
+		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
+				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.IMPROVED_LAVA,
+				cfg.getBoolean("AntiLaby.Features.Enable.IMPROVED_LAVA"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.CROSSHAIR_SYNC,
+				cfg.getBoolean("AntiLaby.Features.Enable.CROSSHAIR_SYNC"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.REFILL_FIX,
+				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
 		return disabledLabyModFeaturesConfig;
 	}
 
