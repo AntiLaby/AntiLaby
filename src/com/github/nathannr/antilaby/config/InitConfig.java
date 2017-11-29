@@ -123,6 +123,8 @@ public class InitConfig {
 	public void convertConfig() {
 		if (configVersion == 1) {
 			// Convert...
+			boolean enableBypassWithPermission = ConfigFile.getCfg().getBoolean("AntiLaby.EnableBypassWithPermission");
+			boolean labyModPlayerKickEnable = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 			boolean FOOD = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
 			boolean GUI = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
 			boolean NICK = ConfigFile.getCfg().getBoolean("AntiLaby.disable.NICK");
@@ -135,8 +137,11 @@ public class InitConfig {
 			boolean ARMOR = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ARMOR");
 			boolean DAMAGEINDICATOR = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
 			boolean MINIMAP_RADAR = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
+			List<String> labyModPlayerCommands = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
 			ConfigFile.resetConfig();
 			generateNewConfig();
+			ConfigFile.getCfg().set("AntiLaby.EnableBypassWithPermission", enableBypassWithPermission);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerKick.Enable", labyModPlayerKickEnable);
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.FOOD", FOOD);
 			ConfigFile.getCfg().set("AntiLaby.Features.Disable.SATURATION_BAR", FOOD);
 			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_ALL", GUI);
@@ -151,6 +156,8 @@ public class InitConfig {
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.ARMOR", ARMOR);
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR", DAMAGEINDICATOR);
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", MINIMAP_RADAR);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", null);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", labyModPlayerCommands);
 			System.out.println(Prefix.CPREFIXINFO + "Your configuration file has been converted from version '"
 					+ configVersion + "' to version '" + CURRENT_CONFIG_VERSION + "'.");
 			ConfigFile.saveFile();

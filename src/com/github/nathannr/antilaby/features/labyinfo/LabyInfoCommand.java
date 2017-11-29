@@ -37,11 +37,11 @@ public class LabyInfoCommand implements CommandExecutor {
 							if (labyPlayer.usesLabyMod()) {
 								player.sendMessage(
 										MessageManager.getAsChatMessage(AntiLaby.getInstance().getMultiLanguage()
-												.getMultiLanguageMessage(player, "LabyInfo.LabyMod", true), player));
+												.getMultiLanguageMessage(player, "LabyInfo.LabyMod", true), targetPlayer));
 							} else {
 								player.sendMessage(
 										MessageManager.getAsChatMessage(AntiLaby.getInstance().getMultiLanguage()
-												.getMultiLanguageMessage(player, "LabyInfo.NoLabyMod", true), player));
+												.getMultiLanguageMessage(player, "LabyInfo.NoLabyMod", true), targetPlayer));
 							}
 						} else {
 							player.sendMessage(MessageManager.getNoPermissionMessage(player));

@@ -43,11 +43,6 @@ public class AntiLaby extends JavaPlugin {
 	 * 
 	 * @author NathanNr
 	 */
-
-	
-	// TODO: Fix bypass permission
-	// TODO: Invite beta-testers
-	
 	
 	// NMS-version
 	private String nmsver;
@@ -305,12 +300,12 @@ public class AntiLaby extends JavaPlugin {
 			}
 		});
 		// TODO: Change to bar charts
-		bstats.addCustomChart(new BStats.AdvancedPie("disabled_functions") {
+	/*	bstats.addCustomChart(new BStats.AdvancedPie("disabled_functions") {
 			// Disabled functions
 			@Override
 			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-				int FOOD = (AntiLaby.getInstance().getConfig().getBoolean("") ? 1 : 0);
-				int GUI = Boolean2Int.convert(Config.getFOOD());
+				int FOOD = Boolean2Int.convert(Config.getFOOD());
+				int GUI = Boolean2Int.convert(Config.getGUI());
 				int NICK = Boolean2Int.convert(Config.getNICK());
 				int BLOCKBUILD = Boolean2Int.convert(Config.getBLOCKBUILD());
 				int CHAT = Boolean2Int.convert(Config.getCHAT());
@@ -333,7 +328,7 @@ public class AntiLaby extends JavaPlugin {
 				valueMap.put("MINIMAP_RADAR", MINIMAP_RADAR);
 				return valueMap;
 			}
-		});
+		});*/
 	}
 
 	// Disable the plugin if not compatible

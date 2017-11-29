@@ -71,6 +71,7 @@ public class AntiLabyPackager {
 			// config file
 			if (p.hasPermission("antilaby.bypass")) {
 				if (cfg.getBoolean("AntiLaby.EnableBypassWithPermission")) {
+					this.disabledLabyModFeatures = this.allowEverything();
 					ignorePlayer = true;
 					System.out.println("[AntiLaby/INFO] Player " + p.getName() + " (" + p.getUniqueId()
 							+ ") has the permission 'antilaby.bypass' and has been ignored.");
@@ -84,7 +85,7 @@ public class AntiLabyPackager {
 			ignorePlayer = false;
 		}
 		if (ignorePlayer) {
-			return false;
+			this.disabledLabyModFeatures = this.allowEverything();
 		}
 		// TODO: Don't forget to update the info file after adding a new
 		// NMS-version!
@@ -130,9 +131,9 @@ public class AntiLabyPackager {
 	 * @author NathanNr
 	 */
 	public HashMap<LabyModFeature, Boolean> getConfigLabyModSettings() {
-		
+
 		FileConfiguration cfg = ConfigFile.getCfg();
-		
+
 		HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<LabyModFeature, Boolean>();
 
 		// Old features:
@@ -196,6 +197,21 @@ public class AntiLabyPackager {
 		} else
 			disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, true);
 
+		// New features/Enable
+		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
+				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.IMPROVED_LAVA,
+				cfg.getBoolean("AntiLaby.Features.Enable.IMPROVED_LAVA"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.CROSSHAIR_SYNC,
+				cfg.getBoolean("AntiLaby.Features.Enable.CROSSHAIR_SYNC"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.REFILL_FIX,
+				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
+		return disabledLabyModFeaturesConfig;
+	}
+
+	public HashMap<LabyModFeature, Boolean> allowEverything() {
+		FileConfiguration cfg = ConfigFile.getCfg();
+		HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<LabyModFeature, Boolean>();
 		// New features/Enable
 		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
 				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
