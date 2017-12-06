@@ -7,9 +7,12 @@ import org.bukkit.entity.Player;
 
 public class NmsTools {
 
+	private static String version;
+	
 	static String getVersion() {
+		if(version != null) return version;
 		String name = Bukkit.getServer().getClass().getPackage().getName();
-		String version = name.substring(name.lastIndexOf('.') + 1) + ".";
+		version = name.substring(name.lastIndexOf('.') + 1) + ".";
 		return version;
 	}
 
