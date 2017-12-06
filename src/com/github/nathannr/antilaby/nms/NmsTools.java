@@ -1,6 +1,8 @@
 package com.github.nathannr.antilaby.nms;
 
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -8,6 +10,7 @@ import org.bukkit.entity.Player;
 public class NmsTools {
 
 	private static String version;
+	private static Map<String, Class<?>> classCache = new HashMap<>();
 	
 	static String getVersion() {
 		if(version != null) return version;
@@ -18,9 +21,11 @@ public class NmsTools {
 
 	public static Class<?> getNMSClass(String className) {
 		String fullName = "net.minecraft.server." + getVersion() + className;
+		if(classCache.containsKey(fullName)) return classCache.get(fullName);
 		Class<?> clazz = null;
 		try {
 			clazz = Class.forName(fullName);
+			classCache.put(fullName, clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
