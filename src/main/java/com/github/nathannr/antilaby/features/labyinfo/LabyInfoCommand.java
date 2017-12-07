@@ -7,20 +7,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyPlayer;
-import com.github.nathannr.antilaby.api.util.Permission;
-import com.github.nathannr.antilaby.api.util.Prefix;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
+import com.github.nathannr.antilaby.util.Permission;
+import com.github.nathannr.antilaby.util.Prefix;
 
 public class LabyInfoCommand implements CommandExecutor {
-
+	
 	private static boolean commandAvailable = true;
-
+	
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -66,5 +66,5 @@ public class LabyInfoCommand implements CommandExecutor {
 				+ "Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-
+	
 }

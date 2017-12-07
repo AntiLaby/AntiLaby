@@ -1,4 +1,4 @@
-package com.github.nathannr.antilaby.api.util;
+package com.github.nathannr.antilaby.util;
 
 public class PluginChannel {
 
