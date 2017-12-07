@@ -13,15 +13,14 @@ import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
 
 public class LabyInfoCommand implements CommandExecutor {
-	
+
 	private static boolean commandAvailable = true;
-	
+
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -58,9 +57,8 @@ public class LabyInfoCommand implements CommandExecutor {
 		} else if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			if (player.hasPermission(Permission.LABYINFO_PERMISSION)) {
-				if (player.spigot().getLocale().equalsIgnoreCase("de_de"))
-					player.sendMessage(MessageManager.getAsChatMessage(
-							"§cMomentan ist LabyInfo nach einem Server-Reload nicht verfügbar. Bitte starte den Server neu, um LabyInfo nutzen zu können! In einem zukünftigen Update wird diese Funktion verfügbar sein.§r"));
+				if (player.getLocale().equalsIgnoreCase("de_de")) player.sendMessage(MessageManager.getAsChatMessage(
+						"§cMomentan ist LabyInfo nach einem Server-Reload nicht verfügbar. Bitte starte den Server neu, um LabyInfo nutzen zu können! In einem zukünftigen Update wird diese Funktion verfügbar sein.§r"));
 				else player.sendMessage(MessageManager.getAsChatMessage(
 						"§cSorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.§r"));
 			} else player.sendMessage(MessageManager.getNoPermissionMessage(player));
@@ -68,5 +66,5 @@ public class LabyInfoCommand implements CommandExecutor {
 				+ "Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-	
+
 }
