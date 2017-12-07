@@ -1,2 +1,6 @@
 /bin/
 AntiLaby19Icon.png
+*.classpath
+*.project
+
+/target/
