@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LangFileParser {
-	
+
 	public static Map<String, String> parse(File f) {
 		try {
 			return parse(new FileInputStream(f), f.getName());
@@ -19,12 +19,13 @@ public class LangFileParser {
 			return null;
 		}
 	}
-
+	
 	public static Map<String, String> parse(InputStream resource) {
 		return parse(resource, "unknown");
 	}
-
+	
 	public static Map<String, String> parse(InputStream resource, String nameToUse) {
+		System.out.println("Loading lang resource " + nameToUse);
 		final Map<String, String> result = new HashMap<>();
 		if (resource == null) return result;
 		try {
@@ -44,15 +45,15 @@ public class LangFileParser {
 		}
 		return result;
 	}
-
-	private final Language l;
-
-	public LangFileParser(Language l) {
+	
+	private final Locale l;
+	
+	public LangFileParser(Locale l) {
 		this.l = l;
 	}
-	
+
 	public Map<String, String> parse() {
-		return parse(LangFileParser.class.getResourceAsStream(l.getName() + ".lang"));
+		return parse(LangFileParser.class.getResourceAsStream(l.getName() + ".lang"), l.getName() + ".lang");
 	}
-	
+
 }
