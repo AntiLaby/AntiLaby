@@ -4,9 +4,10 @@
 ## IMORTANT:
 This is a reworked AntiLaby version. It can contain unfixed bugs and is in some points not compatible with the downloadable version of AntiLaby.
 Use with caution as it is not fully tested.
+[Here you can find a stable version of AntiLaby.](https://github.com/NathanNr/AntiLaby)
 
 Useful links:
 * [Getting started](https://github.com/NathanNr/AntiLaby/wiki/Getting-started)
 * [Wiki](https://github.com/NathanNr/AntiLaby/wiki)
 * [Ask questions, send suggestions and report bugs](https://github.com/NathanNr/AntiLaby/issues/new)
-* [Source code](https://github.com/NathanNr/AntiLaby)
+* [Source code](https://github.com/NathanNr/AntiLaby/tree/rework)
