@@ -2,7 +2,7 @@
 ### AntiLaby is a Spigot plugin by [NathanNr](https://github.com/NathanNr/) and [heisluft](https://github.com/heisluft) to disable functions of the [LabyMod](https://www.labymod.net/)
 
 ## IMORTANT:
-This is a reworked AntiLaby version. It can contain unfixed bugs and may sometimes not be compatible with the downloadable version of AntiLaby.
+This is a reworked AntiLaby version. It can contain unfixed bugs and is in some points not compatible with the downloadable version of AntiLaby.
 Use with caution as it is not fully tested.
 
 Useful links:
