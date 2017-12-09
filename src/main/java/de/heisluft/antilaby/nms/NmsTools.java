@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class NmsTools {
-
+	
 	private static Class<?> craftPlayer;
 	private static Class<?> packetDataSerializer;
 	private static Class<?> packetClass;
@@ -25,8 +25,17 @@ public class NmsTools {
 	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
 	private static Map<Player, Object> mappedConnections = new HashMap<>();
 	private static boolean init;
-	
+
 	private static String version;
+
+	public static String getVersion() {
+		if (!init) try {
+			init();
+		} catch (final ReflectiveOperationException e) {
+			e.printStackTrace();
+		}
+		return version;
+	}
 	
 	private static void init() throws ReflectiveOperationException {
 		if (init) return;
@@ -41,7 +50,7 @@ public class NmsTools {
 		craftPlayer = Class.forName("org.bukkit.craftbukkit." + version + "entity.CraftPlayer");
 		init = true;
 	}
-
+	
 	public static void setLabyModFeature(Player p, HashMap<LabyModFeature, Boolean> list)
 			throws IOException, IllegalArgumentException, ReflectiveOperationException, SecurityException {
 		if (!init) init();
@@ -68,7 +77,7 @@ public class NmsTools {
 			if (!n.getValue()) b.append(n.getKey() + ", ");
 		System.out.print(b.replace(b.length() - 2, b.length(), "").toString() + ") for player " + p.getName() + " ("
 				+ p.getUniqueId() + ")");
-		
-	}
 
+	}
+	
 }

@@ -10,8 +10,14 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Level;
+
+import de.heisluft.antilaby.log.Logger;
+
 public class LangFileParser {
 
+	private static final Logger LOG = new Logger("§4Localization§r");
+	
 	public static Map<String, String> parse(File f) {
 		try {
 			return parse(new FileInputStream(f), f.getName());
@@ -25,7 +31,7 @@ public class LangFileParser {
 	}
 	
 	public static Map<String, String> parse(InputStream resource, String nameToUse) {
-		System.out.println("Loading lang resource " + nameToUse);
+		LOG.log(Level.INFO, "§eTrying to load language resource " + nameToUse);
 		final Map<String, String> result = new HashMap<>();
 		if (resource == null) return result;
 		try {
@@ -53,7 +59,7 @@ public class LangFileParser {
 	}
 
 	public Map<String, String> parse() {
-		return parse(LangFileParser.class.getResourceAsStream(l.getName() + ".lang"), l.getName() + ".lang");
+		return parse(getClass().getClassLoader().getResourceAsStream(l.getName() + ".lang"), l.getName() + ".lang");
 	}
 
 }
