@@ -11,32 +11,32 @@ import com.github.nathannr.antilaby.config.ConfigFile;
 import de.heisluft.antilaby.nms.NmsTools;
 
 public class AntiLabyPackager {
-
+	
 	private final Player p;
 	private HashMap<LabyModFeature, Boolean> disabledLabyModFeatures = getConfigLabyModSettings();
 	private boolean forceIgnoreBypassPermission = false;
-
+	
 	public AntiLabyPackager(Player p) {
 		this.p = p;
 	}
-
+	
 	public AntiLabyPackager(Player p, boolean forceIgnoreBypassPermission) {
 		this.p = p;
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 	}
-
+	
 	public AntiLabyPackager(Player p, HashMap<LabyModFeature, Boolean> disabledLabyModFeatures) {
 		this.p = p;
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
 	}
-
+	
 	public AntiLabyPackager(Player p, HashMap<LabyModFeature, Boolean> disabledLabyModFeatures,
 			boolean forceIgnoreBypassPermission) {
 		this.p = p;
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 	}
-
+	
 	public HashMap<LabyModFeature, Boolean> allowEverything() {
 		final FileConfiguration cfg = ConfigFile.getCfg();
 		final HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<>();
@@ -51,7 +51,7 @@ public class AntiLabyPackager {
 				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
 		return disabledLabyModFeaturesConfig;
 	}
-
+	
 	/**
 	 * Get the AntiLaby packages from the config file
 	 *
@@ -59,11 +59,11 @@ public class AntiLabyPackager {
 	 * @author NathanNr
 	 */
 	public HashMap<LabyModFeature, Boolean> getConfigLabyModSettings() {
-
+		
 		final FileConfiguration cfg = ConfigFile.getCfg();
-
+		
 		final HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<>();
-
+		
 		// Old features:
 		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.FOOD"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.FOOD, false);
@@ -89,7 +89,7 @@ public class AntiLabyPackager {
 		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, false);
 		else disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, true);
-
+		
 		// New features/Disable:
 		if (cfg.getBoolean("AntiLaby.Features.Disable.SATURATION_BAR"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.SATURATION_BAR, false);
@@ -108,7 +108,7 @@ public class AntiLabyPackager {
 		if (cfg.getBoolean("AntiLaby.Features.Disable.ANIMATIONS"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, false);
 		else disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, true);
-
+		
 		// New features/Enable
 		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
 				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
@@ -120,7 +120,7 @@ public class AntiLabyPackager {
 				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
 		return disabledLabyModFeaturesConfig;
 	}
-
+	
 	/**
 	 * Send the AntiLaby packages
 	 *
@@ -149,15 +149,15 @@ public class AntiLabyPackager {
 		}
 		return true;
 	}
-
-	public boolean setDisabledLabyModFeatures(HashMap<LabyModFeature, Boolean> disabledLabyModFeatures) {
+	
+	public AntiLabyPackager setDisabledLabyModFeatures(HashMap<LabyModFeature, Boolean> disabledLabyModFeatures) {
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
-		return true;
+		return this;
 	}
-
-	public boolean setForceIgnoreBypassPermission(boolean forceIgnoreBypassPermission) {
+	
+	public AntiLabyPackager setForceIgnoreBypassPermission(boolean forceIgnoreBypassPermission) {
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
-		return true;
+		return this;
 	}
-
+	
 }
