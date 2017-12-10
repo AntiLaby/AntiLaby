@@ -10,7 +10,7 @@ public class Logger {
 	private final String name;
 
 	public Logger() {
-		this(Thread.currentThread().getStackTrace()[0].getClassName());
+		this(Thread.currentThread().getStackTrace()[2].getClassName());
 	}
 	
 	public Logger(Class<?> src) {

@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,21 +31,24 @@ public class LangFileParser {
 		final Map<String, String> result = new HashMap<>();
 		if (resource == null) return result;
 		try {
-			final BufferedReader r = new BufferedReader(new InputStreamReader(resource));
+			final BufferedReader r = new BufferedReader(new InputStreamReader(resource, Charset.forName("UTF-8")));
 			int line = 0;
 			while (r.ready()) {
 				line++;
-				final String ln = r.readLine().trim();
+				String ln = r.readLine();
+				ln = ln.trim();
 				if (!ln.startsWith("#")) if (!ln.contains("=")) LanguageManager.LOG.log(Level.WARN,
 						"Could not parse line in resource " + nameToUse + " line " + line + ": " + ln);
 				else {
 					final String[] s = ln.split("=", 2);
 					result.put(s[0].trim().replace(" ", ""), s[1].trim());
+
 				}
 			}
 			r.close();
-		} catch (final IOException e) {
-			System.out.println("Could not parse lang resource: " + nameToUse);
+		} catch (final Exception e) {
+			LanguageManager.LOG.log(Level.ERROR, "Could not parse lang resource " + nameToUse + ": " + e.getMessage());
+			e.printStackTrace();
 		}
 		return result;
 	}

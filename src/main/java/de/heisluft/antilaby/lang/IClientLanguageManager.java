@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  * @author heisluft
  */
 public interface IClientLanguageManager<T extends ILocale> extends ILanguageManager<T> {
-
+	
 	/**
 	 * Gets the {@link T ILocale} implementation for the specified {@link Player}
 	 *
@@ -22,7 +22,18 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * @author heisluft
 	 */
 	public T getLanguageForPlayer(Player player);
-
+	
+	/**
+	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
+	 *
+	 * @param player
+	 *            The player to set the ILocale implementation for
+	 * @param locale
+	 *            the name of the ILocale instance
+	 * @author heisluft
+	 */
+	public void setLanguageForPlayer(Player player, String locale);
+	
 	/**
 	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
 	 *
@@ -33,7 +44,7 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * @author heisluft
 	 */
 	public void setLanguageForPlayer(Player player, T locale);
-	
+
 	/**
 	 * Translates the unlocalized String to the specified {@link Player}s {@link T
 	 * ILocale} implementation
