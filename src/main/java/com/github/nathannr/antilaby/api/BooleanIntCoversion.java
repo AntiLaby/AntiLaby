@@ -1,29 +1,34 @@
 package com.github.nathannr.antilaby.api;
 
+/**
+ * Provides static method for boolean to int conversion and vice-versa
+ *
+ * @author heisluft
+ */
 public final class BooleanIntCoversion {
-	
+
 	/**
 	 * Converts boolean to int
 	 *
-	 * @param b
-	 *            the boolean to convert
-	 * @return int
+	 * @param toConvert
+	 *            The boolean to convert
+	 * @return 1 if {@code toConvert == true}
 	 * @author NathanNr
 	 */
-	public static int convert(boolean b) {
-		return b ? 1 : 0;
+	public static int convert(boolean toConvert) {
+		return toConvert ? 1 : 0;
 	}
-
+	
 	/**
 	 * Converts an int to a boolean
 	 *
+	 * @param toConvert
+	 *            The integer to convert
+	 * @return a boolean value based on {@code toConvert != 0}
 	 * @author heisluft
-	 * @param i
-	 *            the integer to convert
-	 * @return a boolean value
 	 */
-	public static boolean convert(int i) {
-		return i != 0;
+	public static boolean convert(int toConvert) {
+		return toConvert != 0;
 	}
-	
+
 }
