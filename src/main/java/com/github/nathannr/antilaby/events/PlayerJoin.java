@@ -8,16 +8,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.nathannr.antilaby.main.AntiLaby;
 
-import de.heisluft.antilaby.lang.ClientLanguageManager;
-import de.heisluft.antilaby.lang.Locale;
+import de.heisluft.antilaby.lang.impl.LanguageManager;
+import de.heisluft.antilaby.lang.impl.Locale;
 
 public class PlayerJoin implements Listener {
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
 		// Disable LabyMod functions for the new player
-		ClientLanguageManager.INSTANCE.setLanguageForPlayer(player, Locale.byName(player.getLocale(), Locale.EN_US));
+		LanguageManager.INSTANCE.setLanguageForPlayer(player, Locale.byName(player.getLocale(), Locale.EN_US));
 		// Disable LabyMod functions for the new player
 		final AntiLabyPackager pack = new AntiLabyPackager(player);
 		pack.sendPackages();

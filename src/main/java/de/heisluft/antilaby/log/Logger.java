@@ -4,26 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 
-import de.heisluft.antilaby.nms.NmsTools;
-
 public class Logger {
 	
-	private static ConsoleCommandSender c;
-	private static boolean init;
-	
-	private static void init() {
-		if (init) return;
-		try {
-			c = (ConsoleCommandSender) Class
-					.forName("org.bukkit.craftbukkit." + NmsTools.getVersion() + "command.ColouredConsoleSender")
-					.getMethod("getInstance").invoke(null);
-		} catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
-			System.out.println("fuck");
-			c = Bukkit.getServer().getConsoleSender();
-		}
-		init = true;
-	}
-	
+	private static final ConsoleCommandSender c = Bukkit.getConsoleSender();
 	private final String name;
 
 	public Logger() {
@@ -35,12 +18,12 @@ public class Logger {
 	}
 	
 	public Logger(String name) {
-		init();
 		this.name = name;
 	}
 
 	public void log(Level level, String log) {
-		c.sendMessage("[AntiLaby/" + name + "] [" + level.name() + "]: " + log);
+		final String color = level == Level.ERROR || level == Level.FATAL ? "§4" : level == Level.WARN ? "§e" : "";
+		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + log + "§r");
 	}
 	
 }

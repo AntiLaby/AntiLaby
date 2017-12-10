@@ -34,8 +34,14 @@ import com.github.nathannr.antilaby.util.PluginChannel;
 import com.github.nathannr.antilaby.util.Prefix;
 import com.github.nathannr.antilaby.util.Resource;
 
-import de.heisluft.antilaby.lang.ClientLanguageManager;
+import de.heisluft.antilaby.lang.impl.LanguageManager;
+import de.heisluft.antilaby.lang.impl.Locale;
 
+/**
+ * Main class of AntiLaby Spigot plugin
+ *
+ * @author NathanNr
+ */
 public class AntiLaby extends JavaPlugin {
 
 	private static AntiLaby instance;
@@ -44,12 +50,6 @@ public class AntiLaby extends JavaPlugin {
 		return instance;
 	}
 
-	/**
-	 * Main class of AntiLaby Spigot plugin
-	 *
-	 * @author NathanNr
-	 */
-	
 	// NMS-version
 	private String nmsver;
 	// Compatible?
@@ -184,7 +184,10 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		ClientLanguageManager.initAll();
+		LanguageManager.initAll();
+		while (!LanguageManager.isInit())
+			System.out.println("waiting");
+		System.out.println(LanguageManager.INSTANCE.translate("thisLine.couldBeRead", Locale.getOrCreate("en_us")));
 		// Get NMS-version
 		nmsver = Bukkit.getServer().getClass().getPackage().getName();
 		nmsver = nmsver.substring(nmsver.lastIndexOf(".") + 1);
