@@ -50,70 +50,70 @@ import de.heisluft.antilaby.log.Logger;
  * @author NathanNr
  */
 public class AntiLaby extends JavaPlugin {
-
+	
 	private static AntiLaby instance;
-	private static final Logger LOG = new Logger("Main");
-
+	public static final Logger LOG = new Logger("Main");
+	
 	public static AntiLaby getInstance() {
 		return instance;
 	}
-
+	
 	// NMS-version
 	private String nmsver;
 	// Compatible?
 	private boolean compatible;
 	// MCStats.org Metrics
 	private Metrics metrics;
-
-	private final List<PluginFeature> loadedFeatures = new ArrayList<>(1);
 	
+	private final List<PluginFeature> loadedFeatures = new ArrayList<>(1);
+
 	// Is this a beta version?
 	private VersionType versionType;
-
+	
 	// MultiLanguage
 	private MultiLanguage multiLanguage;
-
+	
 	private UpdateDownloader ud;
-
+	
 	public void disableFeature(PluginFeature feature) {
 		loadedFeatures.remove(feature);
 	}
-	
+
 	// Disable the plugin if not compatible
 	public void disableIfNotCompatible() {
 		if (!compatible) getPluginLoader().disablePlugin(this);
 	}
-	
+
 	public void enableFeature(PluginFeature feature) {
 		if (!loadedFeatures.contains(feature)) loadedFeatures.add(feature);
 	}
-
+	
 	@Override
 	public File getFile() {
 		return super.getFile();
 	}
-
+	
 	public Metrics getMetrics() {
 		return metrics;
 	}
-
+	
 	public MultiLanguage getMultiLanguage() {
 		return multiLanguage;
 	}
-	
+
 	public String getNmsver() {
 		return nmsver;
 	}
-
+	
 	public VersionType getVersionType() {
 		return versionType;
 	}
-
+	
 	public void initBMetrics() {
 		// Start plugin metrics for bStats.org
 		final BStats bstats = new BStats(this);
 		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", new Callable<String>() {
-
+			
 			// Is AutoUpdate enabled?
 			@Override
 			public String call() {
@@ -123,7 +123,7 @@ public class AntiLaby extends JavaPlugin {
 			}
 		}));
 		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", new Callable<String>() {
-
+			
 			// Bypass with permission enabled?
 			@Override
 			public String call() {
@@ -133,7 +133,7 @@ public class AntiLaby extends JavaPlugin {
 			}
 		}));
 		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", new Callable<String>() {
-
+			
 			// LabyMod player kick enabled?
 			@Override
 			public String call() {
@@ -143,7 +143,7 @@ public class AntiLaby extends JavaPlugin {
 			}
 		}));
 		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", new Callable<Map<String, Integer>>() {
-			
+
 			// Disabled functions
 			@Override
 			public Map<String, Integer> call() {
@@ -173,9 +173,9 @@ public class AntiLaby extends JavaPlugin {
 				return valueMap;
 			}
 		}));
-
+		
 	}
-
+	
 	/**
 	 * Initializes and registers the AntiLaby commands
 	 */
@@ -184,11 +184,11 @@ public class AntiLaby extends JavaPlugin {
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
 	}
-
+	
 	private void initConfig() {
 		new InitConfig(getInstance()).init();
 	}
-
+	
 	/**
 	 * Initializes and registers the EventListeners
 	 */
@@ -197,11 +197,11 @@ public class AntiLaby extends JavaPlugin {
 		pm.registerEvents(new PlayerJoin(), this);
 		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
-
+	
 	public boolean isSupportEnabled(PluginFeature feature) {
 		return loadedFeatures.contains(feature);
 	}
-
+	
 	@Override
 	public void onDisable() {
 		// Kill update task if it's running
@@ -210,7 +210,7 @@ public class AntiLaby extends JavaPlugin {
 		LOG.log(Level.INFO,
 				"Disabled AntiLaby by NathanNr version " + getDescription().getVersion() + " sucsessfully!");
 	}
-
+	
 	@Override
 	public void onEnable() {
 		LanguageManager.initAll();
@@ -300,7 +300,7 @@ public class AntiLaby extends JavaPlugin {
 		}
 		LOG.log(Level.INFO, "Enabled AntiLaby by NathanNr version " + getDescription().getVersion() + " sucsessfully!");
 	}
-
+	
 	@Override
 	public void onLoad() {
 		instance = this;
@@ -312,7 +312,7 @@ public class AntiLaby extends JavaPlugin {
 		else versionType = VersionType.RELEASE;
 		LabyInfoCommand.setCommandAvailability();
 	}
-
+	
 	public void reloadPlugin(CommandSender sender) {
 		// Reload the plugin
 		if (sender instanceof Player) {
@@ -340,7 +340,7 @@ public class AntiLaby extends JavaPlugin {
 			LOG.log(Level.INFO, player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else LOG.log(Level.INFO, "Reload complete!");
 	}
-
+	
 	public void sendInfo(CommandSender sender) {
 		// Send information about this plugin to a command sender (console /
 		// player)
@@ -356,7 +356,7 @@ public class AntiLaby extends JavaPlugin {
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
-
+	
 	private void update() {
 		if (getVersionType().equals(VersionType.RELEASE)) {
 			if (getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
@@ -372,5 +372,5 @@ public class AntiLaby extends JavaPlugin {
 			disableIfNotCompatible();
 		}
 	}
-
+	
 }

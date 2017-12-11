@@ -2,41 +2,43 @@ package com.github.nathannr.antilaby.api.antilabypackages;
 
 import java.util.HashMap;
 
+import org.apache.logging.log4j.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.config.ConfigFile;
+import com.github.nathannr.antilaby.main.AntiLaby;
 
 import de.heisluft.antilaby.nms.NmsTools;
 
 public class AntiLabyPackager {
-	
+
 	private final Player p;
 	private HashMap<LabyModFeature, Boolean> disabledLabyModFeatures = getConfigLabyModSettings();
 	private boolean forceIgnoreBypassPermission = false;
-	
+
 	public AntiLabyPackager(Player p) {
 		this.p = p;
 	}
-	
+
 	public AntiLabyPackager(Player p, boolean forceIgnoreBypassPermission) {
 		this.p = p;
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 	}
-	
+
 	public AntiLabyPackager(Player p, HashMap<LabyModFeature, Boolean> disabledLabyModFeatures) {
 		this.p = p;
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
 	}
-	
+
 	public AntiLabyPackager(Player p, HashMap<LabyModFeature, Boolean> disabledLabyModFeatures,
 			boolean forceIgnoreBypassPermission) {
 		this.p = p;
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 	}
-	
+
 	public HashMap<LabyModFeature, Boolean> allowEverything() {
 		final FileConfiguration cfg = ConfigFile.getCfg();
 		final HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<>();
@@ -51,7 +53,7 @@ public class AntiLabyPackager {
 				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
 		return disabledLabyModFeaturesConfig;
 	}
-	
+
 	/**
 	 * Get the AntiLaby packages from the config file
 	 *
@@ -59,11 +61,11 @@ public class AntiLabyPackager {
 	 * @author NathanNr
 	 */
 	public HashMap<LabyModFeature, Boolean> getConfigLabyModSettings() {
-		
+
 		final FileConfiguration cfg = ConfigFile.getCfg();
-		
+
 		final HashMap<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new HashMap<>();
-		
+
 		// Old features:
 		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.FOOD"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.FOOD, false);
@@ -89,7 +91,7 @@ public class AntiLabyPackager {
 		if (cfg.getBoolean("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, false);
 		else disabledLabyModFeaturesConfig.put(LabyModFeature.MINIMAP_RADAR, true);
-		
+
 		// New features/Disable:
 		if (cfg.getBoolean("AntiLaby.Features.Disable.SATURATION_BAR"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.SATURATION_BAR, false);
@@ -108,7 +110,7 @@ public class AntiLabyPackager {
 		if (cfg.getBoolean("AntiLaby.Features.Disable.ANIMATIONS"))
 			disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, false);
 		else disabledLabyModFeaturesConfig.put(LabyModFeature.ANIMATIONS, true);
-		
+
 		// New features/Enable
 		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
 				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
@@ -120,7 +122,7 @@ public class AntiLabyPackager {
 				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
 		return disabledLabyModFeaturesConfig;
 	}
-	
+
 	/**
 	 * Send the AntiLaby packages
 	 *
@@ -135,7 +137,7 @@ public class AntiLabyPackager {
 			if (p.hasPermission("antilaby.bypass")) if (cfg.getBoolean("AntiLaby.EnableBypassWithPermission")) {
 			disabledLabyModFeatures = allowEverything();
 			ignorePlayer = true;
-			System.out.println("[AntiLaby/INFO] Player " + p.getName() + " (" + p.getUniqueId()
+			AntiLaby.LOG.log(Level.INFO, "Player " + p.getName() + " (" + p.getUniqueId()
 					+ ") has the permission 'antilaby.bypass' and has been ignored.");
 			}
 		if (ignorePlayer) disabledLabyModFeatures = allowEverything();
@@ -143,21 +145,21 @@ public class AntiLabyPackager {
 			NmsTools.setLabyModFeature(p, disabledLabyModFeatures);
 		} catch (final Exception e) {
 			e.printStackTrace();
-			System.err.println("[AntiLaby/ERROR] An unknown error has occurred: Can't send AntiLaby packages to player "
+			AntiLaby.LOG.log(Level.ERROR, "An unknown error has occurred: Can't send AntiLaby packages to player "
 					+ p.getName() + " (" + p.getUniqueId() + ")!");
 			return false;
 		}
 		return true;
 	}
-	
+
 	public AntiLabyPackager setDisabledLabyModFeatures(HashMap<LabyModFeature, Boolean> disabledLabyModFeatures) {
 		this.disabledLabyModFeatures = disabledLabyModFeatures;
 		return this;
 	}
-	
+
 	public AntiLabyPackager setForceIgnoreBypassPermission(boolean forceIgnoreBypassPermission) {
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 		return this;
 	}
-	
+
 }

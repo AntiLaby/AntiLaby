@@ -8,16 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyModFeature;
+import com.github.nathannr.antilaby.main.AntiLaby;
 
+import de.heisluft.antilaby.log.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class NmsTools {
-	
+
 	private static Class<?> craftPlayer;
 	private static Class<?> packetDataSerializer;
 	private static Class<?> packetClass;
@@ -25,18 +28,19 @@ public class NmsTools {
 	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
 	private static Map<Player, Object> mappedConnections = new HashMap<>();
 	private static boolean init;
-
+	private static final Logger LOG = new Logger("Reflection");
+	
 	private static String version;
-
+	
 	public static String getVersion() {
 		if (!init) try {
 			init();
 		} catch (final ReflectiveOperationException e) {
-			e.printStackTrace();
+			LOG.log(Level.ERROR, e.getMessage());
 		}
 		return version;
 	}
-	
+
 	private static void init() throws ReflectiveOperationException {
 		if (init) return;
 		final String name = Bukkit.getServer().getClass().getPackage().getName();
@@ -50,7 +54,7 @@ public class NmsTools {
 		craftPlayer = Class.forName("org.bukkit.craftbukkit." + version + "entity.CraftPlayer");
 		init = true;
 	}
-	
+
 	public static void setLabyModFeature(Player p, HashMap<LabyModFeature, Boolean> list)
 			throws IOException, IllegalArgumentException, ReflectiveOperationException, SecurityException {
 		if (!init) init();
@@ -75,9 +79,9 @@ public class NmsTools {
 		final StringBuilder b = new StringBuilder("[AntiLaby/INFO] Disabled some LabyMod functions (");
 		for (final Entry<String, Boolean> n : nList.entrySet())
 			if (!n.getValue()) b.append(n.getKey() + ", ");
-		System.out.print(b.replace(b.length() - 2, b.length(), "").toString() + ") for player " + p.getName() + " ("
-				+ p.getUniqueId() + ")");
-
+		AntiLaby.LOG.log(Level.INFO, b.replace(b.length() - 2, b.length(), "").toString() + ") for player "
+				+ p.getName() + " (" + p.getUniqueId() + ")");
+		
 	}
-	
+
 }
