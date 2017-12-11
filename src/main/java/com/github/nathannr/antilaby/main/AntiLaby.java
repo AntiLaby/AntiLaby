@@ -319,7 +319,7 @@ public class AntiLaby extends JavaPlugin {
 			final Player player = (Player) sender;
 			if (!player.hasPermission("antilaby.reload")) {
 				player.sendMessage(multiLanguage.getMultiLanguageMessage(player, "NoPermission", true));
-				System.out.println(Prefix.CPREFIXINFO + "Player " + player.getName() + " (" + player.getUniqueId()
+				LOG.log(Level.INFO, "Player " + player.getName() + " (" + player.getUniqueId()
 						+ ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				return;
 			}
@@ -327,8 +327,7 @@ public class AntiLaby extends JavaPlugin {
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			player.sendMessage(Prefix.PREFIX + "§aReloading AntiLaby...§r");
-			System.out.println(
-					Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
+			LOG.log(Level.INFO, player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else sender.sendMessage(Prefix.CPREFIXINFO + "Reloading AntiLaby...");
 		ConfigFile.reloadFile();
 		for (final Player all : Bukkit.getOnlinePlayers()) {
@@ -338,9 +337,8 @@ public class AntiLaby extends JavaPlugin {
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			player.sendMessage(Prefix.PREFIX + "§aReload complete!§r");
-			System.out.println(
-					Prefix.CPREFIXINFO + player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
-		} else sender.sendMessage(Prefix.CPREFIXINFO + "Reload complete!");
+			LOG.log(Level.INFO, player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
+		} else LOG.log(Level.INFO, "Reload complete!");
 	}
 
 	public void sendInfo(CommandSender sender) {
@@ -365,11 +363,11 @@ public class AntiLaby extends JavaPlugin {
 				// Check and install updates async
 				ud = new UpdateDownloader();
 				ud.start();
-			} else System.out.println(Prefix.CPREFIXINFO
-					+ "You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/"
-					+ Resource.RESOURCE_ID + "/!");
+			} else LOG.log(Level.INFO,
+					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/"
+							+ Resource.RESOURCE_ID + "/!");
 		} else {
-			System.out.println(Prefix.CPREFIXINFO + "You are running a " + getVersionType().toString().toLowerCase()
+			LOG.log(Level.INFO, "You are running a " + getVersionType().toString().toLowerCase()
 					+ " version! Auto-update is not available. You can update manually: " + Resource.RESOURCE_LINK);
 			disableIfNotCompatible();
 		}
