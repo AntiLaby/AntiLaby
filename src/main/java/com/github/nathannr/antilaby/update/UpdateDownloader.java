@@ -18,10 +18,10 @@ import com.github.nathannr.antilaby.util.Prefix;
 import com.github.nathannr.antilaby.util.Resource;
 
 public class UpdateDownloader extends Thread {
-	
+
 	private boolean updateAvailable;
 	private String newVersion;
-	
+
 	private boolean installUpdate(String urlString, int urlId) {
 		System.out.println(Prefix.CPREFIXINFO + "Downloading update from download server " + urlId + "...");
 		try {
@@ -41,18 +41,18 @@ public class UpdateDownloader extends Thread {
 				return false;
 			} else {
 				System.out.println(Prefix.CPREFIXINFO + "Installing update...");
-				
+
 				final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
-				
+
 				final OutputStream os2 = new BufferedOutputStream(
-						new FileOutputStream(AntiLaby.getInstance().getPluginFile()));
+						new FileOutputStream(AntiLaby.getInstance().getFile()));
 				final byte[] chunk2 = new byte[1024];
 				int chunkSize2;
 				while ((chunkSize2 = is2.read(chunk2)) != -1)
 					os2.write(chunk2, 0, chunkSize2);
 				is2.close();
 				os2.close();
-				
+
 				final File tmp = new File("plugins/AntiLaby.tmp");
 				tmp.delete();
 				return true;
@@ -64,7 +64,7 @@ public class UpdateDownloader extends Thread {
 			return false;
 		}
 	}
-	
+
 	@Override
 	// Start update function async
 	public void run() {
@@ -113,5 +113,5 @@ public class UpdateDownloader extends Thread {
 		AntiLaby.getInstance().disableIfNotCompatible();
 		interrupt();
 	}
-	
+
 }

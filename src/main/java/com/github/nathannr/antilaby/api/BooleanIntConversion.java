@@ -5,7 +5,7 @@ package com.github.nathannr.antilaby.api;
  *
  * @author heisluft
  */
-public final class BooleanIntCoversion {
+public final class BooleanIntConversion {
 
 	/**
 	 * Converts boolean to int
