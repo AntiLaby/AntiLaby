@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="C:/Users/Heisluft/Desktop/MC/plugin/deps/spigot-1.12.2.jar" sourcepath="C:/Users/Heisluft/Desktop/MC/plugin/deps/"/>
-	<classpathentry kind="lib" path="C:/Users/Heisluft/Downloads/ProtocolLib.jar" sourcepath="C:/Users/Heisluft/Desktop/MC/plugin/deps/protocolLib"/>
+	<classpathentry kind="lib" path="C:/Users/Heisluft/Downloads/ProtocolLib.jar" sourcepath="C:/Users/Heisluft/Desktop/MC/plugin/deps/"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

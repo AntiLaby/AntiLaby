@@ -1,5 +1,6 @@
 package com.github.nathannr.antilaby.features.labyinfo;
 
+import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,14 +14,14 @@ import com.github.nathannr.antilaby.util.Permission;
 import com.github.nathannr.antilaby.util.Prefix;
 
 public class LabyInfoCommand implements CommandExecutor {
-	
+
 	private static boolean commandAvailable = true;
-	
+
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -39,9 +40,8 @@ public class LabyInfoCommand implements CommandExecutor {
 									targetPlayer));
 						} else {
 							player.sendMessage(MessageManager.getNoPermissionMessage(player));
-							System.out.println(
-									Prefix.CPREFIXINFO + "Player " + player.getName() + " (" + player.getUniqueId()
-											+ ") to use LabyInfo: Permission 'antilaby.labyinfo' is missing!");
+							AntiLaby.LOG.log(Level.WARN, "Player " + player.getName() + " (" + player.getUniqueId()
+									+ ") to use LabyInfo: Permission 'antilaby.labyinfo' is missing!");
 						}
 					} else if (labyPlayer.usesLabyMod()) sender.sendMessage("Player '" + args[0] + "' uses LabyMod.");
 					else sender.sendMessage("Player '" + args[0] + "' doesn't use LabyMod.");
@@ -66,5 +66,5 @@ public class LabyInfoCommand implements CommandExecutor {
 				+ "Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-	
+
 }

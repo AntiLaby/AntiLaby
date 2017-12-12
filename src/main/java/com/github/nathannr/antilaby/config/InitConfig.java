@@ -2,24 +2,27 @@ package com.github.nathannr.antilaby.config;
 
 import java.util.List;
 
+import org.apache.logging.log4j.Level;
+
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.update.VersionType;
-import com.github.nathannr.antilaby.util.Prefix;
 import com.github.nathannr.antilaby.util.Resource;
+
+import de.heisluft.antilaby.log.Logger;
 
 public class InitConfig {
 	
 	public static final int CURRENT_CONFIG_VERSION = 2;
 	
+	private static final Logger LOG = new Logger("Config");
+	
 	public static int getCurrentConfigVersion() {
 		return CURRENT_CONFIG_VERSION;
 	}
-	
-	private final AntiLaby plugin;
 
-	private int configVersion;
+	private final AntiLaby plugin;
 	
-	private ConfigFile configFile;
+	private int configVersion;
 	
 	public InitConfig(AntiLaby plugin) {
 		this.plugin = plugin;
@@ -65,11 +68,11 @@ public class InitConfig {
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", MINIMAP_RADAR);
 			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", null);
 			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", labyModPlayerCommands);
-			System.out.println(Prefix.CPREFIXINFO + "Your configuration file has been converted from version '"
-					+ configVersion + "' to version '" + CURRENT_CONFIG_VERSION + "'.");
+			LOG.log(Level.INFO, "Your configuration file has been converted from version '" + configVersion
+					+ "' to version '" + CURRENT_CONFIG_VERSION + "'.");
 			ConfigFile.saveFile();
-		} else System.err.println(Prefix.CPREFIXERROR + "Failed to convert configuration file from version '"
-				+ configVersion + "' to version '" + CURRENT_CONFIG_VERSION + "'!");
+		} else LOG.log(Level.ERROR, "Failed to convert configuration file from version '" + configVersion
+				+ "' to version '" + CURRENT_CONFIG_VERSION + "'!");
 	}
 	
 	private void generateNewConfig() {
@@ -127,13 +130,9 @@ public class InitConfig {
 		return configVersion;
 	}
 	
-	public AntiLaby getPlugin() {
-		return plugin;
-	}
-	
 	public void init() {
 		// Init config
-		configFile = new ConfigFile(plugin);
+		ConfigFile.init();
 		if (ConfigFile.getCfg().getString("AntiLaby.ConfigVersion") == null) {
 			// No config or old config
 			if (plugin.getConfig().getString("AntiLaby.disable.FOOD") == null) {
@@ -157,7 +156,6 @@ public class InitConfig {
 	}
 	
 	private void resetConfig() {
-
 		generateNewConfig();
 		generateNewConfig();
 	}
