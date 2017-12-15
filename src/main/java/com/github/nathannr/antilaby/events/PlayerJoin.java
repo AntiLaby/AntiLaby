@@ -14,7 +14,7 @@ import com.github.nathannr.antilaby.main.PluginFeature;
 import de.heisluft.antilaby.lang.impl.LanguageManager;
 
 public class PlayerJoin implements Listener {
-
+	
 	@EventHandler
 	public void onChangeLocale(PlayerLocaleChangeEvent e) {
 		if (AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB)) return;
@@ -26,7 +26,7 @@ public class PlayerJoin implements Listener {
 	public void onLeave(PlayerQuitEvent e) {
 		LanguageManager.INSTANCE.unmapPlayerLanguage(e.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();

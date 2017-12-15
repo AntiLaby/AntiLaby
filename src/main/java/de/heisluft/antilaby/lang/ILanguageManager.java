@@ -9,7 +9,23 @@ package de.heisluft.antilaby.lang;
  * @author heisluft
  */
 public interface ILanguageManager<T extends ILocale> {
-	
+
+	/**
+	 * Initializes the LanguageManager. In this method you should initialize all
+	 * your {@link ILocale} implementation instances
+	 *
+	 * @author heisluft
+	 */
+	public abstract void init();
+
+	/**
+	 * This method should return true if either this instance is already initialized
+	 * or this implementation does not need initialization
+	 *
+	 * @return True, if this instance is initialized
+	 */
+	public abstract boolean isInit();
+
 	/**
 	 * Translates the unlocalized String to the specified {@link T ILocale}
 	 * implementation name
@@ -24,7 +40,7 @@ public interface ILanguageManager<T extends ILocale> {
 	 * @author heisluft
 	 */
 	public String translate(String unlocalized, String language, Object... args);
-
+	
 	/**
 	 * Translates the unlocalized String to the specified {@link ILocale}
 	 * implementation

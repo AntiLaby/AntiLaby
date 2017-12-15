@@ -17,6 +17,8 @@ import com.github.nathannr.antilaby.messagemanager.MessageManager;
 import com.github.nathannr.antilaby.util.Permission;
 import com.github.nathannr.antilaby.util.PluginChannel;
 
+import de.heisluft.antilaby.lang.impl.LanguageManager;
+
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	private static HashMap<String, String> labyModPlayers = new HashMap<>();
@@ -30,8 +32,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 	}
 	
 	private void kickPlayer(Player player) {
-		player.kickPlayer(
-				AntiLaby.getInstance().getMultiLanguage().getMultiLanguageMessage(player, "LabyModPlayerKick", true));
+		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
 		AntiLaby.LOG.log(Level.INFO, "Player " + player.getName() + " (" + player.getUniqueId().toString()
 				+ ") is not allowed to use LabyMod and has been kicked.");
 	}

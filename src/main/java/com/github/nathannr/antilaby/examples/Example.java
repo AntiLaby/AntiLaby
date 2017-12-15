@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.api.LabyModFeature;
+import com.github.nathannr.antilaby.api.LabyPlayer;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 
 import de.heisluft.antilaby.nms.NmsTools;
@@ -19,7 +20,7 @@ import de.heisluft.antilaby.nms.NmsTools;
  * versions!
  */
 public class Example {
-
+	
 	/**
 	 * same as {@link #antiLabyPackageExample(Player)}, but uses chaining
 	 *
@@ -33,7 +34,7 @@ public class Example {
 		return new AntiLabyPackager(player).setDisabledLabyModFeatures(myPackageSettings)
 				.setForceIgnoreBypassPermission(true).sendPackages();
 	}
-	
+
 	/**
 	 * Example AntiLaby API method
 	 *
@@ -42,11 +43,11 @@ public class Example {
 	public static boolean antiLabyPackageExample(Player player) {
 		// Create instance
 		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player);
-
+		
 		// Get disabled functions out of the config file
 		@SuppressWarnings("unused")
 		final HashMap<LabyModFeature, Boolean> configSettings = antiLabyPackager.getConfigLabyModSettings();
-		
+
 		// Choose your own disabled functions
 		final HashMap<LabyModFeature, Boolean> myPackageSettings = new HashMap<>();
 		myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
@@ -62,6 +63,20 @@ public class Example {
 	}
 
 	/**
+	 * Test if the player uses LabyMod
+	 *
+	 * @param player
+	 *            The Player to test
+	 * @return true the player uses LabyMod, false otherwise
+	 * @author NathanNr
+	 */
+	public static boolean labyPlayer(Player player) {
+		final LabyPlayer labyPlayer = new LabyPlayer(player); // Create a LabyPlayer-Object
+		final boolean playerUsesLabyMod = labyPlayer.usesLabyMod(); // Test if the player uses LabyMod
+		return playerUsesLabyMod;
+	}
+	
+	/**
 	 * Example simple AntiLaby API method
 	 *
 	 * @author NathanNr
@@ -70,5 +85,5 @@ public class Example {
 		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player); // Create instance
 		return antiLabyPackager.sendPackages(); // Send AntiLaby packages using the settings out of the config file
 	}
-
+	
 }

@@ -1,9 +1,11 @@
 package de.heisluft.antilaby.lang.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.github.nathannr.antilaby.main.AntiLaby;
@@ -14,27 +16,34 @@ import de.heisluft.antilaby.log.Logger;
 public class LanguageManager implements IClientLanguageManager<Locale> {
 
 	public static final LanguageManager INSTANCE = new LanguageManager();
+	static final String RESOURCE_PATH = AntiLaby.getInstance().getDataFolder() + "/lang";
+	static final int RESOURCE_VERSION = 1;
 
 	static final Logger LOG = new Logger("Localization");
-	private static boolean isInit = false;
+	private boolean isInit = false;
 
-	public static void initAll() {
-		for (final Locale l : Locale.getAll())
-			l.init();
-		isInit = true;
-	}
-	
-	public static boolean isInit() {
-		return isInit;
-	}
-	
 	private final Map<Player, Locale> mappedLanguages = new HashMap<>();
-
+	
 	private LanguageManager() {}
-
+	
 	@Override
 	public Locale getLanguageForPlayer(Player p) {
 		return mappedLanguages.get(p);
+	}
+
+	@Override
+	public void init() {
+		new File(RESOURCE_PATH).mkdir();
+		for (final Locale l : Locale.values())
+			l.init(false);
+		for (final Player p : Bukkit.getOnlinePlayers())
+			setLanguageForPlayer(p, p.getLocale());
+		isInit = true;
+	}
+
+	@Override
+	public boolean isInit() {
+		return isInit;
 	}
 	
 	@Override

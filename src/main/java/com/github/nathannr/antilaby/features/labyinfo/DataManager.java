@@ -11,10 +11,12 @@ import org.bukkit.Bukkit;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
 
+import de.heisluft.antilaby.util.Files;
+
 public class DataManager {
-	
+
 	private static String dataFilePath = AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser";
-	
+
 	public static void loadData() {
 		if (Bukkit.getOnlinePlayers() != null) {
 			ObjectInputStream ois = null;
@@ -22,11 +24,7 @@ public class DataManager {
 			try {
 				fis = new FileInputStream(dataFilePath);
 				ois = new ObjectInputStream(fis);
-				final Object obj = ois.readObject();
-				if (obj instanceof LabyInfoPlayerPack) {
-					final LabyInfoPlayerPack lipp = (LabyInfoPlayerPack) obj;
-					IncomingPluginChannel.setLabyModPlayers(lipp.getPlayers());
-				}
+				IncomingPluginChannel.setLabyModPlayers(Files.<LabyInfoPlayerPack>readObject(ois).getPlayers());
 			} catch (IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			} finally {
@@ -39,7 +37,7 @@ public class DataManager {
 			}
 		}
 	}
-	
+
 	public static void saveData() {
 		FileOutputStream fos = null;
 		ObjectOutputStream oos = null;
@@ -59,5 +57,5 @@ public class DataManager {
 			} catch (final IOException e) {}
 		}
 	}
-	
+
 }
