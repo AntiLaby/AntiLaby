@@ -6,6 +6,8 @@ This is a reworked AntiLaby version. It can contain unfixed bugs and is in some 
 Use with caution as it is not fully tested.
 The stable version of AntiLaby can be found [here](https://github.com/NathanNr/AntiLaby)
 
+######Also, AntiLaby uses Java 8 from now on!
+
 Useful links:
 * [Getting started](https://github.com/NathanNr/AntiLaby/wiki/Getting-started)
 * [Wiki](https://github.com/NathanNr/AntiLaby/wiki)
