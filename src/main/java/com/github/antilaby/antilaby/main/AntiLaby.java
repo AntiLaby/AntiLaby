@@ -184,11 +184,8 @@ public class AntiLaby extends JavaPlugin {
 		
 		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod", () -> {
 			final Map<String, Integer> valueMap = new HashMap<>();
-			valueMap.put("players_lm", Players.getLabyModPlayerCount());
-			valueMap.put("players_no_lm", Players.getNoLabyModPlayerCount());
-			final int playersUnknown = Bukkit.getOnlinePlayers().size()
-					- (Players.getLabyModPlayerCount() + Players.getNoLabyModPlayerCount());
-			valueMap.put("players_unknown", playersUnknown);
+			valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
+			valueMap.put("players_no_lm", Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
 			return valueMap;
 		}));
 	}
