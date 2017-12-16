@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.main;
+package com.github.antilaby.antilaby.compat;
 
 public enum PluginFeature {
 	PROTOCOL_LIB;

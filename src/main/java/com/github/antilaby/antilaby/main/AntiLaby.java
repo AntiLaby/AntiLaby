@@ -18,6 +18,7 @@ import com.github.antilaby.antilaby.api.BooleanIntConversion;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.command.AntiLabyTabComplete;
+import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.config.ConfigFile;

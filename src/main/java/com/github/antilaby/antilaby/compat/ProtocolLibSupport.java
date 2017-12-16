@@ -11,7 +11,6 @@ import com.comphenix.protocol.events.PacketListener;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.main.PluginFeature;
 
 /**
  * The ProtocolLib support class

@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
+import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.main.PluginFeature;
 
 public class PlayerJoin implements Listener {
 	
