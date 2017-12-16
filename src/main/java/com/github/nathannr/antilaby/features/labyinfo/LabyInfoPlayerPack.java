@@ -10,20 +10,20 @@ public class LabyInfoPlayerPack implements Serializable {
 
 	private static final long serialVersionUID = -3475901410784292626L;
 
-	private HashMap<String, String> players = new HashMap<>();
+	private HashMap<String, String> playersLabyMod = new HashMap<>();
 
-	public LabyInfoPlayerPack(HashMap<String, String> players) {
-		this.players = players;
+	public LabyInfoPlayerPack(HashMap<String, String> playersLabyMod) {
+		this.playersLabyMod = playersLabyMod;
 	}
 
-	public LabyInfoPlayerPack(ArrayList<Player> players) {
-		for(Player all : players) {
-			this.players.put(all.getUniqueId().toString(), all.getName());
+	public LabyInfoPlayerPack(ArrayList<Player> playersLabyMod) {
+		for(Player all : playersLabyMod) {
+			this.playersLabyMod.put(all.getUniqueId().toString(), all.getName());
 		}
 	}
 	
 	public HashMap<String, String> getPlayers() {
-		return this.players;
+		return this.playersLabyMod;
 	}
 
 }

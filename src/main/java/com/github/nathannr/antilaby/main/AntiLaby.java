@@ -21,6 +21,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.nathannr.antilaby.api.BooleanIntConversion;
+import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
 import com.github.nathannr.antilaby.command.AntiLabyTabComplete;
@@ -30,6 +31,7 @@ import com.github.nathannr.antilaby.config.InitConfig;
 import com.github.nathannr.antilaby.events.PlayerJoin;
 import com.github.nathannr.antilaby.features.labyinfo.DataManager;
 import com.github.nathannr.antilaby.features.labyinfo.LabyInfoCommand;
+import com.github.nathannr.antilaby.features.labyinfo.Players;
 import com.github.nathannr.antilaby.messagemanager.MultiLanguage;
 import com.github.nathannr.antilaby.metrics.BStats;
 import com.github.nathannr.antilaby.metrics.Metrics;
@@ -128,7 +130,6 @@ public class AntiLaby extends JavaPlugin {
 		// Start plugin metrics for bStats.org
 		final BStats bstats = new BStats(this);
 		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", new Callable<String>() {
-
 			// Is AutoUpdate enabled?
 			@Override
 			public String call() {
@@ -137,7 +138,6 @@ public class AntiLaby extends JavaPlugin {
 			}
 		}));
 		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", new Callable<String>() {
-
 			// Bypass with permission enabled?
 			@Override
 			public String call() {
@@ -146,7 +146,6 @@ public class AntiLaby extends JavaPlugin {
 			}
 		}));
 		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", new Callable<String>() { 
-
 			// LabyMod player kick enabled?
 			@Override
 			public String call() {
@@ -155,8 +154,22 @@ public class AntiLaby extends JavaPlugin {
 				else return "false";
 			}
 		}));
+		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod", new Callable<Map<String, Integer>>() {
+			// TODO: Add it to bStats.org if it's available
+			// Players with and without LabyMod in a MultiLineChart
+	        @Override
+	        public Map<String, Integer> call() throws Exception {
+	            Map<String, Integer> valueMap = new HashMap<>();
+	            valueMap.put("players_lm", Players.getLabyModPlayerCount());
+	            valueMap.put("players_no_lm", Players.getNoLabyModPlayerCount());
+	            int playersUnknown = Bukkit.getOnlinePlayers().size() - (Players.getLabyModPlayerCount() + Players.getNoLabyModPlayerCount());
+	            valueMap.put("players_unknown", playersUnknown);
+	            return valueMap;
+	        }
+	    }));
 		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", new Callable<Map<String, Integer>>() {
-			
+			// TODO: Add it to bStats.org if it's available
+			// TODO: Add all new functions
 			// Disabled functions
 			@Override
 			public Map<String, Integer> call() {
