@@ -4,11 +4,10 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
+import com.github.heisluft.antilaby.nms.NmsTools;
 import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.api.LabyPlayer;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
-
-import de.heisluft.antilaby.nms.NmsTools;
 
 /**
  * This class gives a few examples on how to use the AntiLaby API<br>

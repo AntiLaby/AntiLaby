@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.lang.impl;
+package com.github.heisluft.antilaby.lang.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,8 +11,8 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 
-import de.heisluft.antilaby.lang.ILocale;
-import de.heisluft.antilaby.util.IOUtils;
+import com.github.heisluft.antilaby.lang.ILocale;
+import com.github.heisluft.antilaby.util.IOUtils;
 
 public class Locale implements ILocale {
 	

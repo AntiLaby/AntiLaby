@@ -18,6 +18,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.github.heisluft.antilaby.compat.ProtocolLibSupport;
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
+import com.github.heisluft.antilaby.log.Logger;
+import com.github.heisluft.antilaby.nms.NmsTools;
+import com.github.heisluft.antilaby.util.Constants;
 import com.github.nathannr.antilaby.api.BooleanIntConversion;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.nathannr.antilaby.command.AntiLabyCommand;
@@ -35,12 +40,6 @@ import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.nathannr.antilaby.update.UpdateDownloader;
 import com.github.nathannr.antilaby.update.VersionType;
-
-import de.heisluft.antilaby.compat.ProtocolLibSupport;
-import de.heisluft.antilaby.lang.impl.LanguageManager;
-import de.heisluft.antilaby.log.Logger;
-import de.heisluft.antilaby.nms.NmsTools;
-import de.heisluft.antilaby.util.Constants;
 
 /**
  * Main class of AntiLaby Spigot plugin

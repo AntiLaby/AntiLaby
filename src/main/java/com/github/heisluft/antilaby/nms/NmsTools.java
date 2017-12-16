@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.nms;
+package com.github.heisluft.antilaby.nms;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -11,10 +11,10 @@ import java.util.Map.Entry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.github.heisluft.antilaby.log.Logger;
 import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.main.AntiLaby;
 
-import de.heisluft.antilaby.log.Logger;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 

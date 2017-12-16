@@ -11,10 +11,9 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 
+import com.github.heisluft.antilaby.util.IOUtils;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
-
-import de.heisluft.antilaby.util.IOUtils;
 
 public class DataManager {
 

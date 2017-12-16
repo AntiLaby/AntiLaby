@@ -6,8 +6,8 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import de.heisluft.antilaby.lang.impl.LanguageManager;
-import de.heisluft.antilaby.util.Constants;
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
+import com.github.heisluft.antilaby.util.Constants;
 
 public class MessageManager {
 	

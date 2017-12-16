@@ -4,4 +4,4 @@
  * 
  * @author heisluft
  */
-package de.heisluft.antilaby.util;
+package com.github.heisluft.antilaby.util;

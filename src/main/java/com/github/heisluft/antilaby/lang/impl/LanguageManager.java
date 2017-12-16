@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.lang.impl;
+package com.github.heisluft.antilaby.lang.impl;
 
 import java.io.File;
 import java.util.HashMap;
@@ -7,11 +7,10 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import com.github.heisluft.antilaby.lang.IClientLanguageManager;
+import com.github.heisluft.antilaby.log.Logger;
+import com.github.heisluft.antilaby.nms.NmsTools;
 import com.github.nathannr.antilaby.main.AntiLaby;
-
-import de.heisluft.antilaby.lang.IClientLanguageManager;
-import de.heisluft.antilaby.log.Logger;
-import de.heisluft.antilaby.nms.NmsTools;
 
 public class LanguageManager implements IClientLanguageManager<Locale> {
 	

@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.compat;
+package com.github.heisluft.antilaby.compat;
 
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -8,11 +8,10 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
+import com.github.heisluft.antilaby.log.Logger;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.main.PluginFeature;
-
-import de.heisluft.antilaby.lang.impl.LanguageManager;
-import de.heisluft.antilaby.log.Logger;
 
 /**
  * The ProtocolLib support class

@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.lang;
+package com.github.heisluft.antilaby.lang;
 
 /**
  * A Translator Interface holding an {@link ILocale} implementation

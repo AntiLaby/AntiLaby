@@ -5,11 +5,10 @@ import java.util.HashMap;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import com.github.heisluft.antilaby.nms.NmsTools;
 import com.github.nathannr.antilaby.api.LabyModFeature;
 import com.github.nathannr.antilaby.config.ConfigFile;
 import com.github.nathannr.antilaby.main.AntiLaby;
-
-import de.heisluft.antilaby.nms.NmsTools;
 
 public class AntiLabyPackager {
 	

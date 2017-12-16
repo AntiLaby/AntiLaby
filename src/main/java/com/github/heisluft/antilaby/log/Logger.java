@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.log;
+package com.github.heisluft.antilaby.log;
 
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;

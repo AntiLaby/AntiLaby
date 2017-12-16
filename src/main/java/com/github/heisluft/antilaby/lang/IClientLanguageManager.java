@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.lang;
+package com.github.heisluft.antilaby.lang;
 
 import org.bukkit.entity.Player;
 

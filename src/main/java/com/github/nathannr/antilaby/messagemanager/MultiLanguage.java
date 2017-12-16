@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.heisluft.antilaby.lang.impl.Locale;
+import com.github.heisluft.antilaby.lang.impl.Locale;
 
 public class MultiLanguage {
 

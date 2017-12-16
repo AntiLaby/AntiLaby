@@ -10,12 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
+import com.github.heisluft.antilaby.util.Constants;
 import com.github.nathannr.antilaby.config.Config;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
-
-import de.heisluft.antilaby.lang.impl.LanguageManager;
-import de.heisluft.antilaby.util.Constants;
 
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
 	

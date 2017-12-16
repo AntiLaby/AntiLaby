@@ -2,11 +2,10 @@ package com.github.nathannr.antilaby.config;
 
 import java.util.List;
 
+import com.github.heisluft.antilaby.log.Logger;
+import com.github.heisluft.antilaby.util.Constants;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.update.VersionType;
-
-import de.heisluft.antilaby.log.Logger;
-import de.heisluft.antilaby.util.Constants;
 
 public class InitConfig {
 

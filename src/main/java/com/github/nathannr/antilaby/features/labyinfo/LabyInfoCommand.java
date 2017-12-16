@@ -6,12 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
+import com.github.heisluft.antilaby.util.Constants;
 import com.github.nathannr.antilaby.api.LabyPlayer;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
-
-import de.heisluft.antilaby.lang.impl.LanguageManager;
-import de.heisluft.antilaby.util.Constants;
 
 public class LabyInfoCommand implements CommandExecutor {
 

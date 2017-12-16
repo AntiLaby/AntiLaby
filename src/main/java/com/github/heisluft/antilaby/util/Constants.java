@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.util;
+package com.github.heisluft.antilaby.util;
 
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 

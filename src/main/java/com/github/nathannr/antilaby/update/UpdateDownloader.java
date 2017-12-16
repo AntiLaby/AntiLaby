@@ -12,10 +12,9 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.github.heisluft.antilaby.util.Constants;
+import com.github.heisluft.antilaby.util.IOUtils;
 import com.github.nathannr.antilaby.main.AntiLaby;
-
-import de.heisluft.antilaby.util.Constants;
-import de.heisluft.antilaby.util.IOUtils;
 
 public class UpdateDownloader extends Thread {
 

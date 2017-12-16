@@ -3,4 +3,4 @@
  *
  * @author heisluft
  */
-package de.heisluft.antilaby.log;
+package com.github.heisluft.antilaby.log;

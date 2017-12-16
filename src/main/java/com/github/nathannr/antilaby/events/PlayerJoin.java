@@ -7,11 +7,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import com.github.heisluft.antilaby.lang.impl.LanguageManager;
 import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.main.PluginFeature;
-
-import de.heisluft.antilaby.lang.impl.LanguageManager;
 
 public class PlayerJoin implements Listener {
 	

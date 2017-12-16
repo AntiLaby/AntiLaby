@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.lang.impl;
+package com.github.heisluft.antilaby.lang.impl;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -3,4 +3,4 @@
  * 
  * @author heisluft
  */
-package de.heisluft.antilaby.nms;
+package com.github.heisluft.antilaby.nms;

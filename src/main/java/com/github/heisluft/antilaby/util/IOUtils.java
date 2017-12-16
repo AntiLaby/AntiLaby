@@ -1,4 +1,4 @@
-package de.heisluft.antilaby.util;
+package com.github.heisluft.antilaby.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
