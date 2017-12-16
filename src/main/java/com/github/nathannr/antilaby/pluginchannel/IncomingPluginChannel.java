@@ -3,7 +3,6 @@ package com.github.nathannr.antilaby.pluginchannel;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -32,7 +31,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	private void kickPlayer(Player player) {
 		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
-		AntiLaby.LOG.log(Level.INFO, "Player " + player.getName() + " (" + player.getUniqueId().toString()
+		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
 				+ ") is not allowed to use LabyMod and has been kicked.");
 	}
 	
@@ -40,7 +39,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 	public void onPluginMessageReceived(String channel, Player player, byte[] data) {
 		if (channel.equals(Constants.LABYMOD_CHANNEL)) {
 			if (!labyModPlayers.containsKey(player.getUniqueId().toString())) {
-				AntiLaby.LOG.log(Level.INFO,
+				AntiLaby.LOG.info(
 						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses LabyMod.");
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 			}

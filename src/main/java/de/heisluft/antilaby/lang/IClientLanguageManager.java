@@ -8,11 +8,11 @@ import org.bukkit.entity.Player;
  *
  * @param <T>
  *            The {@link ILocale} implementation
- * @since 3.0-Alpha20171210-Rewrite
+ * @since 2.0
  * @author heisluft
  */
 public interface IClientLanguageManager<T extends ILocale> extends ILanguageManager<T> {
-
+	
 	/**
 	 * Gets the {@link T ILocale} implementation for the specified {@link Player}
 	 *
@@ -22,7 +22,7 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * @author heisluft
 	 */
 	public T getLanguageForPlayer(Player player);
-
+	
 	/**
 	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
 	 *
@@ -33,7 +33,7 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * @author heisluft
 	 */
 	public void setLanguageForPlayer(Player player, String locale);
-
+	
 	/**
 	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
 	 *
@@ -44,7 +44,7 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * @author heisluft
 	 */
 	public void setLanguageForPlayer(Player player, T locale);
-	
+
 	/**
 	 * Translates the unlocalized String to the specified {@link Player}s {@link T
 	 * ILocale} implementation

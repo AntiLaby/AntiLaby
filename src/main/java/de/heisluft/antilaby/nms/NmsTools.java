@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -47,7 +46,7 @@ public final class NmsTools {
 		if (!init) try {
 			init();
 		} catch (final ReflectiveOperationException e) {
-			LOG.log(Level.ERROR, e.getMessage());
+			LOG.error(e.getMessage());
 		}
 		return version;
 	}
@@ -114,8 +113,8 @@ public final class NmsTools {
 		final StringBuilder b = new StringBuilder("[AntiLaby/INFO] Disabled some LabyMod functions (");
 		for (final Entry<String, Boolean> n : nList.entrySet())
 			if (!n.getValue()) b.append(n.getKey() + ", ");
-		AntiLaby.LOG.log(Level.INFO, b.replace(b.length() - 2, b.length(), "").toString() + ") for player "
-				+ player.getName() + " (" + player.getUniqueId() + ")");
+		AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").toString() + ") for player " + player.getName()
+				+ " (" + player.getUniqueId() + ")");
 
 	}
 	

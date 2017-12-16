@@ -1,6 +1,5 @@
 package de.heisluft.antilaby.compat;
 
-import org.apache.logging.log4j.Level;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -17,7 +16,7 @@ import de.heisluft.antilaby.log.Logger;
 
 /**
  * The ProtocolLib support class
- * 
+ *
  * @author heisluft
  */
 public class ProtocolLibSupport implements PacketListener {
@@ -28,7 +27,7 @@ public class ProtocolLibSupport implements PacketListener {
 	 * Initializes the AntiLaby ProtocolLib support
 	 */
 	public static void init() {
-		LOG.log(Level.INFO, "Enabling Support for ProtocolLib version "
+		LOG.info("Enabling Support for ProtocolLib version "
 				+ ProtocolLibrary.getPlugin().getDescription().getVersion());
 		ProtocolLibrary.getProtocolManager().addPacketListener(new ProtocolLibSupport());
 		AntiLaby.getInstance().enableFeature(PluginFeature.PROTOCOL_LIB);
@@ -60,8 +59,7 @@ public class ProtocolLibSupport implements PacketListener {
 			if (!old.equals(lang)) lm.setLanguageForPlayer(event.getPlayer(), lang);
 
 		} catch (final ReflectiveOperationException e) {
-			LOG.log(Level.ERROR,
-					"could not retrieve language, falling back to possibly inaccurate events: " + e.getMessage());
+			LOG.error("could not retrieve language, falling back to possibly inaccurate events: " + e.getMessage());
 		}
 	}
 

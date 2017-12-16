@@ -45,8 +45,9 @@ public class MultiLanguage {
 					if (translateAlternateColorCodes == true)
 						return ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path));
 					else return fallbackCfg.getString(path);
-				} else throw new MultiLanguageException("MultiLanguageMessage error: Path '" + path
-						+ "' does not exists in the fallback language file.");
+				} else throw new MultiLanguageException(
+						plugin.getDescription().getPrefix() + "MultiLanguageMessage error: Path '" + path
+								+ "' does not exists in the fallback language file.");
 			}
 		} else {
 			if (fallbackCfg.getString(path) == null) initLanguage();
@@ -54,13 +55,12 @@ public class MultiLanguage {
 				if (translateAlternateColorCodes == true)
 					return ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path));
 				else return fallbackCfg.getString(path);
-			} else throw new MultiLanguageException(
-					"MultiLanguageMessage error: Path '" + path + "' does not exists in the fallback language file.");
+			} else throw new MultiLanguageException(plugin.getDescription().getPrefix()
+					+ "MultiLanguageMessage error: Path '" + path + "' does not exists in the fallback language file.");
 		}
 	}
 	
-	@Deprecated
-	public void initLanguage() {
+	private void initLanguage() {
 		languageLoaded = true;
 	}
 

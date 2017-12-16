@@ -3,11 +3,11 @@ package de.heisluft.antilaby.lang;
 /**
  * An Interface defining a Locale
  *
- * @since 3.0-Alpha20171210-Rewrite
+ * @since 2.0
  * @author heisluft
  */
 public interface ILocale {
-
+	
 	/**
 	 * Gets the name of this {@link ILocale}
 	 *
@@ -15,7 +15,7 @@ public interface ILocale {
 	 * @author heisluft
 	 */
 	public abstract String getName();
-
+	
 	/**
 	 * Translates the unlocalized sString to this {@link ILocale}
 	 *

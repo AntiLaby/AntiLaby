@@ -1,18 +1,20 @@
 package de.heisluft.antilaby.util;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamException;
 import java.io.OutputStream;
+import java.net.URL;
 
 /**
- * This class defines utility methods for file handling
- *
+ * This class defines utility methods for I/O handling
+ * 
  * @author heisluft
- *
  */
-public final class Files {
+public final class IOUtils {
 
 	/**
 	 * Passes all read bytes from the given {@link InputStream} to the given
@@ -30,7 +32,7 @@ public final class Files {
 		while ((nextByte = readFrom.read()) != -1)
 			writeTo.write(nextByte);
 	}
-
+	
 	/**
 	 * Reads the next object from the given {@link ObjectStreamException} and casts
 	 * it to T
@@ -54,7 +56,33 @@ public final class Files {
 	}
 
 	/**
+	 * Gets the text from a web page
+	 *
+	 * @param urlString
+	 *            The URL to be read
+	 * @return The text
+	 * @throws IOException
+	 *             If an IO Error occurred
+	 */
+	public static String readUrl(String urlString) throws IOException {
+		BufferedReader reader = null;
+		try {
+			final URL url = new URL(urlString);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			final StringBuffer buffer = new StringBuffer();
+			int read;
+			final char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+			return buffer.toString();
+		} finally {
+			if (reader != null) reader.close();
+		}
+	}
+	
+	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private Files() {}
+	private IOUtils() {}
+	
 }

@@ -1,6 +1,5 @@
 package com.github.nathannr.antilaby.features.labyinfo;
 
-import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,14 +14,14 @@ import de.heisluft.antilaby.lang.impl.LanguageManager;
 import de.heisluft.antilaby.util.Constants;
 
 public class LabyInfoCommand implements CommandExecutor {
-	
+
 	private static boolean commandAvailable = true;
-	
+
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -39,7 +38,7 @@ public class LabyInfoCommand implements CommandExecutor {
 									.translate("antilaby.command.labyInfo.noLabyMod", player, targetPlayer.getName()));
 						} else {
 							player.sendMessage(MessageManager.getNoPermissionMessage(player));
-							AntiLaby.LOG.log(Level.WARN, "Player " + player.getName() + " (" + player.getUniqueId()
+							AntiLaby.LOG.warn("Player " + player.getName() + " (" + player.getUniqueId()
 									+ ") to use LabyInfo: Permission 'antilaby.labyinfo' is missing!");
 						}
 					} else if (labyPlayer.usesLabyMod()) sender.sendMessage("Player '" + args[0] + "' uses LabyMod.");
@@ -48,7 +47,7 @@ public class LabyInfoCommand implements CommandExecutor {
 					final Player player = (Player) sender;
 					player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.playerOffline",
 							player, args[0]));
-				} else AntiLaby.LOG.log(Level.INFO, "Player '" + args[0] + "' is offline!");
+				} else AntiLaby.LOG.info("Player '" + args[0] + "' is offline!");
 			} else if (sender instanceof Player) {
 				final Player player = (Player) sender;
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.usage", player));
@@ -58,9 +57,9 @@ public class LabyInfoCommand implements CommandExecutor {
 			if (player.hasPermission(Constants.PERMISSION_LABYINFO))
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.reload", player));
 			else player.sendMessage(MessageManager.getNoPermissionMessage(player));
-		} else AntiLaby.LOG.log(Level.INFO,
+		} else AntiLaby.LOG.info(
 				"Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-	
+
 }

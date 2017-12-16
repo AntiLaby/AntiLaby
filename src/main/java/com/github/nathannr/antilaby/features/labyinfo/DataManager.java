@@ -14,19 +14,19 @@ import org.bukkit.Bukkit;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
 
-import de.heisluft.antilaby.util.Files;
+import de.heisluft.antilaby.util.IOUtils;
 
 public class DataManager {
-	
+
 	private static File dataFile = new File(AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser");
-	
+
 	/**
 	 * Deletes the dataFile
 	 */
 	public static void cleanup() {
 		if (dataFile.exists()) dataFile.delete();
 	}
-
+	
 	/**
 	 * Loads all LabyPlayerInformation
 	 */
@@ -35,7 +35,7 @@ public class DataManager {
 			ObjectInputStream ois = null;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(dataFile));
-				final HashMap<String, String> p = Files.<LabyInfoPlayerPack>readObject(ois).getPlayers();
+				final HashMap<String, String> p = IOUtils.<LabyInfoPlayerPack>readObject(ois).getPlayers();
 				for (final Entry<String, String> e : p.entrySet())
 					System.out.println(e);
 				IncomingPluginChannel.setLabyModPlayers(p);
@@ -49,7 +49,7 @@ public class DataManager {
 			cleanup();
 		}
 	}
-	
+
 	public static void saveData() {
 		if (IncomingPluginChannel.getLabyModPlayers().isEmpty()) return;
 		ObjectOutputStream oos = null;
@@ -65,5 +65,5 @@ public class DataManager {
 			} catch (final IOException e) {}
 		}
 	}
-	
+
 }
