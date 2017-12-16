@@ -48,7 +48,7 @@ public class LabyInfoCommand implements CommandExecutor {
 					final Player player = (Player) sender;
 					player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.playerOffline",
 							player, args[0]));
-				} else sender.sendMessage(Constants.CPREFIXERROR + "Player '" + args[0] + "' is offline!");
+				} else AntiLaby.LOG.log(Level.INFO, "Player '" + args[0] + "' is offline!");
 			} else if (sender instanceof Player) {
 				final Player player = (Player) sender;
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.usage", player));
@@ -58,8 +58,8 @@ public class LabyInfoCommand implements CommandExecutor {
 			if (player.hasPermission(Constants.PERMISSION_LABYINFO))
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.reload", player));
 			else player.sendMessage(MessageManager.getNoPermissionMessage(player));
-		} else sender.sendMessage(Constants.CPREFIXINFO
-				+ "Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
+		} else AntiLaby.LOG.log(Level.INFO,
+				"Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
 	

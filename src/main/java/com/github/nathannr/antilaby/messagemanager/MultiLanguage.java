@@ -11,22 +11,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import de.heisluft.antilaby.lang.impl.Locale;
 
 public class MultiLanguage {
-	
+
 	private boolean languageLoaded = false;
 	private final JavaPlugin plugin;
-	private final String cprefix;
-
-	public MultiLanguage(JavaPlugin plugin, String cprefix) {
+	
+	public MultiLanguage(JavaPlugin plugin) {
 		this.plugin = plugin;
-		this.cprefix = cprefix;
 		initLanguage();
 	}
-
+	
 	@Deprecated
 	public String getFallbackLanguageMessage(String path, boolean translateAlternateColorCodes) {
 		return Locale.EN_US.translate(path);
 	}
-	
+
 	public String getMultiLanguageMessage(Player player, String path, boolean translateAlternateColorCodes) {
 		// Get a message in player's language
 		if (languageLoaded == false) initLanguage();
@@ -47,7 +45,7 @@ public class MultiLanguage {
 					if (translateAlternateColorCodes == true)
 						return ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path));
 					else return fallbackCfg.getString(path);
-				} else throw new MultiLanguageException(cprefix + "MultiLanguageMessage error: Path '" + path
+				} else throw new MultiLanguageException("MultiLanguageMessage error: Path '" + path
 						+ "' does not exists in the fallback language file.");
 			}
 		} else {
@@ -56,14 +54,14 @@ public class MultiLanguage {
 				if (translateAlternateColorCodes == true)
 					return ChatColor.translateAlternateColorCodes('&', fallbackCfg.getString(path));
 				else return fallbackCfg.getString(path);
-			} else throw new MultiLanguageException(cprefix + "MultiLanguageMessage error: Path '" + path
-					+ "' does not exists in the fallback language file.");
+			} else throw new MultiLanguageException(
+					"MultiLanguageMessage error: Path '" + path + "' does not exists in the fallback language file.");
 		}
 	}
-
+	
 	@Deprecated
 	public void initLanguage() {
 		languageLoaded = true;
 	}
-	
+
 }

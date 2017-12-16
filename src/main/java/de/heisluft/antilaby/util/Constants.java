@@ -8,24 +8,16 @@ import com.github.nathannr.antilaby.api.antilabypackages.AntiLabyPackager;
  * @author heisluft
  */
 public final class Constants {
-	
+
 	/**
 	 * The SpigotMC.org resource id
 	 */
 	public static final int RESOURCE_ID = 21347;
-
+	
 	/**
 	 * The AntiLaby chat prefix
 	 */
 	public static final String PREFIX = "§8[§e§lAntiLaby§8]§r ";
-	/**
-	 * The old AntiLaby console info prefix
-	 */
-	public static final String CPREFIXINFO = "[AntiLaby/INFO] ";
-	/**
-	 * The old AntiLaby console error prefix
-	 */
-	public static final String CPREFIXERROR = "[AntiLaby/ERROR] ";
 	/**
 	 * The SpigotMC.org resource link
 	 */
@@ -47,10 +39,10 @@ public final class Constants {
 	 * The plugin channel LabyMod uses to exchange information with the server
 	 */
 	public static final String LABYMOD_CHANNEL = "LABYMOD";
-
+	
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
 	private Constants() {}
-
+	
 }
