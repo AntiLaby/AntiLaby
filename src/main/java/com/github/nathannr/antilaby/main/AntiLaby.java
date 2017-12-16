@@ -145,7 +145,7 @@ public class AntiLaby extends JavaPlugin {
 				return Strings.equalsFallback(r, "true", true, "false").toLowerCase();
 			}
 		}));
-		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", new Callable<String>() {
+		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", new Callable<String>() { 
 
 			// LabyMod player kick enabled?
 			@Override
