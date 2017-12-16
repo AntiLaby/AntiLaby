@@ -4,12 +4,12 @@
 ## IMORTANT:
 This is a reworked AntiLaby version. It can contain unfixed bugs and is in some points not compatible with the downloadable version of AntiLaby.
 Use with caution as it is not fully tested.
-The stable version of AntiLaby can be found [here](https://github.com/NathanNr/AntiLaby)
+The stable version of AntiLaby can be found [here](https://github.com/AntiLaby/AntiLaby)
 
 Also, AntiLaby uses Java 8 from now on!
 
 Useful links:
-* [Getting started](https://github.com/NathanNr/AntiLaby/wiki/Getting-started)
-* [Wiki](https://github.com/NathanNr/AntiLaby/wiki)
-* [Ask questions, send suggestions and report bugs](https://github.com/NathanNr/AntiLaby/issues/new)
-* [Source code](https://github.com/NathanNr/AntiLaby/tree/rework)
+* [Getting started](https://github.com/AntiLaby/AntiLaby/wiki/Getting-started)
+* [Wiki](https://github.com/AntiLaby/AntiLaby/wiki)
+* [Ask questions, send suggestions and report bugs](https://github.com/AntiLaby/AntiLaby/issues/new)
+* [Source code](https://github.com/AntiLaby/AntiLaby/tree/rework)
