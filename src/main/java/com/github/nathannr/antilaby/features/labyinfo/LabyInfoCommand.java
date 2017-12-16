@@ -13,14 +13,14 @@ import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
 
 public class LabyInfoCommand implements CommandExecutor {
-
+	
 	private static boolean commandAvailable = true;
-
+	
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -37,7 +37,7 @@ public class LabyInfoCommand implements CommandExecutor {
 									.translate("antilaby.command.labyInfo.noLabyMod", player, targetPlayer.getName()));
 						} else {
 							player.sendMessage(MessageManager.getNoPermissionMessage(player));
-							AntiLaby.LOG.warn("Player " + player.getName() + " (" + player.getUniqueId()
+							AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId()
 									+ ") to use LabyInfo: Permission 'antilaby.labyinfo' is missing!");
 						}
 					} else if (labyPlayer.usesLabyMod()) sender.sendMessage("Player '" + args[0] + "' uses LabyMod.");
@@ -60,5 +60,5 @@ public class LabyInfoCommand implements CommandExecutor {
 				"Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-
+	
 }
