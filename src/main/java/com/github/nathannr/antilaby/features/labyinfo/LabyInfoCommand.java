@@ -10,20 +10,19 @@ import org.bukkit.entity.Player;
 import com.github.nathannr.antilaby.api.LabyPlayer;
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.messagemanager.MessageManager;
-import com.github.nathannr.antilaby.util.Permission;
-import com.github.nathannr.antilaby.util.Prefix;
 
 import de.heisluft.antilaby.lang.impl.LanguageManager;
+import de.heisluft.antilaby.util.Constants;
 
 public class LabyInfoCommand implements CommandExecutor {
-
+	
 	private static boolean commandAvailable = true;
-
+	
 	public static void setCommandAvailability() {
 		if (!Bukkit.getOnlinePlayers().isEmpty()) commandAvailable = false;
 		else commandAvailable = true;
 	}
-
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (commandAvailable) {
@@ -33,7 +32,7 @@ public class LabyInfoCommand implements CommandExecutor {
 					final LabyPlayer labyPlayer = new LabyPlayer(targetPlayer);
 					if (sender instanceof Player) {
 						final Player player = (Player) sender;
-						if (player.hasPermission(Permission.LABYINFO_PERMISSION)) {
+						if (player.hasPermission(Constants.PERMISSION_LABYINFO)) {
 							if (labyPlayer.usesLabyMod()) player.sendMessage(LanguageManager.INSTANCE
 									.translate("antilaby.command.labyInfo.labyMod", player, targetPlayer.getName()));
 							else player.sendMessage(LanguageManager.INSTANCE
@@ -49,19 +48,19 @@ public class LabyInfoCommand implements CommandExecutor {
 					final Player player = (Player) sender;
 					player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.playerOffline",
 							player, args[0]));
-				} else sender.sendMessage(Prefix.CPREFIXERROR + "Player '" + args[0] + "' is offline!");
+				} else sender.sendMessage(Constants.CPREFIXERROR + "Player '" + args[0] + "' is offline!");
 			} else if (sender instanceof Player) {
 				final Player player = (Player) sender;
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.usage", player));
 			} else sender.sendMessage("Usage: /labyinfo <player>");
 		} else if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			if (player.hasPermission(Permission.LABYINFO_PERMISSION))
+			if (player.hasPermission(Constants.PERMISSION_LABYINFO))
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.reload", player));
 			else player.sendMessage(MessageManager.getNoPermissionMessage(player));
-		} else sender.sendMessage(Prefix.CPREFIXINFO
+		} else sender.sendMessage(Constants.CPREFIXINFO
 				+ "Sorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.");
 		return true;
 	}
-
+	
 }

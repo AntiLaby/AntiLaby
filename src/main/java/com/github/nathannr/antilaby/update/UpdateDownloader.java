@@ -16,7 +16,8 @@ import org.apache.logging.log4j.Level;
 
 import com.github.nathannr.antilaby.io.ReadUrl;
 import com.github.nathannr.antilaby.main.AntiLaby;
-import com.github.nathannr.antilaby.util.Resource;
+
+import de.heisluft.antilaby.util.Constants;
 
 public class UpdateDownloader extends Thread {
 	
@@ -72,7 +73,7 @@ public class UpdateDownloader extends Thread {
 		// Check for updates
 		AntiLaby.LOG.log(Level.INFO, "Checking for updates on spigotmc.org...");
 		try {
-			newVersion = ReadUrl.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Resource.RESOURCE_ID);
+			newVersion = ReadUrl.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Constants.RESOURCE_ID);
 			if (newVersion != null) {
 				if (!newVersion.contains(" ") || !newVersion.contains("!")) {
 					if (!newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
@@ -104,7 +105,7 @@ public class UpdateDownloader extends Thread {
 						"Auto-update complete! Reload or restart your server to activate the new version.");
 			else AntiLaby.LOG.log(Level.ERROR,
 					"Failed to install update from download server 1! Please install the newest version manually from https://www.spigotmc.org/resources/"
-							+ Resource.RESOURCE_ID + "/!");
+							+ Constants.RESOURCE_ID + "/!");
 			final File tmp = new File("plugins/AntiLaby.tmp");
 			if (tmp.exists()) tmp.delete();
 		}

@@ -36,14 +36,12 @@ import com.github.nathannr.antilaby.metrics.Metrics;
 import com.github.nathannr.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.nathannr.antilaby.update.UpdateDownloader;
 import com.github.nathannr.antilaby.update.VersionType;
-import com.github.nathannr.antilaby.util.PluginChannel;
-import com.github.nathannr.antilaby.util.Prefix;
-import com.github.nathannr.antilaby.util.Resource;
 
 import de.heisluft.antilaby.compat.ProtocolLibSupport;
 import de.heisluft.antilaby.lang.impl.LanguageManager;
 import de.heisluft.antilaby.log.Logger;
 import de.heisluft.antilaby.nms.NmsTools;
+import de.heisluft.antilaby.util.Constants;
 
 /**
  * Main class of AntiLaby Spigot plugin
@@ -289,7 +287,7 @@ public class AntiLaby extends JavaPlugin {
 				bw.write(" - antilaby.bypasscommands: Allows you to bypass the join commands if you are using LabyMod");
 				bw.newLine();
 				bw.newLine();
-				bw.write("Find more information about AntiLaby and how to use it: " + Resource.RESOURCE_LINK);
+				bw.write("Find more information about AntiLaby and how to use it: " + Constants.RESOURCE_LINK);
 				bw.close();
 			} catch (final IOException e) {}
 		} else {
@@ -303,8 +301,8 @@ public class AntiLaby extends JavaPlugin {
 		// Init files, commands and events
 		initConfig();
 		// Register plugin channels
-		Bukkit.getMessenger().registerOutgoingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL);
-		Bukkit.getMessenger().registerIncomingPluginChannel(this, PluginChannel.LABYMOD_CHANNEL,
+		Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
 				new IncomingPluginChannel());
 		// Init ProtocolLib support
 		if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) ProtocolLibSupport.init();
@@ -322,7 +320,7 @@ public class AntiLaby extends JavaPlugin {
 		// Start plugin metrics for bStats.org
 		initBMetrics();
 		// Init MultiLanguage system
-		multiLanguage = new MultiLanguage(getInstance(), Prefix.CPREFIXINFO);
+		multiLanguage = new MultiLanguage(getInstance(), Constants.CPREFIXINFO);
 		final LanguageManager lang = LanguageManager.INSTANCE;
 		// Resend AntiLaby packages (on reload)
 		if (!lang.isInit()) lang.init();
@@ -354,9 +352,9 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Prefix.PREFIX + "§aReloading AntiLaby...§r");
+			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
 			LOG.log(Level.INFO, player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
-		} else sender.sendMessage(Prefix.CPREFIXINFO + "Reloading AntiLaby...");
+		} else sender.sendMessage(Constants.CPREFIXINFO + "Reloading AntiLaby...");
 		ConfigFile.reloadFile();
 		for (final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
@@ -365,7 +363,7 @@ public class AntiLaby extends JavaPlugin {
 		LabyInfoCommand.setCommandAvailability();
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Prefix.PREFIX + "§aReload complete!§r");
+			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
 			LOG.log(Level.INFO, player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else LOG.log(Level.INFO, "Reload complete!");
 	}
@@ -378,7 +376,7 @@ public class AntiLaby extends JavaPlugin {
 		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + getDescription().getVersion()
 				+ " by NathanNr and heisluft" + ChatColor.RESET);
 		sender.sendMessage(
-				ChatColor.BLUE + "More information about the plugin: " + Resource.RESOURCE_LINK + ChatColor.RESET);
+				ChatColor.BLUE + "More information about the plugin: " + Constants.RESOURCE_LINK + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
 		sender.sendMessage(
 				ChatColor.BLUE + "Use '/labyinfo <player>' to check if a player uses LabyMod." + ChatColor.RESET);
@@ -394,10 +392,10 @@ public class AntiLaby extends JavaPlugin {
 				ud.start();
 			} else LOG.log(Level.INFO,
 					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby manually from here: https://www.spigotmc.org/resources/"
-							+ Resource.RESOURCE_ID + "/!");
+							+ Constants.RESOURCE_ID + "/!");
 		} else {
 			LOG.log(Level.INFO, "You are running a " + getVersionType().toString()
-					+ " version! Auto-update is not available. You can update manually: " + Resource.RESOURCE_LINK);
+					+ " version! Auto-update is not available. You can update manually: " + Constants.RESOURCE_LINK);
 			disableIfNotCompatible();
 		}
 	}

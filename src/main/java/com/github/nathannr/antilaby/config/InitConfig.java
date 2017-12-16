@@ -6,9 +6,9 @@ import org.apache.logging.log4j.Level;
 
 import com.github.nathannr.antilaby.main.AntiLaby;
 import com.github.nathannr.antilaby.update.VersionType;
-import com.github.nathannr.antilaby.util.Resource;
 
 import de.heisluft.antilaby.log.Logger;
+import de.heisluft.antilaby.util.Constants;
 
 public class InitConfig {
 	
@@ -77,7 +77,7 @@ public class InitConfig {
 	
 	private void generateNewConfig() {
 		ConfigFile.getCfg().options().header(
-				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Resource.RESOURCE_ID + "/");
+				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		ConfigFile.getCfg().addDefault("AntiLaby.EnableBypassWithPermission", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.LabyModPlayerKick.Enable", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.Features.Disable.SATURATION_BAR", true);
@@ -114,7 +114,7 @@ public class InitConfig {
 		else ConfigFile.getCfg().set("AntiLaby.Update.AutoUpdate",
 				"Auto-update is not available in " + plugin.getVersionType().toString().toLowerCase()
 						+ " versions! You can update manually: https://www.spigotmc.org/resources/"
-						+ Resource.RESOURCE_ID + "/");
+						+ Constants.RESOURCE_ID + "/");
 		ConfigFile.getCfg().addDefault("AntiLaby.ConfigVersion", 2);
 		ConfigFile.getCfg().options().copyDefaults(true);
 		ConfigFile.saveFile();
