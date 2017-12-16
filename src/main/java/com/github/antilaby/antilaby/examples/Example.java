@@ -13,18 +13,17 @@ import com.github.antilaby.antilaby.nms.NmsTools;
  * This class gives a few examples on how to use the AntiLaby API<br>
  *
  * WARNING: It's highly recommended to use only methods from the package
- * 'com.github.nathannr.antilaby.api', or, if you really know what you are
+ * 'com.github.antilaby.antilaby.api', or, if you really know what you are
  * doing, use {@link NmsTools} directly and handle the exceptions properly!
  * Other solutions may or may not work or be compatible for multiple Minecraft
  * versions!
  */
 public class Example {
-	
+
 	/**
 	 * same as {@link #antiLabyPackageExample(Player)}, but uses chaining
-	 *
+	 * 
 	 * @author heisluft
-	 *
 	 */
 	public static boolean antiLabyChainedPackagerExample(Player player) {
 		final HashMap<LabyModFeature, Boolean> myPackageSettings = new HashMap<>();
@@ -36,16 +35,15 @@ public class Example {
 
 	/**
 	 * Example AntiLaby API method
-	 *
+	 * 
 	 * @author NathanNr
 	 */
 	public static boolean antiLabyPackageExample(Player player) {
 		// Create instance
 		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player);
-		
+
 		// Get disabled functions out of the config file
-		@SuppressWarnings("unused")
-		final HashMap<LabyModFeature, Boolean> configSettings = antiLabyPackager.getConfigLabyModSettings();
+		/* final HashMap<LabyModFeature, Boolean> configSettings = */ antiLabyPackager.getConfigLabyModSettings();
 
 		// Choose your own disabled functions
 		final HashMap<LabyModFeature, Boolean> myPackageSettings = new HashMap<>();
@@ -53,8 +51,8 @@ public class Example {
 		myPackageSettings.put(LabyModFeature.POTIONS, true);
 		antiLabyPackager.setDisabledLabyModFeatures(myPackageSettings);
 		/*
-		 * Send the packages even if the player has the permission 'antilaby.bypass' and
-		 * bypassing is enabled in the config file
+		 * Send the packages even if the player has the permission
+		 * 'antilaby.bypass' and bypassing is enabled in the config file
 		 */
 		antiLabyPackager.setForceIgnoreBypassPermission(true);
 		// Send the AntiLaby packages
@@ -62,27 +60,32 @@ public class Example {
 	}
 
 	/**
-	 * Test if the player uses LabyMod
-	 *
+	 * Test if a player uses LabyMod
+	 * 
 	 * @param player
 	 *            The Player to test
 	 * @return true the player uses LabyMod, false otherwise
 	 * @author NathanNr
 	 */
 	public static boolean labyPlayer(Player player) {
-		final LabyPlayer labyPlayer = new LabyPlayer(player); // Create a LabyPlayer-Object
-		final boolean playerUsesLabyMod = labyPlayer.usesLabyMod(); // Test if the player uses LabyMod
+		// Create a LabyPlayer object
+		final LabyPlayer labyPlayer = new LabyPlayer(player);
+		// Test if the player uses LabyMod
+		final boolean playerUsesLabyMod = labyPlayer.usesLabyMod();
+		// Return the value
 		return playerUsesLabyMod;
 	}
-	
+
 	/**
 	 * Example simple AntiLaby API method
 	 *
 	 * @author NathanNr
 	 */
 	public static boolean simpleAntiLabyPackageExample(Player player) {
-		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player); // Create instance
-		return antiLabyPackager.sendPackages(); // Send AntiLaby packages using the settings out of the config file
+		// Create a LabyPlayer
+		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player);
+		// Send AntiLaby packages
+		return antiLabyPackager.sendPackages();
 	}
-	
+
 }
