@@ -21,12 +21,12 @@ public class PlayerJoin implements Listener {
 		final Player player = e.getPlayer();
 		LanguageManager.INSTANCE.setLanguageForPlayer(player, e.getLocale());
 	}
-
+	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
 		LanguageManager.INSTANCE.unmapPlayerLanguage(e.getPlayer());
 	}
-
+	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();

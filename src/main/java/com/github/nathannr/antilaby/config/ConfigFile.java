@@ -10,20 +10,20 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.github.nathannr.antilaby.main.AntiLaby;
 
 public class ConfigFile {
-	
-	private static AntiLaby plugin = AntiLaby.getInstance();
 
+	private static AntiLaby plugin = AntiLaby.getInstance();
+	
 	private static File file;
 	private static FileConfiguration cfg;
-
+	
 	public static FileConfiguration getCfg() {
 		return cfg;
 	}
-
+	
 	public static File getFile() {
 		return file;
 	}
-
+	
 	public static void init() {
 		file = new File(plugin.getDataFolder() + "/config.yml");
 		try {
@@ -34,7 +34,7 @@ public class ConfigFile {
 		cfg = YamlConfiguration.loadConfiguration(file);
 		reloadFile();
 	}
-
+	
 	public static void reloadFile() {
 		try {
 			cfg.load(file);
@@ -42,13 +42,13 @@ public class ConfigFile {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static void resetConfig() {
 		file.delete();
 		file = new File(plugin.getDataFolder() + "/config.yml");
 		cfg = YamlConfiguration.loadConfiguration(file);
 	}
-
+	
 	public static void saveFile() {
 		try {
 			cfg.save(file);
@@ -56,5 +56,5 @@ public class ConfigFile {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

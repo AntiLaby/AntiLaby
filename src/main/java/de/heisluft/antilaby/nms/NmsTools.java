@@ -20,7 +20,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class NmsTools {
-
+	
 	private static Class<?> craftPlayer;
 	private static Class<?> packetDataSerializer;
 	private static Class<?> packetClass;
@@ -29,9 +29,9 @@ public class NmsTools {
 	private static Map<Player, Object> mappedConnections = new HashMap<>();
 	private static boolean init;
 	private static final Logger LOG = new Logger("Reflection");
-	
+
 	private static String version;
-	
+
 	public static String getVersion() {
 		if (!init) try {
 			init();
@@ -40,21 +40,21 @@ public class NmsTools {
 		}
 		return version;
 	}
-
+	
 	private static void init() throws ReflectiveOperationException {
 		if (init) return;
 		final String name = Bukkit.getServer().getClass().getPackage().getName();
-		version = name.substring(name.lastIndexOf('.') + 1) + ".";
-		packetClass = Class.forName("net.minecraft.server." + version + "Packet");
-		packetDataSerializer = Class.forName("net.minecraft.server." + version + "PacketDataSerializer");
+		version = name.substring(name.lastIndexOf('.') + 1);
+		packetClass = Class.forName("net.minecraft.server." + version + ".Packet");
+		packetDataSerializer = Class.forName("net.minecraft.server." + version + ".PacketDataSerializer");
 		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
 		packetPlayOutCustomPayloadConstructor = Class
-				.forName("net.minecraft.server." + version + "PacketPlayOutCustomPayload")
+				.forName("net.minecraft.server." + version + ".PacketPlayOutCustomPayload")
 				.getConstructor(String.class, packetDataSerializer);
-		craftPlayer = Class.forName("org.bukkit.craftbukkit." + version + "entity.CraftPlayer");
+		craftPlayer = Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftPlayer");
 		init = true;
 	}
-
+	
 	public static void setLabyModFeature(Player p, HashMap<LabyModFeature, Boolean> list)
 			throws IOException, IllegalArgumentException, ReflectiveOperationException, SecurityException {
 		if (!init) init();
@@ -81,7 +81,7 @@ public class NmsTools {
 			if (!n.getValue()) b.append(n.getKey() + ", ");
 		AntiLaby.LOG.log(Level.INFO, b.replace(b.length() - 2, b.length(), "").toString() + ") for player "
 				+ p.getName() + " (" + p.getUniqueId() + ")");
-		
-	}
 
+	}
+	
 }
