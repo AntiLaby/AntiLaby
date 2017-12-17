@@ -11,7 +11,7 @@ import java.net.URL;
 
 /**
  * This class defines utility methods for I/O handling
- * 
+ *
  * @author heisluft
  */
 public final class IOUtils {

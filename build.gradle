@@ -15,3 +15,15 @@ dependencies {
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }
+
+task createJar(type: Jar) {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+task copyJarToTestserver(type: Copy) {
+    copy {
+        from createJar
+        into pathToTestServer.concat('plugins')
+    }
+}

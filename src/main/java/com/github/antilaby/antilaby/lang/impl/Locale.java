@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarFile;
 
 import org.bukkit.ChatColor;
 
 import com.github.antilaby.antilaby.lang.ILocale;
+import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.IOUtils;
 
 public class Locale implements ILocale {
@@ -73,12 +75,16 @@ public class Locale implements ILocale {
 		if (init) return this;
 		try {
 			final File f = new File(LanguageManager.RESOURCE_PATH + File.separator + name + ".lang");
+			if (!f.exists()) f.createNewFile();
 			final LanguageVersion v = LangFileParser.getVersion(f);
-			System.out.println(v);
-			if (!f.exists() || overwrite || LanguageVersion.CURRENT_VERSION.compareTo(v) == 1) {
-				f.createNewFile();
-				final InputStream is = getClass().getClassLoader().getResourceAsStream(name + ".lang");
+			if (LanguageVersion.CURRENT_VERSION.compareTo(v) == 1)
+				LanguageManager.LOG.info("Updating language resource " + name + ".lang from version " + v
+						+ " to version " + LanguageVersion.CURRENT_VERSION);
+			if (!overwrite || LanguageVersion.CURRENT_VERSION.compareTo(v) == 1) {
+				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
+				final InputStream is = file.getInputStream(file.getJarEntry(name + ".lang"));
 				IOUtils.copyStream(is, new FileOutputStream(f));
+				file.close();
 			}
 			translation.putAll(LangFileParser.parse(f));
 		} catch (final IOException e) {

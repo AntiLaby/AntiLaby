@@ -1,3 +1,4 @@
+# version: 1.0.0
 translation.error=Error with translation: %s
 info.specialDef=&aThis server uses AntiLaby version &b%s &awith NMS version &b%s&a.
 antilaby.playerKickMessage=&cYou are not allowed to use &aLabyMod &con this Server!

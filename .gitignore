@@ -5,3 +5,4 @@ AntiLaby19Icon.png
 *.project
 /target/
 /.gradle/
+/build/
