@@ -18,19 +18,19 @@
   </build>
   <url>https://github.com/AntiLaby/AntiLaby</url>
   <organization>
-  	<name>The AntiLaby Team</name>
-  	<url>https://github.com/AntiLaby</url>
+    <name>The AntiLaby Team</name>
+    <url>https://github.com/AntiLaby</url>
   </organization>
   <issueManagement>
-  	<system>GitHub</system>
-  	<url>https://github.com/AntiLaby/AntiLaby/issues</url>
+    <system>GitHub</system>
+    <url>https://github.com/AntiLaby/AntiLaby/issues</url>
   </issueManagement>
   <dependencies>
-  	<dependency>
+    <dependency>
       <groupId>junit</groupId>
   	  <artifactId>junit</artifactId>
-	  <version>4.12</version>
-  	  <scope>test</scope>
-  	</dependency>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
