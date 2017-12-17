@@ -1,0 +1,17 @@
+// Apply the java-library plugin to add support for Java Library
+apply plugin: 'java-library'
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+    	url "http://repo.dmulloy2.net/content/groups/public/"
+    }
+}
+
+dependencies {
+	compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
+    compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
+    testCompile 'junit:junit:4.12'
+}
