@@ -266,7 +266,6 @@ public class AntiLaby extends JavaPlugin {
 	public void onLoad() {
 		instance = this;
 		versionType = VersionType.fromName(getDescription().getVersion().toLowerCase());
-		LabyInfoCommand.setCommandAvailability();
 	}
 	
 	public void reloadPlugin(CommandSender sender) {
@@ -290,7 +289,6 @@ public class AntiLaby extends JavaPlugin {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();
 		}
-		LabyInfoCommand.setCommandAvailability();
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
