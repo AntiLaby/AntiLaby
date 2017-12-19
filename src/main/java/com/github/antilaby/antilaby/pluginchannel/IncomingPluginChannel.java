@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
@@ -21,11 +22,11 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 	public static HashMap<String, String> getLabyModPlayers() {
 		return labyModPlayers;
 	}
-	
+
 	public static void setLabyModPlayers(HashMap<String, String> labyModPlayers) {
 		IncomingPluginChannel.labyModPlayers = labyModPlayers;
 	}
-	
+
 	private void kickPlayer(Player player) {
 		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
 		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
@@ -40,20 +41,24 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses LabyMod.");
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 			}
-			if (Config.getLabyModPlayerKickEnable()) if (AntiLaby.getInstance().getConfig()
-					.getString("AntiLaby.EnableBypassWithPermission").equals("true")) {
-				if (!player.hasPermission(Constants.PERMISSION_BYPASS)) {
+			if (Config.getLabyModPlayerKickEnable())
+				if (AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission")
+						.equals("true")) {
+					if (!player.hasPermission(Constants.PERMISSION_BYPASS)) {
+						kickPlayer(player);
+						return;
+					}
+				} else {
 					kickPlayer(player);
 					return;
 				}
-			} else {
-				kickPlayer(player);
-				return;
+			if (!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
+				LabyModJoinCommands labyModJoinCommands = new LabyModJoinCommands(AntiLaby.getInstance());
+				for (final String command : labyModJoinCommands.getLabyModJoinCommands(false)) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%PLAYER%", player.getName())
+							.replace("%UUID%", player.getUniqueId().toString()));
+				}
 			}
-			if (!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS))
-				for (final String command : Config.getLabyModPlayerCommands())
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%PLAYER%", player.getName())
-						.replace("%UUID%", player.getUniqueId().toString()));
 		}
 	}
 

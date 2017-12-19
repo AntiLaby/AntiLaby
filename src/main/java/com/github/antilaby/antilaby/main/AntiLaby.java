@@ -15,6 +15,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.github.antilaby.antilaby.api.BooleanIntConversion;
+import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.command.AntiLabyTabComplete;
@@ -149,13 +150,25 @@ public class AntiLaby extends JavaPlugin {
 			valueMap.put("MINIMAP_RADAR", MINIMAP_RADAR);
 			return valueMap;
 		}));
-
-		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod", () -> {
+		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
 			final Map<String, Integer> valueMap = new HashMap<>();
 			valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
 			valueMap.put("players_no_lm",
 					Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
 			return valueMap;
+		}));
+		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () -> {
+			return IncomingPluginChannel.getLabyModPlayers().size();
+		}));
+		LabyModJoinCommands lmjc = new LabyModJoinCommands(this);
+		bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
+			if(lmjc.getLabyModJoinCommands(false).isEmpty())
+				return "false";
+			else
+				return "true";
+		}));
+		bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> {
+			return lmjc.getLabyModJoinCommands(false).size();
 		}));
 	}
 	
