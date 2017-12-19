@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.lang.impl;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,16 +9,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Pattern;
+
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class LangFileParser {
 	
 	private static final Pattern VERSION_PATTERN = Pattern.compile("((^|#)|.*\\s)version:\\s?\\d*\\.?\\d*\\.?\\d*$");
 	private static final Pattern REPLACER = Pattern.compile("^.*version:\\s?");
-	
+
 	public static LanguageVersion getVersion(File lFile) {
 		if (lFile == null || !lFile.exists()) throw new NullPointerException("File does not exist");
 		BufferedReader r = null;
@@ -42,6 +49,16 @@ public class LangFileParser {
 			return LanguageVersion.getOrCreate(REPLACER.matcher(headerFrom).replaceAll(""));
 		return LanguageVersion.UNDEFINED;
 		
+	}
+	
+	public static OutputStream migrateYamlToLang(YamlConfiguration yaml) {
+		final List<String> lines = new ArrayList<>();
+		for (final Entry<String, Object> e : yaml.getValues(false).entrySet())
+			if (e.getValue() instanceof String) lines.add(e.getKey() + "="
+					+ ((String) e.getValue()).replace("%PLAYER%", "%s").replace("%UUID%", "%s") + "\n");
+		for (final String string : lines)
+			System.out.println(string);
+		return new ByteArrayOutputStream();
 	}
 	
 	public static Map<String, String> parse(File f) {
