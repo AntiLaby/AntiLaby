@@ -6,3 +6,4 @@ AntiLaby19Icon.png
 /target/
 /.gradle/
 /build/
+gradle.properties
