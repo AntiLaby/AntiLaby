@@ -18,7 +18,7 @@ public final class BooleanIntConversion {
 	public static int convert(boolean toConvert) {
 		return toConvert ? 1 : 0;
 	}
-	
+
 	/**
 	 * Converts an int to a boolean
 	 *

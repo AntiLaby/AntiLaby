@@ -4,6 +4,13 @@ import java.security.MessageDigest;
 
 public class Hash {
 
+	/**
+	 * Get a string as SHA-256 hash
+	 * 
+	 * @param s
+	 *            The string
+	 * @return The string as hash
+	 */
 	public static String getAsSHA256(String s) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
