@@ -18,13 +18,12 @@ import com.github.antilaby.antilaby.api.BooleanIntConversion;
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
-import com.github.antilaby.antilaby.command.AntiLabyTabComplete;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.config.InitConfig;
-import com.github.antilaby.antilaby.events.PlayerJoin;
+import com.github.antilaby.antilaby.listener.PlayerJoin;
 import com.github.antilaby.antilaby.features.labyinfo.DataManager;
 import com.github.antilaby.antilaby.features.labyinfo.LabyInfoCommand;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
@@ -171,7 +170,7 @@ public class AntiLaby extends JavaPlugin {
 	 */
 	private void initCmds() {
 		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
-		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
+		getCommand("antilaby").setTabCompleter(new AntiLabyCommand(this));
 		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
 	}
 	
@@ -238,7 +237,7 @@ public class AntiLaby extends JavaPlugin {
 		}
 		// Try to update AntiLaby
 		update();
-		// Init files, commands and events
+		// Init files, commands and listener
 		initConfig();
 		// Register plugin channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);

@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.events;
+package com.github.antilaby.antilaby.listener;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,7 @@ import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 
-public class PlayerJoin implements Listener {
+public final class PlayerJoin implements Listener {
 	
 	@EventHandler
 	public void onChangeLocale(PlayerLocaleChangeEvent e) {

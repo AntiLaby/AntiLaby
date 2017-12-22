@@ -3,12 +3,16 @@ package com.github.antilaby.antilaby.command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 
-public class AntiLabyCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public final class AntiLabyCommand implements CommandExecutor, TabCompleter {
 
 	private final AntiLaby plugin;
 
@@ -33,5 +37,21 @@ public class AntiLabyCommand implements CommandExecutor {
 			final Player p = (Player) sender;
 			p.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.antiLaby.usage", p));
 		} else sender.sendMessage("Usage: /antilaby <info|reload>");
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		// Tab-complete for the AntiLaby debug command
+		if (cmd.getName().equalsIgnoreCase("antilaby") && args.length == 1) {
+			List<String> list = new ArrayList<>();
+			list.add("info");
+			list.add("reload");
+			return list;
+		} else if (cmd.getName().equalsIgnoreCase("antilaby")) {
+			List<String> empty = new ArrayList<>();
+			return empty;
+		}
+
+		return null;
 	}
 }
