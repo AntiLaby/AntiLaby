@@ -6,39 +6,39 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 
 public class Config {
 	
-	public static boolean getANIMATIONS() {
+	public static boolean isAnimationsDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ANIMATIONS");
 	}
 
-	public static boolean getARMOR() {
+	public static boolean isArmorDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ARMOR");
 	}
 
-	public static boolean getBLOCKBUILD() {
+	public static boolean isBlockBuildDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD");
 	}
 
-	public static boolean getCHAT() {
+	public static boolean isChatDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.CHAT");
 	}
 
-	public static boolean getDAMAGEINDICATOR() {
+	public static boolean isDamageIndicatorDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
 	}
 	
-	public static boolean getEnableBypassWithPermission() {
+	public static boolean isBypassWithPermissionsDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.EnableBypassWithPermission");
 	}
 	
-	public static boolean getEXTRAS() {
+	public static boolean isExtrasDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.EXTRAS");
 	}
 	
-	public static boolean getFOOD() {
+	public static boolean isFoodDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.FOOD");
 	}
 	
-	public static boolean getGUI() {
+	public static boolean isGuiDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.GUI");
 	}
 	
@@ -51,7 +51,7 @@ public class Config {
 		return AntiLaby.getInstance().getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
 	}
 	
-	public static boolean getLabyModPlayerKickEnable() {
+	public static boolean isKickEnabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 	}
 	
@@ -60,15 +60,15 @@ public class Config {
 		return AntiLaby.getInstance().getConfig().getString("AntiLaby.LabyModPlayersKick.KickMessage");
 	}
 	
-	public static boolean getMINIMAP_RADAR() {
+	public static boolean isMinimapRadarDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
 	}
 	
-	public static boolean getNICK() {
+	public static boolean isNickDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.NICK");
 	}
 	
-	public static boolean getPOTIONS() {
+	public static boolean isPotionConsumeDisabled() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.POTIONS");
 	}
 	

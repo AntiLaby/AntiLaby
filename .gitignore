@@ -7,3 +7,5 @@ AntiLaby19Icon.png
 /.gradle/
 /build/
 gradle.properties
+AntiLaby.iml
+.idea

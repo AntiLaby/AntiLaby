@@ -115,39 +115,33 @@ public class AntiLaby extends JavaPlugin {
 	public void initBMetrics() {
 		// Start plugin metrics for bStats.org
 		final BStats bstats = new BStats(this);
-		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> {
-			return String.valueOf(Config.isAutoUpdateEnabled());
-		}));
-		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> {
-			return String.valueOf(Config.getEnableBypassWithPermission());
-		}));
-		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> {
-			return String.valueOf(Config.getLabyModPlayerKickEnable());
-		}));
+		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config.isAutoUpdateEnabled())));
+		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config.isBypassWithPermissionsDisabled())));
+		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config.isKickEnabled())));
 		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
 			final Map<String, Integer> valueMap = new HashMap<>();
-			final int FOOD = BooleanIntConversion.convert(Config.getFOOD());
-			final int GUI = BooleanIntConversion.convert(Config.getGUI());
-			final int NICK = BooleanIntConversion.convert(Config.getNICK());
-			final int BLOCKBUILD = BooleanIntConversion.convert(Config.getBLOCKBUILD());
-			final int CHAT = BooleanIntConversion.convert(Config.getCHAT());
-			final int EXTRAS = BooleanIntConversion.convert(Config.getEXTRAS());
-			final int ANIMATIONS = BooleanIntConversion.convert(Config.getANIMATIONS());
-			final int POTIONS = BooleanIntConversion.convert(Config.getPOTIONS());
-			final int ARMOR = BooleanIntConversion.convert(Config.getARMOR());
-			final int DAMAGEINDICATOR = BooleanIntConversion.convert(Config.getDAMAGEINDICATOR());
-			final int MINIMAP_RADAR = BooleanIntConversion.convert(Config.getMINIMAP_RADAR());
-			valueMap.put("FOOD", FOOD);
-			valueMap.put("GUI", GUI);
-			valueMap.put("NICK", NICK);
-			valueMap.put("BLOCKBUILD", BLOCKBUILD);
-			valueMap.put("CHAT", CHAT);
-			valueMap.put("EXTRAS", EXTRAS);
-			valueMap.put("ANIMATIONS", ANIMATIONS);
-			valueMap.put("POTIONS", POTIONS);
-			valueMap.put("ARMOR", ARMOR);
-			valueMap.put("DAMAGEINDICATOR", DAMAGEINDICATOR);
-			valueMap.put("MINIMAP_RADAR", MINIMAP_RADAR);
+			final int foodDisabled = BooleanIntConversion.convert(Config.isFoodDisabled());
+			final int guiDisabled = BooleanIntConversion.convert(Config.isGuiDisabled());
+			final int isNickDisabled = BooleanIntConversion.convert(Config.isNickDisabled());
+			final int isBlockBuildDisabled = BooleanIntConversion.convert(Config.isBlockBuildDisabled());
+			final int isChatDisabled = BooleanIntConversion.convert(Config.isChatDisabled());
+			final int isExtrasDisabled = BooleanIntConversion.convert(Config.isExtrasDisabled());
+			final int isAnimationsDisabled = BooleanIntConversion.convert(Config.isAnimationsDisabled());
+			final int isPotionsDisabled = BooleanIntConversion.convert(Config.isPotionConsumeDisabled());
+			final int isArmorDisabled = BooleanIntConversion.convert(Config.isArmorDisabled());
+			final int isDamageIndicatorDisabled = BooleanIntConversion.convert(Config.isDamageIndicatorDisabled());
+			final int isMapOrRadarDisabled= BooleanIntConversion.convert(Config.isMinimapRadarDisabled());
+			valueMap.put("FOOD", foodDisabled);
+			valueMap.put("GUI", guiDisabled);
+			valueMap.put("NICK", isNickDisabled);
+			valueMap.put("BLOCKBUILD", isBlockBuildDisabled);
+			valueMap.put("CHAT", isChatDisabled);
+			valueMap.put("EXTRAS", isExtrasDisabled);
+			valueMap.put("ANIMATIONS", isAnimationsDisabled);
+			valueMap.put("POTIONS", isPotionsDisabled);
+			valueMap.put("ARMOR", isArmorDisabled);
+			valueMap.put("DAMAGEINDICATOR", isDamageIndicatorDisabled);
+			valueMap.put("MINIMAP_RADAR", isMapOrRadarDisabled);
 			return valueMap;
 		}));
 		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
