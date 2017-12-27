@@ -11,14 +11,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.regex.Pattern;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.YamlConstructor;
+import org.bukkit.configuration.file.YamlRepresenter;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.representer.Representer;
 
 public class LangFileParser {
 	
@@ -51,13 +54,7 @@ public class LangFileParser {
 		
 	}
 	
-	public static OutputStream migrateYamlToLang(YamlConfiguration yaml) {
-		final List<String> lines = new ArrayList<>();
-		for (final Entry<String, Object> e : yaml.getValues(false).entrySet())
-			if (e.getValue() instanceof String) lines.add(e.getKey() + "="
-					+ ((String) e.getValue()).replace("%PLAYER%", "%s").replace("%UUID%", "%s") + "\n");
-		for (final String string : lines)
-			System.out.println(string);
+	public static OutputStream migrateYamlToLang(YamlConfiguration yamlConfiguration) {
 		return new ByteArrayOutputStream();
 	}
 	
@@ -101,12 +98,22 @@ public class LangFileParser {
 		return result;
 	}
 	
+	private static Map<String, String> yamlToString(YamlConfiguration toDump) {
+		final DumperOptions yamlOptions = new DumperOptions();
+		final Representer yamlRepresenter = new YamlRepresenter();
+		yamlOptions.setDefaultFlowStyle(FlowStyle.FLOW);
+		yamlRepresenter.setDefaultFlowStyle(FlowStyle.FLOW);
+		final String yamlString = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions)
+				.dump(toDump.getValues(false));
+		return new Yaml().<HashMap<String, String>>load(yamlString);
+	}
+	
 	private final Locale l;
 	
 	public LangFileParser(Locale l) {
 		this.l = l;
 	}
-
+	
 	public Map<String, String> parse() {
 		return parse(getClass().getClassLoader().getResourceAsStream(l.getName() + ".lang"), l.getName() + ".lang");
 	}
