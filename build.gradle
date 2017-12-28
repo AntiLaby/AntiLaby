@@ -1,10 +1,16 @@
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+apply plugin: 'java'
 
-// In this section you declare where to find the dependencies of your project
+// Apply IDE plugins for easy build
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+
 repositories {
+    // For Spigot
     mavenLocal()
+    // For JUnit
     mavenCentral()
+    // For ProtocolLib
     maven {
     	url "http://repo.dmulloy2.net/content/groups/public/"
     }
@@ -16,14 +22,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-task createJar(type: Jar) {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
 task copyJarToTestserver(type: Copy) {
-    copy {
-        from createJar
-        into pathToTestServer.concat('plugins')
-    }
+    from jar
+    into pathToTestServer.concat('plugins')
 }

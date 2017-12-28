@@ -10,4 +10,3 @@
 #gradle stuff
 /.gradle/
 /build/
-gradle.properties
