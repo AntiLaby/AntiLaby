@@ -292,7 +292,7 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
+			player.sendMessage(Constants.PREFIX + "Â§aReloading AntiLaby...Â§r");
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else LOG.info("Reloading AntiLaby...");
 		ConfigFile.reloadFile();
@@ -302,7 +302,7 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
+			player.sendMessage(Constants.PREFIX + "Â§aReload complete!Â§r");
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else LOG.info("Reload complete!");
 	}

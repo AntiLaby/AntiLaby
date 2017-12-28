@@ -81,8 +81,8 @@ public class Logger {
 	 *            The log message
 	 */
 	public void log(Level level, String message) {
-		final String color = level == Level.ERROR || level == Level.FATAL ? "ง4" : level == Level.WARN ? "งe" : "";
-		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "งr");
+		final String color = level == Level.ERROR || level == Level.FATAL ? "ยง4" : level == Level.WARN ? "ยงe" : "";
+		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "ยงr");
 	}
 
 	/**

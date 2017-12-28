@@ -17,7 +17,7 @@ public final class Constants {
 	/**
 	 * The AntiLaby chat prefix
 	 */
-	public static final String PREFIX = "§8[§e§lAntiLaby§8]§r ";
+	public static final String PREFIX = "Â§8[Â§eÂ§lAntiLabyÂ§8]Â§r ";
 	/**
 	 * The SpigotMC.org resource link
 	 */

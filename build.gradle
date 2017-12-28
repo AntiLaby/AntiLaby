@@ -5,6 +5,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 
+sourceCompatibility = 1.8
+
 repositories {
     // For Spigot
     mavenLocal()
@@ -16,6 +18,15 @@ repositories {
     }
 }
 
+processResources {
+    from(sourceSets.main.resources.srcDirs)
+        exclude 'plugin.yml'
+    from(sourceSets.main.resources.srcDirs) {
+        include 'plugin.yml'
+        expand("version": project.version, "name": project.name)
+    }
+}
+
 dependencies {
 	compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
@@ -23,6 +34,8 @@ dependencies {
 }
 
 task copyJarToTestserver(type: Copy) {
+    pathToTestServer = pathToTestServer.replace('\\', '/')
+    if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
     from jar
     into pathToTestServer.concat('plugins')
 }
