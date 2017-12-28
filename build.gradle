@@ -1,5 +1,17 @@
+version = "pre-2.0"
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 // Apply IDE plugins for easy build
 apply plugin: 'eclipse'
@@ -14,28 +26,43 @@ repositories {
     mavenCentral()
     // For ProtocolLib
     maven {
-    	url "http://repo.dmulloy2.net/content/groups/public/"
+        url "http://repo.dmulloy2.net/content/groups/public/"
     }
 }
 
 processResources {
     from(sourceSets.main.resources.srcDirs)
-        exclude 'plugin.yml'
+    exclude 'plugin.yml'
     from(sourceSets.main.resources.srcDirs) {
         include 'plugin.yml'
         expand("version": project.version, "name": project.name)
     }
 }
 
+jar {
+    archiveName = project.name + '-' + project.version + '.jar'
+}
+
 dependencies {
-	compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
+    compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
+    compile 'org.apache.commons:commons-csv:1.5'
     testCompile 'junit:junit:4.12'
 }
 
 task copyJarToTestserver(type: Copy) {
     pathToTestServer = pathToTestServer.replace('\\', '/')
     if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
-    from jar
+    from shadowJar
     into pathToTestServer.concat('plugins')
+}
+
+shadowJar {
+    dependencies {
+        exclude(dependency('com.comphenix.protocol::.*'))
+        exclude(dependency('org.spigotmc::.*'))
+        exclude(dependency('junit::.*'))
+    }
+    relocate "org.apache.commons.csv", "antilaby.shaded.ccsv"
+    archiveName = project.name + '-' + project.version + '-shaded.jar'
 }
