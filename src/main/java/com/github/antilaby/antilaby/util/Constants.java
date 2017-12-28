@@ -8,7 +8,7 @@ import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
  * @author heisluft
  */
 public final class Constants {
-
+	
 	/**
 	 * The SpigotMC.org resource id
 	 */
@@ -21,14 +21,13 @@ public final class Constants {
 	/**
 	 * The SpigotMC.org resource link
 	 */
-	public static final String RESOURCE_LINK = "https://www.spigotmc.org/resources/" + RESOURCE_ID + "/";
+	public static final String RESOURCE_LINK = "https://www.spigotmc.org/resources/" + RESOURCE_ID + '/';
 	/**
 	 * The permission for bypassing the {@link AntiLabyPackager}
 	 */
 	public static final String PERMISSION_BYPASS = "antilaby.bypass";
 	/**
-	 * The permission for bypassing the commands invoked when joining while having
-	 * LabyMod activated
+	 * The permission for bypassing the commands invoked when joining while having LabyMod activated
 	 */
 	public static final String PERMISSION_BYPASS_JOIN_COMMANDS = "antilaby.bypasscommands";
 	/**

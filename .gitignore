@@ -6,6 +6,7 @@
 
 #intellij stuff
 /.idea/
+/out/
 
 #gradle stuff
 /.gradle/

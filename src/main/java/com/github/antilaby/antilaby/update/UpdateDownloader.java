@@ -1,5 +1,9 @@
 package com.github.antilaby.antilaby.update;
 
+import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.util.Constants;
+import com.github.antilaby.antilaby.util.IOUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -12,15 +16,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.Constants;
-import com.github.antilaby.antilaby.util.IOUtils;
-
 public class UpdateDownloader extends Thread {
-
+	
 	private boolean updateAvailable;
 	private String newVersion;
-
+	
 	private boolean installUpdate(String urlString, int urlId) {
 		AntiLaby.LOG.info("Downloading update from download server " + urlId + "...");
 		try {
@@ -30,40 +30,40 @@ public class UpdateDownloader extends Thread {
 			final OutputStream os = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.tmp"));
 			final byte[] chunk = new byte[1024];
 			int chunkSize;
-			while ((chunkSize = is.read(chunk)) != -1)
+			while((chunkSize = is.read(chunk)) != -1)
 				os.write(chunk, 0, chunkSize);
 			os.close();
 			final File newfile = new File("plugins/AntiLaby.tmp");
 			final long newlength = newfile.length();
-			if (newlength <= 10000) {
+			if(newlength <= 10000) {
 				newfile.delete();
 				return false;
 			} else {
 				AntiLaby.LOG.info("Installing update...");
-
+				
 				final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
-
+				
 				final OutputStream os2 = new BufferedOutputStream(
 						new FileOutputStream(AntiLaby.getInstance().getFile()));
 				final byte[] chunk2 = new byte[1024];
 				int chunkSize2;
-				while ((chunkSize2 = is2.read(chunk2)) != -1)
+				while((chunkSize2 = is2.read(chunk2)) != -1)
 					os2.write(chunk2, 0, chunkSize2);
 				is2.close();
 				os2.close();
-
+				
 				final File tmp = new File("plugins/AntiLaby.tmp");
 				tmp.delete();
 				return true;
 			}
-		} catch (final FileNotFoundException e) {
+		} catch(final FileNotFoundException e) {
 			return false;
-		} catch (final IOException e) {
+		} catch(final IOException e) {
 			e.printStackTrace();
 			return false;
 		}
 	}
-
+	
 	@Override
 	// Start update function async
 	public void run() {
@@ -71,10 +71,11 @@ public class UpdateDownloader extends Thread {
 		AntiLaby.LOG.info("Checking for updates on spigotmc.org...");
 		try {
 			newVersion = IOUtils
-					.readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Constants.RESOURCE_ID);
-			if (newVersion != null) {
-				if (!newVersion.contains(" ") || !newVersion.contains("!")) {
-					if (!newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
+					             .readUrl("https://api.spigotmc.org/legacy/update.php?resource=" + Constants
+							                                                                               .RESOURCE_ID);
+			if(newVersion != null) {
+				if(!newVersion.contains(" ") || !newVersion.contains("!")) {
+					if(!newVersion.equalsIgnoreCase(AntiLaby.getInstance().getDescription().getVersion())) {
 						AntiLaby.LOG.info("Update found! Version " + newVersion + " is available.");
 						updateAvailable = true;
 					} else {
@@ -90,23 +91,26 @@ public class UpdateDownloader extends Thread {
 				AntiLaby.LOG.error("Failed to check for updates on spigotmc.org! (No information received)");
 				updateAvailable = false;
 			}
-		} catch (final Exception ex) {
+		} catch(final Exception ex) {
 			AntiLaby.LOG.error("Failed to check for updates on spigotmc.org! (" + ex.getMessage() + ")");
 			updateAvailable = false;
 		}
 		// Download and install update if available
-		if (updateAvailable == true) {
-			if (installUpdate("https://github.com/NathanNr/AntiLaby/releases/download/" + newVersion + "/AntiLaby.jar",
+		if(updateAvailable) {
+			if(installUpdate("https://github.com/NathanNr/AntiLaby/releases/download/" + newVersion + "/AntiLaby.jar",
 					1))
 				AntiLaby.LOG.warn("Auto-update complete! Reload or restart your server to activate the new version.");
 			else AntiLaby.LOG.error(
-					"Failed to install update from download server 1! Please install the newest version manually from https://www.spigotmc.org/resources/"
+					"Failed to install update from download server 1! Please install the newest version manually " +
+							"from" +
+							" " +
+							"https://www.spigotmc.org/resources/"
 							+ Constants.RESOURCE_ID + "/!");
 			final File tmp = new File("plugins/AntiLaby.tmp");
-			if (tmp.exists()) tmp.delete();
+			if(tmp.exists()) tmp.delete();
 		}
 		AntiLaby.getInstance().disableIfNotCompatible();
 		interrupt();
 	}
-
+	
 }
