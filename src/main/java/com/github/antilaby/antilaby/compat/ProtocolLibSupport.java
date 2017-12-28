@@ -17,7 +17,7 @@ import com.github.antilaby.antilaby.main.AntiLaby;
  *
  * @author heisluft
  */
-public class ProtocolLibSupport implements PacketListener {
+public final class ProtocolLibSupport implements PacketListener {
 
 	private static final Logger LOG = new Logger("ProtocolLib Support");
 	
@@ -57,7 +57,7 @@ public class ProtocolLibSupport implements PacketListener {
 			if (!old.equals(lang)) lm.setLanguageForPlayer(event.getPlayer(), lang);
 
 		} catch (final ReflectiveOperationException e) {
-			LOG.error("could not retrieve language, falling back to possibly inaccurate events: " + e.getMessage());
+			LOG.error("could not retrieve language, falling back to possibly inaccurate listener: " + e.getMessage());
 		}
 	}
 

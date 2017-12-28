@@ -41,7 +41,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses LabyMod.");
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 			}
-			if (Config.getLabyModPlayerKickEnable())
+			if (Config.isKickEnabled())
 				if (AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission")
 						.equals("true")) {
 					if (!player.hasPermission(Constants.PERMISSION_BYPASS)) {
