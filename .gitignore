@@ -1,9 +1,13 @@
+#eclipse stuff
 /.settings/
 /bin/
-AntiLaby19Icon.png
-*.classpath
-*.project
-/target/
+.classpath
+.project
+
+#intellij stuff
+/.idea/
+
+#gradle stuff
 /.gradle/
 /build/
 gradle.properties
