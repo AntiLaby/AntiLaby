@@ -21,49 +21,6 @@ public class UpdateDownloader extends Thread {
 	private boolean updateAvailable;
 	private String newVersion;
 	
-	private boolean installUpdate(String urlString, int urlId) {
-		AntiLaby.LOG.info("Downloading update from download server " + urlId + "...");
-		try {
-			final URL url = new URL(urlString);
-			final URLConnection conn = url.openConnection();
-			final InputStream is = new BufferedInputStream(conn.getInputStream());
-			final OutputStream os = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.tmp"));
-			final byte[] chunk = new byte[1024];
-			int chunkSize;
-			while((chunkSize = is.read(chunk)) != -1)
-				os.write(chunk, 0, chunkSize);
-			os.close();
-			final File newfile = new File("plugins/AntiLaby.tmp");
-			final long newlength = newfile.length();
-			if(newlength <= 10000) {
-				newfile.delete();
-				return false;
-			} else {
-				AntiLaby.LOG.info("Installing update...");
-				
-				final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
-				
-				final OutputStream os2 = new BufferedOutputStream(
-						new FileOutputStream(AntiLaby.getInstance().getFile()));
-				final byte[] chunk2 = new byte[1024];
-				int chunkSize2;
-				while((chunkSize2 = is2.read(chunk2)) != -1)
-					os2.write(chunk2, 0, chunkSize2);
-				is2.close();
-				os2.close();
-				
-				final File tmp = new File("plugins/AntiLaby.tmp");
-				tmp.delete();
-				return true;
-			}
-		} catch(final FileNotFoundException e) {
-			return false;
-		} catch(final IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
 	@Override
 	// Start update function async
 	public void run() {
@@ -111,6 +68,49 @@ public class UpdateDownloader extends Thread {
 		}
 		AntiLaby.getInstance().disableIfNotCompatible();
 		interrupt();
+	}
+	
+	private boolean installUpdate(String urlString, int urlId) {
+		AntiLaby.LOG.info("Downloading update from download server " + urlId + "...");
+		try {
+			final URL url = new URL(urlString);
+			final URLConnection conn = url.openConnection();
+			final InputStream is = new BufferedInputStream(conn.getInputStream());
+			final OutputStream os = new BufferedOutputStream(new FileOutputStream("plugins/AntiLaby.tmp"));
+			final byte[] chunk = new byte[1024];
+			int chunkSize;
+			while((chunkSize = is.read(chunk)) != -1)
+				os.write(chunk, 0, chunkSize);
+			os.close();
+			final File newfile = new File("plugins/AntiLaby.tmp");
+			final long newlength = newfile.length();
+			if(newlength <= 10000) {
+				newfile.delete();
+				return false;
+			} else {
+				AntiLaby.LOG.info("Installing update...");
+				
+				final FileInputStream is2 = new FileInputStream(new File("plugins/AntiLaby.tmp"));
+				
+				final OutputStream os2 = new BufferedOutputStream(
+						new FileOutputStream(AntiLaby.getInstance().getFile()));
+				final byte[] chunk2 = new byte[1024];
+				int chunkSize2;
+				while((chunkSize2 = is2.read(chunk2)) != -1)
+					os2.write(chunk2, 0, chunkSize2);
+				is2.close();
+				os2.close();
+				
+				final File tmp = new File("plugins/AntiLaby.tmp");
+				tmp.delete();
+				return true;
+			}
+		} catch(final FileNotFoundException e) {
+			return false;
+		} catch(final IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 	
 }

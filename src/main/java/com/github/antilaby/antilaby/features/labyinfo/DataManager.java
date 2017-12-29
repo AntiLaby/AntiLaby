@@ -20,13 +20,6 @@ public class DataManager {
 	private static File dataFile = new File(AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser");
 
 	/**
-	 * Deletes the dataFile
-	 */
-	public static void cleanup() {
-		if (dataFile.exists()) dataFile.delete();
-	}
-	
-	/**
 	 * Loads all LabyPlayerInformation
 	 */
 	public static void loadData() {
@@ -47,6 +40,13 @@ public class DataManager {
 			}
 			cleanup();
 		}
+	}
+	
+	/**
+	 * Deletes the dataFile
+	 */
+	public static void cleanup() {
+		if (dataFile.exists()) dataFile.delete();
 	}
 
 	public static void saveData() {

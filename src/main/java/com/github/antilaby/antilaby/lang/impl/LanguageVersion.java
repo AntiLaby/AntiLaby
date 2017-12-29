@@ -5,9 +5,11 @@ import java.util.List;
 
 public class LanguageVersion implements Comparable<LanguageVersion> {
 	
+	private static final List<LanguageVersion> instances = new ArrayList<>();
 	public static final LanguageVersion UNDEFINED = new LanguageVersion();
 	public static final LanguageVersion CURRENT_VERSION = new LanguageVersion("1.0.0");
-	private static final List<LanguageVersion> instances = new ArrayList<>();
+	
+	public static void init() {}
 	
 	public static LanguageVersion getOrCreate(int major, int minor, int patch) {
 		for(final LanguageVersion lv : instances)
@@ -19,6 +21,11 @@ public class LanguageVersion implements Comparable<LanguageVersion> {
 		for(final LanguageVersion lv : instances)
 			if(lv.toString().equals(name)) return lv;
 		return new LanguageVersion(name);
+	}
+	
+	@Override
+	public String toString() {
+		return major + "." + minor + '.' + patch;
 	}
 	
 	private final int major, minor, patch;
@@ -101,10 +108,5 @@ public class LanguageVersion implements Comparable<LanguageVersion> {
 	
 	public int getPatchVersion() {
 		return patch;
-	}
-	
-	@Override
-	public String toString() {
-		return major + "." + minor + '.' + patch;
 	}
 }

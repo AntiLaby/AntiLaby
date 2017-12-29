@@ -23,11 +23,6 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 	private LanguageManager() {}
 	
 	@Override
-	public Locale getLanguageForPlayer(Player p) {
-		return mappedLanguages.get(p);
-	}
-	
-	@Override
 	public void init() {
 		new File(RESOURCE_PATH).mkdirs();
 		for(final Locale l : Locale.values())
@@ -35,16 +30,6 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 		for(final Player p : Bukkit.getOnlinePlayers())
 			setLanguageForPlayer(p, p.getLocale());
 		isInit = true;
-	}
-	
-	@Override
-	public boolean isInit() {
-		return isInit;
-	}
-	
-	@Override
-	public void setLanguageForPlayer(Player p, Locale l) {
-		mappedLanguages.put(p, l);
 	}
 	
 	@Override
@@ -60,13 +45,28 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 	}
 	
 	@Override
-	public String translate(String unlocalized, Locale language, Object... args) {
-		return language.translate(unlocalized, args);
+	public void setLanguageForPlayer(Player p, Locale l) {
+		mappedLanguages.put(p, l);
 	}
 	
 	@Override
 	public String translate(String unlocalized, Player translatedTo, Object... args) {
 		return translate(unlocalized, getLanguageForPlayer(translatedTo), args);
+	}
+	
+	@Override
+	public String translate(String unlocalized, Locale language, Object... args) {
+		return language.translate(unlocalized, args);
+	}
+	
+	@Override
+	public Locale getLanguageForPlayer(Player p) {
+		return mappedLanguages.get(p);
+	}
+	
+	@Override
+	public boolean isInit() {
+		return isInit;
 	}
 	
 	@Override

@@ -46,23 +46,12 @@ jar {
 dependencies {
     compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
-    compile 'org.apache.commons:commons-csv:1.5'
     testCompile 'junit:junit:4.12'
 }
 
 task copyJarToTestserver(type: Copy) {
     pathToTestServer = pathToTestServer.replace('\\', '/')
     if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
-    from shadowJar
+    from jar
     into pathToTestServer.concat('plugins')
-}
-
-shadowJar {
-    dependencies {
-        exclude(dependency('com.comphenix.protocol::.*'))
-        exclude(dependency('org.spigotmc::.*'))
-        exclude(dependency('junit::.*'))
-    }
-    relocate "org.apache.commons.csv", "antilaby.shaded.ccsv"
-    archiveName = project.name + '-' + project.version + '-shaded.jar'
 }

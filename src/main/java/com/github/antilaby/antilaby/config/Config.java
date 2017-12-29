@@ -1,27 +1,27 @@
 package com.github.antilaby.antilaby.config;
 
-import java.util.List;
-
 import com.github.antilaby.antilaby.main.AntiLaby;
+
+import java.util.List;
 
 public class Config {
 	
 	public static boolean getANIMATIONS() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ANIMATIONS");
 	}
-
+	
 	public static boolean getARMOR() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.ARMOR");
 	}
-
+	
 	public static boolean getBLOCKBUILD() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.BLOCKBUILD");
 	}
-
+	
 	public static boolean getCHAT() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.CHAT");
 	}
-
+	
 	public static boolean getDAMAGEINDICATOR() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
 	}

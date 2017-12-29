@@ -37,21 +37,6 @@ public class AntiLabyPackager {
 		this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 	}
 	
-	public Map<LabyModFeature, Boolean> allowEverything() {
-		final FileConfiguration cfg = ConfigFile.getCfg();
-		final Map<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new EnumMap<>(LabyModFeature.class);
-		// New features/Enable
-		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
-				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
-		disabledLabyModFeaturesConfig.put(LabyModFeature.IMPROVED_LAVA,
-				cfg.getBoolean("AntiLaby.Features.Enable.IMPROVED_LAVA"));
-		disabledLabyModFeaturesConfig.put(LabyModFeature.CROSSHAIR_SYNC,
-				cfg.getBoolean("AntiLaby.Features.Enable.CROSSHAIR_SYNC"));
-		disabledLabyModFeaturesConfig.put(LabyModFeature.REFILL_FIX,
-				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
-		return disabledLabyModFeaturesConfig;
-	}
-	
 	/**
 	 * Get the AntiLaby packages from the config file
 	 *
@@ -150,6 +135,21 @@ public class AntiLabyPackager {
 			return false;
 		}
 		return true;
+	}
+	
+	public Map<LabyModFeature, Boolean> allowEverything() {
+		final FileConfiguration cfg = ConfigFile.getCfg();
+		final Map<LabyModFeature, Boolean> disabledLabyModFeaturesConfig = new EnumMap<>(LabyModFeature.class);
+		// New features/Enable
+		disabledLabyModFeaturesConfig.put(LabyModFeature.BLOCKBUILD,
+				cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.IMPROVED_LAVA,
+				cfg.getBoolean("AntiLaby.Features.Enable.IMPROVED_LAVA"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.CROSSHAIR_SYNC,
+				cfg.getBoolean("AntiLaby.Features.Enable.CROSSHAIR_SYNC"));
+		disabledLabyModFeaturesConfig.put(LabyModFeature.REFILL_FIX,
+				cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX"));
+		return disabledLabyModFeaturesConfig;
 	}
 	
 	public AntiLabyPackager setDisabledLabyModFeatures(Map<LabyModFeature, Boolean> disabledLabyModFeatures) {

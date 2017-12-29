@@ -30,12 +30,6 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 		IncomingPluginChannel.labyModPlayers = labyModPlayers;
 	}
 	
-	private void kickPlayer(Player player) {
-		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
-		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
-				                  + ") is not allowed to use LabyMod and has been kicked.");
-	}
-	
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] data) {
 		if(channel.equals(Constants.LABYMOD_CHANNEL)) {
@@ -67,6 +61,12 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 				}
 			}
 		}
+	}
+	
+	private void kickPlayer(Player player) {
+		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
+		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
+				                  + ") is not allowed to use LabyMod and has been kicked.");
 	}
 	
 	@EventHandler

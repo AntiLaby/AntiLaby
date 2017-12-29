@@ -1,17 +1,16 @@
 package com.github.antilaby.antilaby.config;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.github.antilaby.antilaby.main.AntiLaby;
+import java.io.File;
+import java.io.IOException;
 
 public class ConfigFile {
-
-	private static AntiLaby plugin = AntiLaby.getInstance();
+	
+	private static final AntiLaby plugin = AntiLaby.getInstance();
 	
 	private static File file;
 	private static FileConfiguration cfg;
@@ -28,7 +27,7 @@ public class ConfigFile {
 		file = new File(plugin.getDataFolder() + "/config.yml");
 		try {
 			file.createNewFile();
-		} catch (final IOException e) {
+		} catch(final IOException e) {
 			e.printStackTrace();
 		}
 		cfg = YamlConfiguration.loadConfiguration(file);
@@ -38,7 +37,7 @@ public class ConfigFile {
 	public static void reloadFile() {
 		try {
 			cfg.load(file);
-		} catch (IOException | InvalidConfigurationException e) {
+		} catch(IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -52,7 +51,7 @@ public class ConfigFile {
 	public static void saveFile() {
 		try {
 			cfg.save(file);
-		} catch (final IOException e) {
+		} catch(final IOException e) {
 			e.printStackTrace();
 		}
 	}

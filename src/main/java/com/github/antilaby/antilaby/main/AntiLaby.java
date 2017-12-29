@@ -73,13 +73,6 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	/**
-	 * Disables the plugin if not compatible
-	 */
-	public void disableIfNotCompatible() {
-		if(!compatible) getPluginLoader().disablePlugin(this);
-	}
-	
-	/**
 	 * Enables the desired {@link PluginFeature}
 	 *
 	 * @param feature
@@ -105,84 +98,6 @@ public class AntiLaby extends JavaPlugin {
 	
 	public VersionType getVersionType() {
 		return versionType;
-	}
-	
-	/**
-	 * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
-	 */
-	private void initBMetrics() {
-		// Start plugin metrics for bStats.org
-		final BStats bstats = new BStats(this);
-		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config
-				                                                                                      .isAutoUpdateEnabled())));
-		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config
-				                                                                                  .getEnableBypassWithPermission())));
-		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config
-				                                                                                .getLabyModPlayerKickEnable())));
-		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
-			final Map<String, Integer> valueMap = new HashMap<>();
-			final int food = BooleanIntConversion.convert(Config.getFOOD());
-			final int gui = BooleanIntConversion.convert(Config.getGUI());
-			final int nick = BooleanIntConversion.convert(Config.getNICK());
-			final int blockBuild = BooleanIntConversion.convert(Config.getBLOCKBUILD());
-			final int chat = BooleanIntConversion.convert(Config.getCHAT());
-			final int extras = BooleanIntConversion.convert(Config.getEXTRAS());
-			final int animations = BooleanIntConversion.convert(Config.getANIMATIONS());
-			final int potions = BooleanIntConversion.convert(Config.getPOTIONS());
-			final int armor = BooleanIntConversion.convert(Config.getARMOR());
-			final int damageIndicator = BooleanIntConversion.convert(Config.getDAMAGEINDICATOR());
-			final int minimapRadar = BooleanIntConversion.convert(Config.getMINIMAP_RADAR());
-			valueMap.put("FOOD", food);
-			valueMap.put("GUI", gui);
-			valueMap.put("NICK", nick);
-			valueMap.put("BLOCKBUILD", blockBuild);
-			valueMap.put("CHAT", chat);
-			valueMap.put("EXTRAS", extras);
-			valueMap.put("ANIMATIONS", animations);
-			valueMap.put("POTIONS", potions);
-			valueMap.put("ARMOR", armor);
-			valueMap.put("DAMAGEINDICATOR", damageIndicator);
-			valueMap.put("MINIMAP_RADAR", minimapRadar);
-			return valueMap;
-		}));
-		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
-			final Map<String, Integer> valueMap = new HashMap<>();
-			valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
-			valueMap.put("players_no_lm",
-					Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
-			return valueMap;
-		}));
-		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () ->
-				                                                                                      IncomingPluginChannel.getLabyModPlayers().size()));
-		final LabyModJoinCommands lmjc = new LabyModJoinCommands();
-		bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
-			if(lmjc.getLabyModJoinCommands(false).isEmpty()) return "false";
-			else return "true";
-		}));
-		bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> lmjc.getLabyModJoinCommands(false)
-				                                                                          .size()));
-	}
-	
-	/**
-	 * Initializes and registers the AntiLaby commands
-	 */
-	private void initCmds() {
-		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
-		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
-		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
-	}
-	
-	private void initConfig() {
-		new InitConfig(this).init();
-	}
-	
-	/**
-	 * Initializes and registers the EventListeners
-	 */
-	private void initEvents() {
-		final PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerJoin(), this);
-		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
 	
 	/**
@@ -268,6 +183,110 @@ public class AntiLaby extends JavaPlugin {
 		LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
 	}
 	
+	/**
+	 * Disables the plugin if not compatible
+	 */
+	public void disableIfNotCompatible() {
+		if(!compatible) getPluginLoader().disablePlugin(this);
+	}
+	
+	private void update() {
+		if(versionType.equals(VersionType.RELEASE)) {
+			if(getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+				// Check and install updates async
+				ud = new UpdateDownloader();
+				ud.start();
+			} else LOG.info(
+					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby " +
+							"manually" +
+							" from here: https://www.spigotmc.org/resources/"
+							+ Constants.RESOURCE_ID + "/!");
+		} else {
+			LOG.info("You are running a " + versionType.toString()
+					         + " version! Auto-update is not available. You can update manually: " + Constants
+							                                                                                 .RESOURCE_LINK);
+			disableIfNotCompatible();
+		}
+	}
+	
+	private void initConfig() {
+		new InitConfig(this).init();
+	}
+	
+	/**
+	 * Initializes and registers the AntiLaby commands
+	 */
+	private void initCmds() {
+		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
+		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
+		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
+	}
+	
+	/**
+	 * Initializes and registers the EventListeners
+	 */
+	private void initEvents() {
+		final PluginManager pm = Bukkit.getPluginManager();
+		pm.registerEvents(new PlayerJoin(), this);
+		pm.registerEvents(new IncomingPluginChannel(), this);
+	}
+	
+	/**
+	 * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
+	 */
+	private void initBMetrics() {
+		// Start plugin metrics for bStats.org
+		final BStats bstats = new BStats(this);
+		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config
+				                                                                                      .isAutoUpdateEnabled())));
+		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config
+				                                                                                  .getEnableBypassWithPermission())));
+		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config
+				                                                                                .getLabyModPlayerKickEnable())));
+		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
+			final Map<String, Integer> valueMap = new HashMap<>();
+			final int food = BooleanIntConversion.convert(Config.getFOOD());
+			final int gui = BooleanIntConversion.convert(Config.getGUI());
+			final int nick = BooleanIntConversion.convert(Config.getNICK());
+			final int blockBuild = BooleanIntConversion.convert(Config.getBLOCKBUILD());
+			final int chat = BooleanIntConversion.convert(Config.getCHAT());
+			final int extras = BooleanIntConversion.convert(Config.getEXTRAS());
+			final int animations = BooleanIntConversion.convert(Config.getANIMATIONS());
+			final int potions = BooleanIntConversion.convert(Config.getPOTIONS());
+			final int armor = BooleanIntConversion.convert(Config.getARMOR());
+			final int damageIndicator = BooleanIntConversion.convert(Config.getDAMAGEINDICATOR());
+			final int minimapRadar = BooleanIntConversion.convert(Config.getMINIMAP_RADAR());
+			valueMap.put("FOOD", food);
+			valueMap.put("GUI", gui);
+			valueMap.put("NICK", nick);
+			valueMap.put("BLOCKBUILD", blockBuild);
+			valueMap.put("CHAT", chat);
+			valueMap.put("EXTRAS", extras);
+			valueMap.put("ANIMATIONS", animations);
+			valueMap.put("POTIONS", potions);
+			valueMap.put("ARMOR", armor);
+			valueMap.put("DAMAGEINDICATOR", damageIndicator);
+			valueMap.put("MINIMAP_RADAR", minimapRadar);
+			return valueMap;
+		}));
+		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
+			final Map<String, Integer> valueMap = new HashMap<>();
+			valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
+			valueMap.put("players_no_lm",
+					Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
+			return valueMap;
+		}));
+		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () ->
+				                                                                                      IncomingPluginChannel.getLabyModPlayers().size()));
+		final LabyModJoinCommands lmjc = new LabyModJoinCommands();
+		bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
+			if(lmjc.getLabyModJoinCommands(false).isEmpty()) return "false";
+			else return "true";
+		}));
+		bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> lmjc.getLabyModJoinCommands(false)
+				                                                                          .size()));
+	}
+	
 	@Override
 	public void onLoad() {
 		instance = this;
@@ -316,25 +335,6 @@ public class AntiLaby extends JavaPlugin {
 				ChatColor.BLUE + "Use '/labyinfo <player>' to check if a player uses LabyMod." + ChatColor.RESET);
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-	}
-	
-	private void update() {
-		if(versionType.equals(VersionType.RELEASE)) {
-			if(getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-				// Check and install updates async
-				ud = new UpdateDownloader();
-				ud.start();
-			} else LOG.info(
-					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby " +
-							"manually" +
-							" from here: https://www.spigotmc.org/resources/"
-							+ Constants.RESOURCE_ID + "/!");
-		} else {
-			LOG.info("You are running a " + versionType.toString()
-					         + " version! Auto-update is not available. You can update manually: " + Constants
-							                                                                                 .RESOURCE_LINK);
-			disableIfNotCompatible();
-		}
 	}
 	
 }

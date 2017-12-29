@@ -11,15 +11,15 @@ public enum VersionType {
 		return VersionType.RELEASE;
 	}
 	
+	@Override
+	public String toString() {
+		return name;
+	}
+	
 	private final String name;
 	
 	VersionType(String name) {
 		this.name = name;
-	}
-	
-	@Override
-	public String toString() {
-		return name;
 	}
 	
 }

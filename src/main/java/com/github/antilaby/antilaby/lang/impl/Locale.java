@@ -17,18 +17,12 @@ import java.util.jar.JarFile;
 
 public class Locale implements ILocale {
 	
-	public static final Locale UNDEFINED = null;
 	private static final List<Locale> values = new ArrayList<>();
 	private static final String DEFAULT_FALLBACK_MESSAGE = "Unknown Error";
+	public static final Locale UNDEFINED = null;
 	public static final Locale EN_US = new Locale("en_us", DEFAULT_FALLBACK_MESSAGE);
 	public static final Locale DE_DE = new Locale("de_de", DEFAULT_FALLBACK_MESSAGE);
 	public static final Locale FR_FR = new Locale("fr_fr", DEFAULT_FALLBACK_MESSAGE);
-	
-	public static Locale byName(String name, Locale fallback) {
-		for(final Locale language : values)
-			if(language.name.equals(name)) return language;
-		return fallback;
-	}
 	
 	public static Locale getOrCreate(String name) {
 		return getOrCreate(name, DEFAULT_FALLBACK_MESSAGE);
@@ -49,6 +43,12 @@ public class Locale implements ILocale {
 		return nameParts.length == 2 && nameParts[0].length() == 2 && nameParts[1].length() == 2;
 	}
 	
+	public static Locale byName(String name, Locale fallback) {
+		for(final Locale language : values)
+			if(language.name.equals(name)) return language;
+		return fallback;
+	}
+	
 	public static List<Locale> values() {
 		return values;
 	}
@@ -67,6 +67,14 @@ public class Locale implements ILocale {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public String translate(String toTranslate, Object... args) {
+		if(!init) init(false);
+		return translation.containsKey(toTranslate)
+				       ? ChatColor.translateAlternateColorCodes('&', String.format(translation.get(toTranslate), args))
+				       : translation.getOrDefault("translation.error", fallbackErrorMessage);
 	}
 	
 	public Locale init(boolean overwrite) {
@@ -90,13 +98,5 @@ public class Locale implements ILocale {
 		}
 		init = true;
 		return this;
-	}
-	
-	@Override
-	public String translate(String toTranslate, Object... args) {
-		if(!init) init(false);
-		return translation.containsKey(toTranslate)
-				       ? ChatColor.translateAlternateColorCodes('&', String.format(translation.get(toTranslate), args))
-				       : translation.getOrDefault("translation.error", fallbackErrorMessage);
 	}
 }

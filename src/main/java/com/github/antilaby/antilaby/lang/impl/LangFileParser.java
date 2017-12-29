@@ -57,10 +57,6 @@ public class LangFileParser {
 		}
 	}
 	
-	public static Map<String, String> parse(InputStream resource) {
-		return parse(resource, "unknown");
-	}
-	
 	public static Map<String, String> parse(InputStream resource, String nameToUse) {
 		LanguageManager.LOG.info("Trying to load language resource: " + nameToUse);
 		final Map<String, String> result = new HashMap<>();
@@ -90,6 +86,10 @@ public class LangFileParser {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	public static Map<String, String> parse(InputStream resource) {
+		return parse(resource, "unknown");
 	}
 	
 	private static Map<String, String> yamlToString(YamlConfiguration toDump) {

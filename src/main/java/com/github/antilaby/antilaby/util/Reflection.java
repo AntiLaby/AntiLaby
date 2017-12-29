@@ -2,11 +2,6 @@ package com.github.antilaby.antilaby.util;
 
 public final class Reflection {
 	
-	@SuppressWarnings("unchecked")
-	public static <T> T cast(Object toCast) {
-		return (T) toCast;
-	}
-	
 	public static <T, E> E getField(T instance, String fieldName) {
 		try {
 			return cast(instance.getClass().getDeclaredField(fieldName).get(instance));
@@ -14,6 +9,11 @@ public final class Reflection {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T cast(Object toCast) {
+		return (T) toCast;
 	}
 	
 	public static <T, E> E invokeMethod(T instance, String methodName, Class<?>[] argTypes, Object... args) {
@@ -33,4 +33,9 @@ public final class Reflection {
 		}
 		return null;
 	}
+	
+	/**
+	 * Private constructor, no need to instantiate this class
+	 */
+	private Reflection() {}
 }

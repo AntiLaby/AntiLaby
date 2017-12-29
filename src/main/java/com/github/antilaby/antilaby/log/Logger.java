@@ -35,6 +35,19 @@ public class Logger {
 	}
 	
 	/**
+	 * Logs the given message with the specified {@link Level}
+	 *
+	 * @param level
+	 * 		The Level to use
+	 * @param message
+	 * 		The log message
+	 */
+	public void log(Level level, String message) {
+		final String color = level == Level.ERROR || level == Level.FATAL ? "§4" : level == Level.WARN ? "§e" : "";
+		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "§r");
+	}
+	
+	/**
 	 * Logs the given message at {@link Level#FATAL FATAL} level
 	 *
 	 * @param message
@@ -52,19 +65,6 @@ public class Logger {
 	 */
 	public void info(String message) {
 		log(Level.INFO, message);
-	}
-	
-	/**
-	 * Logs the given message with the specified {@link Level}
-	 *
-	 * @param level
-	 * 		The Level to use
-	 * @param message
-	 * 		The log message
-	 */
-	public void log(Level level, String message) {
-		final String color = level == Level.ERROR || level == Level.FATAL ? "§4" : level == Level.WARN ? "§e" : "";
-		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "§r");
 	}
 	
 	/**

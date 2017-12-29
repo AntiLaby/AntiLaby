@@ -9,9 +9,8 @@ import java.util.List;
 
 public class InitConfig {
 	
-	public static final int CURRENT_CONFIG_VERSION = 2;
-	
 	private static final Logger LOG = new Logger("Config");
+	public static final int CURRENT_CONFIG_VERSION = 2;
 	
 	public static int getCurrentConfigVersion() {
 		return CURRENT_CONFIG_VERSION;
@@ -25,51 +24,33 @@ public class InitConfig {
 		this.plugin = plugin;
 	}
 	
-	public void convertConfig() {
-		if(configVersion == 1) {
-			// Convert...
-			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
-					                                        .getBoolean("AntiLaby.EnableBypassWithPermission");
-			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
-			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
-			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
-			final boolean nick = ConfigFile.getCfg().getBoolean("AntiLaby.disable.NICK");
-			// boolean BLOCKBUILD =
-			// ConfigFile.getCfg().getBoolean("AntiLaby.disable.BLOCKBUILD");
-			final boolean chat = ConfigFile.getCfg().getBoolean("AntiLaby.disable.CHAT");
-			final boolean extras = ConfigFile.getCfg().getBoolean("AntiLaby.disable.EXTRAS");
-			final boolean animations = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ANIMATIONS");
-			final boolean potions = ConfigFile.getCfg().getBoolean("AntiLaby.disable.POTIONS");
-			final boolean armor = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ARMOR");
-			final boolean damageIndicator = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
-			final boolean minimapRadar = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
-			final List<String> commands = ConfigFile.getCfg()
-					                              .getStringList("AntiLaby.LabyModPlayerCommands");
-			ConfigFile.resetConfig();
+	public int getConfigVersion() {
+		return configVersion;
+	}
+	
+	public void init() {
+		// Init config
+		ConfigFile.init();
+		if(ConfigFile.getCfg().getString("AntiLaby.ConfigVersion") == null) {
+			// No config or old config
+			if(plugin.getConfig().getString("AntiLaby.disable.FOOD") == null) {
+				// No config
+				configVersion = 0;
+				generateNewConfig();
+			} else {
+				// Old config, convert
+				configVersion = 1;
+				convertConfig();
+			}
+		} else if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") == 2) {
+			// New config
+			configVersion = 2;
 			generateNewConfig();
-			ConfigFile.getCfg().set("AntiLaby.EnableBypassWithPermission", bypassPermissionEnabled);
-			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerKick.Enable", labyKick);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.FOOD", food);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.SATURATION_BAR", food);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_ALL", gui);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.NICK", nick);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.TAGS", nick);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.CHAT", chat);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.EXTRAS", extras);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.ANIMATIONS", animations);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_POTION_EFFECTS", potions);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.POTIONS", potions);
-			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_ARMOR_HUD", armor);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.ARMOR", armor);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR", damageIndicator);
-			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", minimapRadar);
-			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", null);
-			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", commands);
-			LOG.info("Your configuration file has been converted from version '" + configVersion + "' to version '"
-					         + CURRENT_CONFIG_VERSION + "'.");
-			ConfigFile.saveFile();
-		} else LOG.error("Failed to convert configuration file from version '" + configVersion + "' to version '"
-				                 + CURRENT_CONFIG_VERSION + "'!");
+		} else // Unknown config, reset config
+			resetConfig();
+		if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") > 2
+				   || ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") < 1)
+			resetConfig();
 	}
 	
 	private void generateNewConfig() {
@@ -123,33 +104,51 @@ public class InitConfig {
 				}
 	}
 	
-	public int getConfigVersion() {
-		return configVersion;
-	}
-	
-	public void init() {
-		// Init config
-		ConfigFile.init();
-		if(ConfigFile.getCfg().getString("AntiLaby.ConfigVersion") == null) {
-			// No config or old config
-			if(plugin.getConfig().getString("AntiLaby.disable.FOOD") == null) {
-				// No config
-				configVersion = 0;
-				generateNewConfig();
-			} else {
-				// Old config, convert
-				configVersion = 1;
-				convertConfig();
-			}
-		} else if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") == 2) {
-			// New config
-			configVersion = 2;
+	public void convertConfig() {
+		if(configVersion == 1) {
+			// Convert...
+			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
+					                                        .getBoolean("AntiLaby.EnableBypassWithPermission");
+			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
+			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
+			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
+			final boolean nick = ConfigFile.getCfg().getBoolean("AntiLaby.disable.NICK");
+			// boolean BLOCKBUILD =
+			// ConfigFile.getCfg().getBoolean("AntiLaby.disable.BLOCKBUILD");
+			final boolean chat = ConfigFile.getCfg().getBoolean("AntiLaby.disable.CHAT");
+			final boolean extras = ConfigFile.getCfg().getBoolean("AntiLaby.disable.EXTRAS");
+			final boolean animations = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ANIMATIONS");
+			final boolean potions = ConfigFile.getCfg().getBoolean("AntiLaby.disable.POTIONS");
+			final boolean armor = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ARMOR");
+			final boolean damageIndicator = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
+			final boolean minimapRadar = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
+			final List<String> commands = ConfigFile.getCfg()
+					                              .getStringList("AntiLaby.LabyModPlayerCommands");
+			ConfigFile.resetConfig();
 			generateNewConfig();
-		} else // Unknown config, reset config
-			resetConfig();
-		if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") > 2
-				   || ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") < 1)
-			resetConfig();
+			ConfigFile.getCfg().set("AntiLaby.EnableBypassWithPermission", bypassPermissionEnabled);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerKick.Enable", labyKick);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.FOOD", food);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.SATURATION_BAR", food);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_ALL", gui);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.NICK", nick);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.TAGS", nick);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.CHAT", chat);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.EXTRAS", extras);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.ANIMATIONS", animations);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_POTION_EFFECTS", potions);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.POTIONS", potions);
+			ConfigFile.getCfg().set("AntiLaby.Features.Disable.GUI_ARMOR_HUD", armor);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.ARMOR", armor);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR", damageIndicator);
+			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", minimapRadar);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", null);
+			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", commands);
+			LOG.info("Your configuration file has been converted from version '" + configVersion + "' to version '"
+					         + CURRENT_CONFIG_VERSION + "'.");
+			ConfigFile.saveFile();
+		} else LOG.error("Failed to convert configuration file from version '" + configVersion + "' to version '"
+				                 + CURRENT_CONFIG_VERSION + "'!");
 	}
 	
 	private void resetConfig() {
