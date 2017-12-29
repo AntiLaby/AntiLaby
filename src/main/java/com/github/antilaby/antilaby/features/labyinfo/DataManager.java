@@ -1,5 +1,10 @@
 package com.github.antilaby.antilaby.features.labyinfo;
 
+import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
+import com.github.antilaby.antilaby.util.IOUtils;
+import org.bukkit.Bukkit;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,34 +14,28 @@ import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-
-import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
-import com.github.antilaby.antilaby.util.IOUtils;
-
 public class DataManager {
-
-	private static File dataFile = new File(AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser");
-
+	
+	private static final File dataFile = new File(AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser");
+	
 	/**
 	 * Loads all LabyPlayerInformation
 	 */
 	public static void loadData() {
-		if (dataFile.exists() && Bukkit.getOnlinePlayers() != null) {
+		if(dataFile.exists() && Bukkit.getOnlinePlayers() != null) {
 			ObjectInputStream ois = null;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(dataFile));
 				final HashMap<String, String> p = IOUtils.<LabyInfoPlayerPack>readObject(ois).getPlayers();
-				for (final Entry<String, String> e : p.entrySet())
+				for(final Entry<String, String> e : p.entrySet())
 					System.out.println(e);
 				IncomingPluginChannel.setLabyModPlayers(p);
-			} catch (IOException | ClassNotFoundException e) {
+			} catch(IOException | ClassNotFoundException e) {
 				e.printStackTrace();
 			} finally {
-				if (ois != null) try {
+				if(ois != null) try {
 					ois.close();
-				} catch (final IOException e) {}
+				} catch(final IOException e) {}
 			}
 			cleanup();
 		}
@@ -46,23 +45,23 @@ public class DataManager {
 	 * Deletes the dataFile
 	 */
 	public static void cleanup() {
-		if (dataFile.exists()) dataFile.delete();
+		if(dataFile.exists()) dataFile.delete();
 	}
-
+	
 	public static void saveData() {
-		if (IncomingPluginChannel.getLabyModPlayers().isEmpty()) return;
+		if(IncomingPluginChannel.getLabyModPlayers().isEmpty()) return;
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(dataFile));
 			final LabyInfoPlayerPack lipp = new LabyInfoPlayerPack(IncomingPluginChannel.getLabyModPlayers());
 			oos.writeObject(lipp);
-		} catch (final IOException e) {
+		} catch(final IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (oos != null) try {
+			if(oos != null) try {
 				oos.close();
-			} catch (final IOException e) {}
+			} catch(final IOException e) {}
 		}
 	}
-
+	
 }

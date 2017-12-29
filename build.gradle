@@ -2,17 +2,6 @@ version = "pre-2.0"
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
-    }
-}
-
-apply plugin: 'com.github.johnrengelman.shadow'
-
 // Apply IDE plugins for easy build
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -39,8 +28,14 @@ processResources {
     }
 }
 
-jar {
-    archiveName = project.name + '-' + project.version + '.jar'
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 dependencies {
@@ -48,6 +43,15 @@ dependencies {
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+task buildAll() {}
+
+buildAll.dependsOn jar, javadocJar, sourcesJar
 
 task copyJarToTestserver(type: Copy) {
     pathToTestServer = pathToTestServer.replace('\\', '/')
