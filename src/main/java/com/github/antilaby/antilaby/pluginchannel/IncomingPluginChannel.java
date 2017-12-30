@@ -35,7 +35,8 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 		if(channel.equals(Constants.LABYMOD_CHANNEL)) {
 			if(!labyModPlayers.containsKey(player.getUniqueId().toString())) {
 				AntiLaby.LOG.info(
-						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses LabyMod.");
+						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses " + new String(
+								data) + '!');
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 			}
 			if(Config.getLabyModPlayerKickEnable())

@@ -22,9 +22,9 @@ import java.util.Map.Entry;
  * @author heisluft
  */
 public final class NmsTools {
-	
-	private static final Map<Player, Object> MAPPED_CONNECTIONS = new HashMap<>();
 	private static final Logger LOG = new Logger("Reflection");
+	private static final String NMS = "net.minecraft.server.";
+	private static final String OBC = "org.bukkit.craftbukkit.";
 	private static Class<?> craftPlayer;
 	private static Class<?> packetDataSerializer;
 	private static Class<?> packetClass;
@@ -57,14 +57,12 @@ public final class NmsTools {
 		if(init) return;
 		final String name = Bukkit.getServer().getClass().getPackage().getName();
 		version = name.substring(name.lastIndexOf('.') + 1);
-		packetClass = Class.forName("net.minecraft.server." + version + ".Packet");
-		packetDataSerializer = Class.forName("net.minecraft.server." + version + ".PacketDataSerializer");
+		packetClass = Class.forName(NMS + version + ".Packet");
+		packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
 		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
-		packetPlayOutCustomPayloadConstructor = Class
-				                                        .forName("net.minecraft.server." + version +
-						                                                 ".PacketPlayOutCustomPayload")
+		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload")
 				                                        .getConstructor(String.class, packetDataSerializer);
-		craftPlayer = Class.forName("org.bukkit.craftbukkit." + version + ".entity.CraftPlayer");
+		craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
 		init = true;
 	}
 	
@@ -86,7 +84,7 @@ public final class NmsTools {
 	 * 		Someone created a {@link SecurityManager}. Not good.
 	 */
 	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions)
-			throws IOException, IllegalArgumentException, ReflectiveOperationException, SecurityException {
+			throws IOException, ReflectiveOperationException {
 		if(!init) init();
 		final HashMap<String, Boolean> nList = new HashMap<>();
 		for(final Entry<LabyModFeature, Boolean> entry : labymodFunctions.entrySet())
@@ -95,16 +93,10 @@ public final class NmsTools {
 		final ObjectOutputStream out = new ObjectOutputStream(byteOut);
 		out.writeObject(nList);
 		final ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
-		Object dataSerializer;
-		Object packet;
-		dataSerializer = packetDataSerializerConstructor.newInstance(a);
-		packet = packetPlayOutCustomPayloadConstructor.newInstance("LABYMOD", dataSerializer);
-		Object connection;
-		if(MAPPED_CONNECTIONS.containsKey(player)) connection = MAPPED_CONNECTIONS.get(player);
-		else {
-			final Object handle = craftPlayer.getMethod("getHandle").invoke(player);
-			MAPPED_CONNECTIONS.put(player, connection = handle.getClass().getField("playerConnection").get(handle));
-		}
+		Object dataSerializer = packetDataSerializerConstructor.newInstance(a);
+		Object packet = packetPlayOutCustomPayloadConstructor.newInstance("LABYMOD", dataSerializer);
+		Object handle = craftPlayer.getMethod("getHandle").invoke(player);
+		Object connection = handle.getClass().getField("playerConnection").get(handle);
 		connection.getClass().getMethod("sendPacket", packetClass).invoke(connection, packetClass.cast(packet));
 		final StringBuilder b = new StringBuilder("[AntiLaby/INFO] Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
@@ -114,7 +106,6 @@ public final class NmsTools {
 				"").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(
 				')').toString());
 		out.close();
-		
 	}
 	
 	/**

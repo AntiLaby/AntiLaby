@@ -31,7 +31,6 @@ public class PlayerJoin implements Listener {
 		if(!AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB))
 			LanguageManager.INSTANCE.setLanguageForPlayer(player, player.getLocale());
 		// Disable LabyMod functions for the new player
-		final AntiLabyPackager pack = new AntiLabyPackager(player);
-		pack.sendPackages();
+		new AntiLabyPackager(player).sendPackages();
 	}
 }
