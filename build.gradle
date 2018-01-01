@@ -52,7 +52,8 @@ artifacts {
 task buildAll() {}
 
 buildAll.dependsOn jar, javadocJar, sourcesJar
-task copyJarToTestserver(type: Copy) {
+
+task copyJarToTestserver(type: Copy, dependsOn: jar) {
     pathToTestServer = pathToTestServer.replace('\\', '/')
     if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
     from jar
