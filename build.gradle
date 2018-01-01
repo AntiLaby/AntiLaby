@@ -54,8 +54,10 @@ task buildAll() {}
 buildAll.dependsOn jar, javadocJar, sourcesJar
 
 task copyJarToTestserver(type: Copy, dependsOn: jar) {
-    pathToTestServer = pathToTestServer.replace('\\', '/')
-    if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
+    def ts = System.getProperty("testserver");
+    if(ts == null) throw new GradleException("no testserver specified, run again with program argument -Dtestserver=\"pathToTestserver\"")
+    ts.replace('\\', '/')
+    ts += !ts.endsWith('/') ? '/' : "".concat("plugins")
     from jar
-    into pathToTestServer.concat('plugins')
+    into ts
 }
