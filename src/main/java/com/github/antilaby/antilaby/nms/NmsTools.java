@@ -3,6 +3,7 @@ package com.github.antilaby.antilaby.nms;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.util.Reflection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
@@ -45,6 +46,15 @@ public final class NmsTools {
 			LOG.error(e.getMessage());
 		}
 		return version;
+	}
+	
+	public static String getLang(Player p) {
+		if(!init) try {
+			init();
+		} catch(final ReflectiveOperationException e) {
+			LOG.error(e.getMessage());
+		}
+		return Reflection.getField(craftPlayer.cast(p), "locale");
 	}
 	
 	/**

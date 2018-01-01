@@ -61,6 +61,7 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 	
 	@Override
 	public Locale getLanguageForPlayer(Player p) {
+		if(!mappedLanguages.containsKey(p)) mappedLanguages.put(p, Locale.byName(NmsTools.getLang(p), Locale.EN_US));
 		return mappedLanguages.get(p);
 	}
 	

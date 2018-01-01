@@ -158,8 +158,10 @@ public class AntiLaby extends JavaPlugin {
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
 				new IncomingPluginChannel());
 		// Init ProtocolLib support
-		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) ProtocolLibSupport.init();
-		else LOG.info("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib"))
+			ProtocolLibSupport.init();
+		else if(version > 8)LOG.info("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+		else LOG.info("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
 		initCmds();
 		initEvents(version);
 		// Load data

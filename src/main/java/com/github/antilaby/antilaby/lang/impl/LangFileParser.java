@@ -45,10 +45,6 @@ public class LangFileParser {
 		
 	}
 	
-	public static OutputStream migrateYamlToLang(YamlConfiguration yamlConfiguration) {
-		return new ByteArrayOutputStream();
-	}
-	
 	public static Map<String, String> parse(File f) {
 		try {
 			return parse(new FileInputStream(f), f.getName());
@@ -90,16 +86,6 @@ public class LangFileParser {
 	
 	public static Map<String, String> parse(InputStream resource) {
 		return parse(resource, "unknown");
-	}
-	
-	private static Map<String, String> yamlToString(YamlConfiguration toDump) {
-		final DumperOptions yamlOptions = new DumperOptions();
-		final Representer yamlRepresenter = new YamlRepresenter();
-		yamlOptions.setDefaultFlowStyle(FlowStyle.FLOW);
-		yamlRepresenter.setDefaultFlowStyle(FlowStyle.FLOW);
-		final String yamlString = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions)
-				                          .dump(toDump.getValues(false));
-		return new Yaml().<HashMap<String, String>>load(yamlString);
 	}
 	
 	private final Locale l;
