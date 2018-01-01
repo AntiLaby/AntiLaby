@@ -7,6 +7,7 @@
 #intellij stuff
 /.idea/
 /out/
+*.iml
 
 #gradle stuff
 /.gradle/
