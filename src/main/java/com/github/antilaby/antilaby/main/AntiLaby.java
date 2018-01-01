@@ -10,6 +10,7 @@ import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.config.InitConfig;
+import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
 import com.github.antilaby.antilaby.features.labyinfo.DataManager;
 import com.github.antilaby.antilaby.features.labyinfo.LabyInfoCommand;
@@ -160,7 +161,7 @@ public class AntiLaby extends JavaPlugin {
 		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) ProtocolLibSupport.init();
 		else LOG.info("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
 		initCmds();
-		initEvents();
+		initEvents(version);
 		// Load data
 		DataManager.loadData();
 		// Start plugin metrics for MCStats.org
@@ -225,9 +226,10 @@ public class AntiLaby extends JavaPlugin {
 	/**
 	 * Initializes and registers the EventListeners
 	 */
-	private void initEvents() {
+	private void initEvents(int version) {
 		final PluginManager pm = Bukkit.getPluginManager();
-		pm.registerEvents(new PlayerJoin(), this);
+		if(version > 8) pm.registerEvents(new EventsPost18(), this);
+			pm.registerEvents(new PlayerJoin(), this);
 		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
 	

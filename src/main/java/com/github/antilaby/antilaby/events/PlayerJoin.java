@@ -12,13 +12,7 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoin implements Listener {
-	
-	@EventHandler
-	public void onChangeLocale(PlayerLocaleChangeEvent e) {
-		if(AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB)) return;
-		final Player player = e.getPlayer();
-		LanguageManager.INSTANCE.setLanguageForPlayer(player, e.getLocale());
-	}
+
 	
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {
@@ -27,10 +21,7 @@ public class PlayerJoin implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		final Player player = event.getPlayer();
-		if(!AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB))
-			LanguageManager.INSTANCE.setLanguageForPlayer(player, player.getLocale());
 		// Disable LabyMod functions for the new player
-		new AntiLabyPackager(player).sendPackages();
+		new AntiLabyPackager(event.getPlayer()).sendPackages();
 	}
 }
