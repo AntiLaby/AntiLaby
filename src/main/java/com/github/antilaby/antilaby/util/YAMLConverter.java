@@ -23,6 +23,7 @@ public final class YAMLConverter {
 	 *
 	 * @return the flattened Map
 	 */
+	@SuppressWarnings("unchecked")
 	public static SortedMap<String, Object> flatten(Map<String, Object> source) {
 		SortedMap<String, Object> result = new TreeMap<>();
 		for(String key : source.keySet()) {
@@ -48,12 +49,16 @@ public final class YAMLConverter {
 	}
 	
 	/**
-	 * Converts the given Yaml Language Configuration to the new one. There are two ways of using this:<br><br> 1.
-	 * appendHeader == true, Just print the configuration via<br><br><code>for(Map.Entry&lt;String, String&gt; e :
-	 * convertToLocale (true, yaml).entrySet())<br> yourWritingMethod(e.getKey() + '=' + e.getValue());</code><br><br>
-	 * 2. appendHeader == false, set header manually:<br><br><code>yourWritingMethod("#version: " +
-	 * LanguageVersion.CURRENT_VERSION.toString());<br>for(Map.Entry&lt;String, String&gt; e : convertToLocale (true,
-	 * yaml).entrySet())<br> yourWritingMethod(e.getKey() + '=' + e.getValue());</code>
+	 * Converts the given Yaml Language Configuration to the new one.
+	 * There are two ways of using this:<br><br>
+	 * 1.
+	 * appendHeader == true, Just print the configuration via<br><br>
+	 * <code>for(Map.Entry&lt;String, String&gt; e : convertToLocale (true, yaml).entrySet())<br>
+	 * yourWritingMethod(e.getKey() + '=' + e.getValue());</code><br><br>
+	 * 2. appendHeader == false, set header manually:<br><br>
+	 * <code>yourWritingMethod("&#35;version: " + LanguageVersion.CURRENT_VERSION.toString());<br>
+	 * for(Map.Entry&lt;String, String&gt; e : convertToLocale (false, yaml).entrySet())<br>
+	 * yourWritingMethod(e.getKey() + '=' + e.getValue());</code>
 	 *
 	 * @param appendVersion
 	 * 		whether the LanguageVersion header should be printed

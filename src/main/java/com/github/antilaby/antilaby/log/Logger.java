@@ -45,11 +45,11 @@ public class Logger {
 	 *            The log message
 	 */
 	public void log(Level level, String message) {
-		final String color = level == Level.ERROR || level == Level.FATAL ? "§4"
-				: level == Level.WARN ? "§e" : level == Level.DEBUG ? "§1" : "";
+		final String color = level == Level.ERROR || level == Level.FATAL ? "\u00A74"
+				: level == Level.WARN ? "\u00A7e" : level == Level.DEBUG ? "\u00A71" : "";
 		if (level == Level.DEBUG && !Config.isDebugModeEnabled())
 			return;
-		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "§r");
+		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "\u00A7r");
 	}
 
 	/**
