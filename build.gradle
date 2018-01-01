@@ -4,7 +4,6 @@ apply plugin: 'java'
 
 // Apply IDE plugins for easy build
 apply plugin: 'eclipse'
-apply plugin: 'idea'
 
 sourceCompatibility = 1.8
 
@@ -20,8 +19,9 @@ repositories {
 }
 
 processResources {
-    from(sourceSets.main.resources.srcDirs)
-    exclude 'plugin.yml'
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'plugin.yml'
+    }
     from(sourceSets.main.resources.srcDirs) {
         include 'plugin.yml'
         expand("version": project.version, "name": project.name)
@@ -52,8 +52,7 @@ artifacts {
 task buildAll() {}
 
 buildAll.dependsOn jar, javadocJar, sourcesJar
-
-task copyJarToTestserver(type: Copy, dependsOn: jar) {
+task copyJarToTestserver(type: Copy) {
     pathToTestServer = pathToTestServer.replace('\\', '/')
     if (!pathToTestServer.endsWith("/")) pathToTestServer += '/'
     from jar

@@ -27,6 +27,6 @@ commands:
     description: Get Information about the plugin or reload the plugin.
     aliases: [al]
   labyinfo:
-    usage: /labyinfo \<player\>
+    usage: /labyinfo <player>
     description: Check if a player uses LabyMod.
     aliases: [li, labymod]
