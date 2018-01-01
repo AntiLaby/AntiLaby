@@ -57,7 +57,7 @@ task copyJarToTestserver(type: Copy, dependsOn: jar) {
     def ts = System.getProperty("testserver")
     if(ts != null) {
         ts.replace('\\', '/')
-        ts += !ts.endsWith('/') ? '/' : "".concat("plugins")
+        ts += (!ts.endsWith('/') ? '/' : "").concat("plugins")
         from jar
         into ts
     }
