@@ -33,7 +33,7 @@ public final class NmsTools {
 	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
 	private static boolean init;
 	private static String version;
-	
+
 	/**
 	 * Gets the servers NMS version, for example 1_8_8
 	 *
@@ -47,16 +47,16 @@ public final class NmsTools {
 		}
 		return version;
 	}
-	
+
 	public static String getLang(Player p) {
 		if(!init) try {
 			init();
 		} catch(final ReflectiveOperationException e) {
 			LOG.error(e.getMessage());
 		}
-		return Reflection.getField(craftPlayer.cast(p), "locale");
+		return Reflection.getField(Reflection.invokeNoArgsMethod(craftPlayer.cast(p), "getHandle"), "locale");
 	}
-	
+
 	/**
 	 * Initializes all static fields
 	 *
@@ -70,12 +70,11 @@ public final class NmsTools {
 		packetClass = Class.forName(NMS + version + ".Packet");
 		packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
 		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
-		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload")
-				                                        .getConstructor(String.class, packetDataSerializer);
+		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializer);
 		craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
 		init = true;
 	}
-	
+
 	/**
 	 * Sends all disabled LabyMod functions to the client
 	 *
@@ -93,8 +92,7 @@ public final class NmsTools {
 	 * @throws SecurityException
 	 * 		Someone created a {@link SecurityManager}. Not good.
 	 */
-	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions)
-			throws IOException, ReflectiveOperationException {
+	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
 		if(!init) init();
 		final HashMap<String, Boolean> nList = new HashMap<>();
 		for(final Entry<LabyModFeature, Boolean> entry : labymodFunctions.entrySet())
@@ -111,16 +109,13 @@ public final class NmsTools {
 		final StringBuilder b = new StringBuilder("[AntiLaby/INFO] Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
 			if(!n.getValue()) b.append(n.getKey()).append(", ");
-		AntiLaby.LOG.info(b.replace(b.length() - 2,
-				b.length(),
-				"").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(
-				')').toString());
+		AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
 		out.close();
 	}
-	
+
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
 	private NmsTools() {}
-	
+
 }
