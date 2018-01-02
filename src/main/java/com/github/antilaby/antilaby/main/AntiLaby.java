@@ -44,14 +44,14 @@ import java.util.Map;
  * @author NathanNr
  */
 public class AntiLaby extends JavaPlugin {
-	
+
 	public static final Logger LOG = new Logger("Main");
 	private static AntiLaby instance;
-	
+
 	public static AntiLaby getInstance() {
 		return instance;
 	}
-	
+
 	private final List<PluginFeature> loadedFeatures = new ArrayList<>(PluginFeature.values().length);
 	// Compatible?
 	private boolean compatible;
@@ -61,54 +61,55 @@ public class AntiLaby extends JavaPlugin {
 	private VersionType versionType;
 	// Is the server part of a BungeeCord network?
 	private BungeeChecker bungeeChecker;
-	
+
 	private UpdateDownloader ud;
-	
+
 	/**
 	 * Disables the desired {@link PluginFeature}
 	 *
 	 * @param feature
-	 * 		The PluginFeature to disable
+	 *            The PluginFeature to disable
 	 *
 	 * @author heisluft
 	 */
 	public void disableFeature(PluginFeature feature) {
 		loadedFeatures.remove(feature);
 	}
-	
+
 	/**
 	 * Enables the desired {@link PluginFeature}
 	 *
 	 * @param feature
-	 * 		The PluginFeature to enable
+	 *            The PluginFeature to enable
 	 *
 	 * @author heisluft
 	 */
 	public void enableFeature(PluginFeature feature) {
-		if(!loadedFeatures.contains(feature)) loadedFeatures.add(feature);
+		if (!loadedFeatures.contains(feature))
+			loadedFeatures.add(feature);
 	}
-	
+
 	@Override
 	public File getFile() {
 		return super.getFile();
 	}
-	
+
 	/**
 	 * Returns the <a href="http://mcstats.org/plugin/Antilaby">MCStats</a> Metrics
 	 */
 	public Metrics getMetrics() {
 		return metrics;
 	}
-	
+
 	public VersionType getVersionType() {
 		return versionType;
 	}
-	
+
 	/**
 	 * Returns whether a given {@link PluginFeature} is enabled
 	 *
 	 * @param feature
-	 * 		The requested feature
+	 *            The requested feature
 	 *
 	 * @return whether the requested feature is enabled
 	 *
@@ -117,16 +118,17 @@ public class AntiLaby extends JavaPlugin {
 	public boolean isSupportEnabled(PluginFeature feature) {
 		return loadedFeatures.contains(feature);
 	}
-	
+
 	@Override
 	public void onDisable() {
 		// Kill update task if it's running
-		if(ud != null) ud.interrupt();
+		if (ud != null)
+			ud.interrupt();
 		// Save Data
 		DataManager.saveData();
 		LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
 	}
-	
+
 	@Override
 	public void onEnable() {
 		// Delete datamanager file on exit
@@ -136,20 +138,20 @@ public class AntiLaby extends JavaPlugin {
 		int version = 0;
 		try {
 			version = Integer.parseInt(nmsver.split("_")[1]);
-		} catch(final NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			LOG.fatal("Unknown NMS version (" + nmsver + ')');
 			compatible = false;
 			disableIfNotCompatible();
 		}
-		if(version >= 8) {
+		if (version >= 8) {
 			// Ensure the DataFolder exists
 			getDataFolder().mkdir();
 			compatible = true;
-			LOG.info("Your server (NMS version " + nmsver + ") is compatible with AntiLaby!");
+			LOG.debug("Your server (NMS version " + nmsver + ") is compatible with AntiLaby!");
 		} else {
 			compatible = false;
 			LOG.error("Your server is not compatible with this version of AntiLaby! Your NMS-version is \"" + nmsver
-					          + "\", which was released before the first LabyMod version.");
+					+ "\", which was released before the first LabyMod version.");
 			disableIfNotCompatible();
 		}
 		// Try to update AntiLaby
@@ -161,10 +163,12 @@ public class AntiLaby extends JavaPlugin {
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
 				new IncomingPluginChannel());
 		// Init ProtocolLib support
-		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib"))
+		if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib"))
 			ProtocolLibSupport.init();
-		else if(version > 8)LOG.info("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
-		else LOG.info("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+		else if (version > 8)
+			LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+		else
+			LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
 		initCmds();
 		initEvents(version);
 		// Load data
@@ -176,52 +180,52 @@ public class AntiLaby extends JavaPlugin {
 		try {
 			metrics = new Metrics(this);
 			metrics.start();
-		} catch(final IOException e) {
+		} catch (final IOException e) {
 			LOG.error(e.getMessage());
 		}
 		// Start plug-in metrics for bStats.org
 		initBMetrics();
 		// Init LanguageManager
 		final LanguageManager lang = LanguageManager.INSTANCE;
-		if(!lang.isInit()) lang.init();
+		if (!lang.isInit())
+			lang.init();
 		// Resend AntiLaby packages (on reload)
-		for(final Player all : Bukkit.getOnlinePlayers()) {
+		for (final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();
 		}
 		LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
 	}
-	
+
 	/**
 	 * Disables the plug-in if not compatible
 	 */
 	public void disableIfNotCompatible() {
-		if(!compatible) getPluginLoader().disablePlugin(this);
+		if (!compatible)
+			getPluginLoader().disablePlugin(this);
 	}
-	
+
 	private void update() {
-		if(versionType.equals(VersionType.RELEASE)) {
-			if(getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
+		if (versionType.equals(VersionType.RELEASE)) {
+			if (getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
 				// Check and install updates async
 				ud = new UpdateDownloader();
 				ud.start();
-			} else LOG.info(
-					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby " +
-							"manually" +
-							" from here: https://www.spigotmc.org/resources/"
-							+ Constants.RESOURCE_ID + "/!");
+			} else
+				LOG.info("You have disabled auto-update in the config file. You can get newer versions of AntiLaby "
+						+ "manually" + " from here: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID
+						+ "/!");
 		} else {
 			LOG.info("You are running a " + versionType.toString()
-					         + " version! Auto-update is not available. You can update manually: " + Constants
-							                                                                                 .RESOURCE_LINK);
+					+ " version! Auto-update is not available. You can update manually: " + Constants.RESOURCE_LINK);
 			disableIfNotCompatible();
 		}
 	}
-	
+
 	private void initConfig() {
 		new InitConfig(this).init();
 	}
-	
+
 	/**
 	 * Initializes and registers the AntiLaby commands
 	 */
@@ -230,30 +234,33 @@ public class AntiLaby extends JavaPlugin {
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
 	}
-	
+
 	/**
 	 * Initializes and registers the EventListeners
 	 */
 	private void initEvents(int version) {
 		final PluginManager pm = Bukkit.getPluginManager();
-		if(version > 8) pm.registerEvents(new EventsPost18(), this);
-			pm.registerEvents(new PlayerJoin(), this);
+		if (version > 8)
+			pm.registerEvents(new EventsPost18(), this);
+		pm.registerEvents(new PlayerJoin(), this);
 		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
-	
+
 	/**
-	 * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
+	 * Initializes the
+	 * <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
 	 */
 	private void initBMetrics() {
 		// Start plug-in metrics for bStats.org
 		final BStats bstats = new BStats(this);
-		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config
-				                                                                                      .isAutoUpdateEnabled())));
-		bstats.addCustomChart(new BStats.SimplePie("is_bungee_server", () -> String.valueOf(bungeeChecker.isBungeecord())));
-		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config
-				                                                                                  .getEnableBypassWithPermission())));
-		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config
-				                                                                                .getLabyModPlayerKickEnable())));
+		bstats.addCustomChart(
+				new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config.isAutoUpdateEnabled())));
+		bstats.addCustomChart(
+				new BStats.SimplePie("is_bungee_server", () -> String.valueOf(bungeeChecker.isBungeecord())));
+		bstats.addCustomChart(
+				new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config.getEnableBypassWithPermission())));
+		bstats.addCustomChart(
+				new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config.getLabyModPlayerKickEnable())));
 		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
 			final Map<String, Integer> valueMap = new HashMap<>();
 			final int food = BooleanIntConversion.convert(Config.getFOOD());
@@ -287,58 +294,62 @@ public class AntiLaby extends JavaPlugin {
 					Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
 			return valueMap;
 		}));
-		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () ->
-				                                                                                      IncomingPluginChannel.getLabyModPlayers().size()));
+		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single",
+				() -> IncomingPluginChannel.getLabyModPlayers().size()));
 		final LabyModJoinCommands lmjc = new LabyModJoinCommands();
 		bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
-			if(lmjc.getLabyModJoinCommands(false).isEmpty()) return "false";
-			else return "true";
+			if (lmjc.getLabyModJoinCommands(false).isEmpty())
+				return "false";
+			else
+				return "true";
 		}));
-		bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> lmjc.getLabyModJoinCommands(false)
-				                                                                          .size()));
+		bstats.addCustomChart(
+				new BStats.SingleLineChart("lmjoincmd_count", () -> lmjc.getLabyModJoinCommands(false).size()));
 	}
-	
+
 	@Override
 	public void onLoad() {
 		instance = this;
 		versionType = VersionType.fromName(getDescription().getVersion().toLowerCase());
 	}
-	
+
 	public void reloadPlugin(CommandSender sender) {
 		// Reload the plug-in
-		if(sender instanceof Player) {
+		if (sender instanceof Player) {
 			final Player player = (Player) sender;
-			if(!player.hasPermission("antilaby.reload")) {
+			if (!player.hasPermission("antilaby.reload")) {
 				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.noPermission", player));
 				LOG.info("Player " + player.getName() + " (" + player.getUniqueId()
-						         + ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
+						+ ") tried to reload AntiLaby: Permission 'antilaby.reload' is missing!");
 				return;
 			}
 		}
-		if(sender instanceof Player) {
+		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
-		} else LOG.info("Reloading AntiLaby...");
+		} else
+			LOG.info("Reloading AntiLaby...");
 		ConfigFile.reloadFile();
-		for(final Player all : Bukkit.getOnlinePlayers()) {
+		for (final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();
 		}
-		if(sender instanceof Player) {
+		if (sender instanceof Player) {
 			final Player player = (Player) sender;
 			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
-		} else LOG.info("Reload complete!");
+		} else
+			LOG.info("Reload complete!");
 	}
-	
+
 	public void sendInfo(CommandSender sender) {
 		// Send information about this plug-in to a command sender (console /
 		// player)
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "AntiLaby plugin version " + getDescription().getVersion()
-				                   + " by the AntiLaby Team" + ChatColor.RESET);
+				+ " by the AntiLaby Team" + ChatColor.RESET);
 		sender.sendMessage(
 				ChatColor.BLUE + "More information about the plugin: " + Constants.RESOURCE_LINK + ChatColor.RESET);
 		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
@@ -347,5 +358,5 @@ public class AntiLaby extends JavaPlugin {
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
 	}
-	
+
 }

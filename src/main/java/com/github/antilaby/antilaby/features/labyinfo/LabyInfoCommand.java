@@ -38,7 +38,7 @@ public class LabyInfoCommand implements CommandExecutor {
 										targetPlayer.getName()));
 						} else {
 							player.sendMessage(lan.translate("antilaby.command.noPermission", player));
-							AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId()
+							AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId()
 									                  + ") to use LabyInfo: Permission 'antilaby.labyinfo' is " +
 									                  "missing!");
 						}

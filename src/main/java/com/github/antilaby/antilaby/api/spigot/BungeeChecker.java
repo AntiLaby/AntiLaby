@@ -6,9 +6,10 @@ public class BungeeChecker {
 
 	/**
 	 * Check if a server uses BungeeCord
+	 * 
 	 * @author NathanNr
 	 */
-	
+
 	private boolean isBungeecord;
 
 	public BungeeChecker() {
