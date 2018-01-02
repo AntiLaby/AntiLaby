@@ -3,6 +3,7 @@ package com.github.antilaby.antilaby.main;
 import com.github.antilaby.antilaby.api.BooleanIntConversion;
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
+import com.github.antilaby.antilaby.api.spigot.BungeeChecker;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.command.AntiLabyTabComplete;
 import com.github.antilaby.antilaby.compat.PluginFeature;
@@ -58,6 +59,8 @@ public class AntiLaby extends JavaPlugin {
 	private Metrics metrics;
 	// Is this a beta version?
 	private VersionType versionType;
+	// Is the server part of a BungeeCord network?
+	private BungeeChecker bungeeChecker;
 	
 	private UpdateDownloader ud;
 	
@@ -153,7 +156,7 @@ public class AntiLaby extends JavaPlugin {
 		update();
 		// Init files, commands and events
 		initConfig();
-		// Register plugin channels
+		// Register plug-in channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
 				new IncomingPluginChannel());
@@ -166,14 +169,17 @@ public class AntiLaby extends JavaPlugin {
 		initEvents(version);
 		// Load data
 		DataManager.loadData();
-		// Start plugin metrics for MCStats.org
+		// Is the server part of a BungeeCord network?
+		bungeeChecker = new BungeeChecker();
+		bungeeChecker.init();
+		// Start plug-in metrics for MCStats.org
 		try {
 			metrics = new Metrics(this);
 			metrics.start();
 		} catch(final IOException e) {
 			LOG.error(e.getMessage());
 		}
-		// Start plugin metrics for bStats.org
+		// Start plug-in metrics for bStats.org
 		initBMetrics();
 		// Init LanguageManager
 		final LanguageManager lang = LanguageManager.INSTANCE;
@@ -187,7 +193,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	/**
-	 * Disables the plugin if not compatible
+	 * Disables the plug-in if not compatible
 	 */
 	public void disableIfNotCompatible() {
 		if(!compatible) getPluginLoader().disablePlugin(this);
@@ -239,10 +245,11 @@ public class AntiLaby extends JavaPlugin {
 	 * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
 	 */
 	private void initBMetrics() {
-		// Start plugin metrics for bStats.org
+		// Start plug-in metrics for bStats.org
 		final BStats bstats = new BStats(this);
 		bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config
 				                                                                                      .isAutoUpdateEnabled())));
+		bstats.addCustomChart(new BStats.SimplePie("is_bungee_server", () -> String.valueOf(bungeeChecker.isBungeecord())));
 		bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config
 				                                                                                  .getEnableBypassWithPermission())));
 		bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config
@@ -298,7 +305,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void reloadPlugin(CommandSender sender) {
-		// Reload the plugin
+		// Reload the plug-in
 		if(sender instanceof Player) {
 			final Player player = (Player) sender;
 			if(!player.hasPermission("antilaby.reload")) {
@@ -326,7 +333,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 	
 	public void sendInfo(CommandSender sender) {
-		// Send information about this plugin to a command sender (console /
+		// Send information about this plug-in to a command sender (console /
 		// player)
 		sender.sendMessage(
 				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
