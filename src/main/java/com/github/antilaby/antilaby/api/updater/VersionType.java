@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.update;
+package com.github.antilaby.antilaby.api.updater;
 
 public enum VersionType {
 	

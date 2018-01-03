@@ -1,8 +1,8 @@
 package com.github.antilaby.antilaby.config;
 
+import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.update.VersionType;
 import com.github.antilaby.antilaby.util.Constants;
 
 import java.util.List;
