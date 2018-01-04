@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.api.updater;
 
 import java.net.URL;
+import java.util.HashMap;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +23,7 @@ public class Update {
 	private boolean updateRequiresConfigUpdate;
 	private boolean updateConfigUpdateAuto;
 	private UpdatePriority updatePriority = UpdatePriority.UNKNOWN;
+	private HashMap<String, String> validationInfos;
 
 	/**
 	 * @param plugin
@@ -179,6 +181,22 @@ public class Update {
 	 */
 	public void setUpdatePriority(UpdatePriority updatePriority) {
 		this.updatePriority = updatePriority;
+	}
+
+	/**
+	 * @return The information to check, if the file has been downloaded correctly
+	 */
+	public HashMap<String, String> getValidationInfos() {
+		return validationInfos;
+	}
+
+	/**
+	 * @param validationInfos
+	 *            Set the information to check, if the file has been downloaded
+	 *            correctly
+	 */
+	public void setValidationInfos(HashMap<String, String> validationInfos) {
+		this.validationInfos = validationInfos;
 	}
 
 }

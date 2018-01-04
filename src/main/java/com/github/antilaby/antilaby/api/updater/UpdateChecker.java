@@ -21,11 +21,15 @@ public class UpdateChecker {
 
 	private JavaPlugin plugin;
 	private URL url;
-	private ArrayList<Update> availableUpdates;
 	private long latestUpdateCheck;
 
+	private ArrayList<Update> availableUpdates;
 	private int availableUpdatesCount;
 
+	/**
+	 * @param plugin
+	 *            The JavaPlugin
+	 */
 	public UpdateChecker(JavaPlugin plugin) {
 		this.plugin = plugin;
 		try {
@@ -36,6 +40,12 @@ public class UpdateChecker {
 		}
 	}
 
+	/**
+	 * @param plugin
+	 *            The JavaPlugin
+	 * @param url
+	 *            The URL which provides the update information
+	 */
 	public UpdateChecker(JavaPlugin plugin, URL url) {
 		this.plugin = plugin;
 		this.url = url;
@@ -45,24 +55,44 @@ public class UpdateChecker {
 		LOG.debug("Checking for updates...");
 		availableUpdates = new ArrayList<>();
 		latestUpdateCheck = System.currentTimeMillis();
-		// TODO: Check for updates and create Update objects
+		// TODO: Check for updates and create Update objects, save them into
+		// availableUpdates
 		LOG.debug("Found " + availableUpdatesCount + " available update versions.");
 	}
 
+	/**
+	 * @return The JavaPlugin
+	 */
 	public JavaPlugin getPlugin() {
 		return plugin;
 	}
 
+	/**
+	 * @return The URL which provides the update information
+	 */
 	public URL getUrl() {
 		return url;
 	}
 
+	/**
+	 * @return The time of the latest update check
+	 */
 	public long getLatestUpdateCheck() {
 		return this.latestUpdateCheck;
 	}
 
+	/**
+	 * @return All available updates
+	 */
 	public List<Update> getAvailableUpdates() {
 		return availableUpdates;
+	}
+
+	/**
+	 * @return The count of all available updates
+	 */
+	public int getAvailableUpdatesCount() {
+		return availableUpdatesCount;
 	}
 
 }

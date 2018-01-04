@@ -16,6 +16,13 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+/**
+ * The old auto-updater class. It will be removed in the future, if the new
+ * auto-updater is ready for use.
+ * 
+ * @author NathanNr
+ */
+
 public class UpdateDownloader extends Thread {
 
 	private boolean updateAvailable;
