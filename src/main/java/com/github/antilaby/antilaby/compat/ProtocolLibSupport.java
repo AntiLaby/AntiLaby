@@ -17,34 +17,33 @@ import org.bukkit.plugin.Plugin;
  * @author heisluft
  */
 public class ProtocolLibSupport implements PacketListener {
-	
+
 	private static final Logger LOG = new Logger("ProtocolLib Support");
-	
+
 	/**
 	 * Initializes the AntiLaby ProtocolLib support
 	 */
 	public static void init() {
-		LOG.info("Enabling Support for ProtocolLib version "
-				         + ProtocolLibrary.getPlugin().getDescription().getVersion());
+		LOG.info("Enabling Support for ProtocolLib version " + ProtocolLibrary.getPlugin().getDescription().getVersion());
 		ProtocolLibrary.getProtocolManager().addPacketListener(new ProtocolLibSupport());
-		AntiLaby.getInstance().enableFeature(PluginFeature.PROTOCOL_LIB);
+		AntiLaby.getInstance().loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
 	}
-	
+
 	@Override
 	public Plugin getPlugin() {
 		return AntiLaby.getInstance();
 	}
-	
+
 	@Override
 	public ListeningWhitelist getReceivingWhitelist() {
 		return ListeningWhitelist.newBuilder().types(PacketType.fromName("SETTINGS")).build();
 	}
-	
+
 	@Override
 	public ListeningWhitelist getSendingWhitelist() {
 		return ListeningWhitelist.EMPTY_WHITELIST;
 	}
-	
+
 	@Override
 	public void onPacketReceiving(PacketEvent event) {
 		final Object handle = event.getPacket().getHandle();
@@ -54,12 +53,12 @@ public class ProtocolLibSupport implements PacketListener {
 		try {
 			final String lang = (String) handle.getClass().getMethod("a").invoke(handle);
 			if(!old.equals(lang)) lm.setLanguageForPlayer(event.getPlayer(), lang);
-			
+
 		} catch(final ReflectiveOperationException e) {
 			LOG.error("could not retrieve language, falling back to possibly inaccurate events: " + e.getMessage());
 		}
 	}
-	
+
 	@Override
 	public void onPacketSending(PacketEvent event) {}
 }

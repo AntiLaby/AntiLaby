@@ -32,7 +32,7 @@ public class Locale implements ILocale {
 		if(!isLangNameValid(name)) return UNDEFINED;
 		fallbackMessage = fallbackMessage != null && !fallbackMessage.isEmpty() ? fallbackMessage : DEFAULT_FALLBACK_MESSAGE;
 		Locale l = byName(name, UNDEFINED);
-		if(values.contains(l)) return l;
+		if(l != UNDEFINED) return l;
 		l = new Locale(name.toLowerCase(), fallbackMessage);
 		return l;
 	}

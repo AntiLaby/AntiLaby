@@ -8,26 +8,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class AntiLabyCommand implements CommandExecutor {
-	
-	private final AntiLaby plugin;
-	
-	public AntiLabyCommand(AntiLaby plugin) {
-		this.plugin = plugin;
-	}
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		// AntiLaby debug command
 		if(cmd.getName().equalsIgnoreCase("antilaby")) if(args.length != 1) sendUsage(sender);
 		else {
-			if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) plugin.reloadPlugin(sender);
-			else if(args[0].equalsIgnoreCase("info")) plugin.sendInfo(sender);
+			if(args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl"))
+				AntiLaby.getInstance().reloadPlugin(sender);
+			else if(args[0].equalsIgnoreCase("info")) AntiLaby.getInstance().sendInfo(sender);
 			else sendUsage(sender);
 		}
 		else sendUsage(sender);
 		return true;
 	}
-	
+
 	public void sendUsage(CommandSender sender) {
 		if(sender instanceof Player) {
 			final Player p = (Player) sender;

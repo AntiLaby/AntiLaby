@@ -42,12 +42,10 @@ public class Config {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.GUI");
 	}
 
-	@Deprecated
 	/**
 	 * Please use LabyModJoinCommands#getLabyModJoinCommands()
-	 * 
-	 * @author NathanNr
 	 */
+	@Deprecated
 	public static List<String> getLabyModPlayerCommands() {
 		return AntiLaby.getInstance().getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
 	}

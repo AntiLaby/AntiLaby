@@ -26,15 +26,18 @@ import java.util.Objects;
  */
 public final class NmsUtils {
 	private static final Logger LOG = new Logger("Reflection");
+
 	private static final String NMS = "net.minecraft.server.";
 	private static final String OBC = "org.bukkit.craftbukkit.";
-	private static Class<?> packetClass;
-	private static Constructor<?> packetDataSerializerConstructor;
-	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
-	private static Field localeField;
-	private static Field playerConnectionField;
-	private static Method sendPacketMethod;
-	private static Method getHandleMethod;
+
+	private static Class<?> packet;
+	private static Constructor<?> packetDataSerializer;
+	private static Constructor<?> packetPlayOutCustomPayload;
+	private static Field locale;
+	private static Field playerConnection;
+	private static Method sendPacket;
+	private static Method getHandle;
+
 	private static boolean init;
 	private static String version;
 
@@ -55,7 +58,7 @@ public final class NmsUtils {
 	public static String getLang(Player p) {
 		try {
 			if(!init) init();
-			return ((String) localeField.get(Objects.requireNonNull(getHandleMethod.invoke(p)))).toLowerCase();
+			return ((String) locale.get(Objects.requireNonNull(getHandle.invoke(p)))).toLowerCase();
 		} catch(ReflectiveOperationException e) {
 			LOG.error(e.getMessage());
 			return "en_us";
@@ -72,16 +75,16 @@ public final class NmsUtils {
 		if(init) return;
 		final String name = Bukkit.getServer().getClass().getPackage().getName();
 		version = name.substring(name.lastIndexOf('.') + 1);
-		packetClass = Class.forName(NMS + version + ".Packet");
-		Class<?> packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
-		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
-		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializer);
+		packet = Class.forName(NMS + version + ".Packet");
+		Class<?> packetDataSerializerC = Class.forName(NMS + version + ".PacketDataSerializer");
+		packetDataSerializer = packetDataSerializerC.getConstructor(ByteBuf.class);
+		packetPlayOutCustomPayload = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializerC);
 		Class<?> craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
-		getHandleMethod = craftPlayer.getMethod("getHandle");
+		getHandle = craftPlayer.getMethod("getHandle");
 		Class<?> entityPlayer = Class.forName(NMS + version + ".EntityPlayer");
-		localeField = entityPlayer.getField("locale");
-		playerConnectionField = entityPlayer.getField("playerConnection");
-		sendPacketMethod = Class.forName(NMS + version + ".PlayerConnection").getMethod("sendPacket", packetClass);
+		locale = entityPlayer.getField("locale");
+		playerConnection = entityPlayer.getField("playerConnection");
+		sendPacket = Class.forName(NMS + version + ".PlayerConnection").getMethod("sendPacket", packet);
 		init = true;
 	}
 
@@ -100,22 +103,24 @@ public final class NmsUtils {
 	 */
 	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
 		if(!init) init();
+		//convert to LabyMod-readable Map
 		final HashMap<String, Boolean> nList = new HashMap<>();
 		for(final Entry<LabyModFeature, Boolean> entry : labymodFunctions.entrySet())
 			nList.put((entry.getKey()).name(), entry.getValue());
+		//write the data to stream
 		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		final ObjectOutputStream out = new ObjectOutputStream(byteOut);
 		out.writeObject(nList);
-		final ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
-		Object dataSerializer = packetDataSerializerConstructor.newInstance(a);
-		Object packet = packetPlayOutCustomPayloadConstructor.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
-		Object handle = getHandleMethod.invoke(player);
-		Object connection = playerConnectionField.get(handle);
-		sendPacketMethod.invoke(connection, packetClass.cast(packet));
+		//Reflection sending magic
+		Object dataSerializer = packetDataSerializer.newInstance(Unpooled.copiedBuffer(byteOut.toByteArray()));
+		Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
+		sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+		//logback
 		final StringBuilder b = new StringBuilder("Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
 			if(!n.getValue()) b.append(n.getKey()).append(", ");
 		AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
+		//close stream
 		out.close();
 	}
 

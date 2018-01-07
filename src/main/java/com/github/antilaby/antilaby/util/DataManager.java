@@ -1,8 +1,7 @@
-package com.github.antilaby.antilaby.features.labyinfo;
+package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
-import com.github.antilaby.antilaby.util.IOUtils;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -15,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 public class DataManager {
-	
+
 	private static final File dataFile = new File(AntiLaby.getInstance().getDataFolder() + "/labyinfo.ser");
-	
+
 	/**
 	 * Loads all LabyPlayerInformation
 	 */
@@ -26,7 +25,7 @@ public class DataManager {
 			ObjectInputStream ois = null;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(dataFile));
-				final HashMap<String, String> p = IOUtils.<LabyInfoPlayerPack>readObject(ois).getPlayers();
+				final HashMap<String, String> p = IOUtils.readObject(ois);
 				for(final Entry<String, String> e : p.entrySet())
 					System.out.println(e);
 				IncomingPluginChannel.setLabyModPlayers(p);
@@ -40,21 +39,20 @@ public class DataManager {
 			cleanup();
 		}
 	}
-	
+
 	/**
 	 * Deletes the dataFile
 	 */
 	public static void cleanup() {
 		if(dataFile.exists()) dataFile.delete();
 	}
-	
+
 	public static void saveData() {
 		if(IncomingPluginChannel.getLabyModPlayers().isEmpty()) return;
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(dataFile));
-			final LabyInfoPlayerPack lipp = new LabyInfoPlayerPack(IncomingPluginChannel.getLabyModPlayers());
-			oos.writeObject(lipp);
+			oos.writeObject(IncomingPluginChannel.getLabyModPlayers());
 		} catch(final IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -63,5 +61,10 @@ public class DataManager {
 			} catch(final IOException e) {}
 		}
 	}
-	
+
+	/**
+	 * Private constructor, no need to instantiate this class
+	 */
+	private DataManager() {throw new UnsupportedOperationException();}
+
 }

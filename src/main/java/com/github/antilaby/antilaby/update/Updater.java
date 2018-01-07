@@ -18,13 +18,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * The old auto-updater class. It will be removed as soon as the new
- * auto-updater is ready for use.
+ * The old auto-updater class. It will be removed as soon as the new auto-updater is ready for use.
  *
  * @author NathanNr
  */
 @SuppressWarnings("ResultOfMethodCallIgnored")
-public class UpdateDownloader extends Thread {
+public class Updater extends Thread {
 
 	/**
 	 * checks for updates and initiates their download and installation if activated

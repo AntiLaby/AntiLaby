@@ -14,15 +14,15 @@ import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.config.InitConfig;
 import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
-import com.github.antilaby.antilaby.features.labyinfo.DataManager;
-import com.github.antilaby.antilaby.features.labyinfo.LabyInfoCommand;
+import com.github.antilaby.antilaby.util.DataManager;
+import com.github.antilaby.antilaby.command.LabyInfoCommand;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.metrics.BStats;
 import com.github.antilaby.antilaby.metrics.Metrics;
 import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
-import com.github.antilaby.antilaby.update.UpdateDownloader;
+import com.github.antilaby.antilaby.update.Updater;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,10 +33,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Main class of AntiLaby Spigot plugin
@@ -44,50 +44,42 @@ import java.util.Map;
  * @author NathanNr
  */
 public class AntiLaby extends JavaPlugin {
-
+	/** The main logger */
 	public static final Logger LOG = new Logger("Main");
+	// The singleton instance
 	private static AntiLaby instance;
 
+	/**
+	 * Gets the singleton instance
+	 *
+	 * @return the singleton instance
+	 */
 	public static AntiLaby getInstance() {
 		return instance;
 	}
 
-	private final List<PluginFeature> loadedFeatures = new ArrayList<>(PluginFeature.values().length);
+	/** All loaded Features */
+	public final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
 	// Compatible?
 	private boolean compatible;
-	// MCStats.org Metrics
-	private Metrics metrics;
 	// Is this a beta version?
 	private VersionType versionType;
 	// Is the server part of a BungeeCord network?
 	private BungeeChecker bungeeChecker;
-
-	private UpdateDownloader ud;
-
+	// The cleanup Thread deletes the saved LabyPlayer data
+	private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
+	// The Updater (The old one)
+	private Updater ud;
+	// is this pre 1.9?
 	private boolean before19 = false;
 
+	/**
+	 * Gets whether the mc version is pre 1.9, used by the {@link LanguageManager} system
+	 *
+	 * @return whether this is before 1.9
+	 */
 	public boolean isPrior19() {
 		return before19;
-	}
-
-	/**
-	 * Disables the desired {@link PluginFeature}
-	 *
-	 * @param feature
-	 * 		The PluginFeature to disable
-	 */
-	public void disableFeature(PluginFeature feature) {
-		loadedFeatures.remove(feature);
-	}
-
-	/**
-	 * Enables the desired {@link PluginFeature}
-	 *
-	 * @param feature
-	 * 		The PluginFeature to enable
-	 */
-	public void enableFeature(PluginFeature feature) {
-		if(!loadedFeatures.contains(feature)) loadedFeatures.add(feature);
 	}
 
 	@Override
@@ -96,41 +88,30 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	/**
-	 * Returns the <a href="http://mcstats.org/plugin/Antilaby">MCStats</a> Metrics
+	 * Gets the {@link VersionType} of the plugin
+	 *
+	 * @return the version type
 	 */
-	public Metrics getMetrics() {
-		return metrics;
-	}
-
 	public VersionType getVersionType() {
 		return versionType;
-	}
-
-	/**
-	 * Returns whether a given {@link PluginFeature} is enabled
-	 *
-	 * @param feature
-	 * 		The requested feature
-	 *
-	 * @return whether the requested feature is enabled
-	 */
-	public boolean isSupportEnabled(PluginFeature feature) {
-		return loadedFeatures.contains(feature);
 	}
 
 	@Override
 	public void onDisable() {
 		// Kill update task if it's running
 		if(ud != null) ud.interrupt();
-		// Save Data
-		DataManager.saveData();
+		// Save Data if compatible
+		if(compatible) DataManager.saveData();
+			// If not, we need to remove the cleanup thread
+		else Runtime.getRuntime().removeShutdownHook(cleanup);
 		LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Override
 	public void onEnable() {
 		// Delete datamanager file on exit
-		Runtime.getRuntime().addShutdownHook(new Thread(DataManager::cleanup, "AntiLabyCleanup"));
+		Runtime.getRuntime().addShutdownHook(cleanup);
 		// Check if the server is compatible with AntiLaby
 		final String nmsver = NmsUtils.getVersion();
 		int version = 0;
@@ -175,7 +156,7 @@ public class AntiLaby extends JavaPlugin {
 		bungeeChecker.init();
 		// Start plug-in metrics for MCStats.org
 		try {
-			metrics = new Metrics(this);
+			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch(final IOException e) {
 			LOG.error(e.getMessage());
@@ -204,13 +185,12 @@ public class AntiLaby extends JavaPlugin {
 		if(versionType.equals(VersionType.RELEASE)) {
 			if(getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
 				// Check and install updates async
-				ud = new UpdateDownloader();
+				ud = new Updater();
 				ud.start();
 			} else
 				LOG.info("You have disabled auto-update in the config file. You can get newer versions of AntiLaby " + "manually" + " from here: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/!");
 		} else {
 			LOG.info("You are running a " + versionType.toString() + " version! Auto-update is not available. You can update manually: " + Constants.RESOURCE_LINK);
-			disableIfNotCompatible();
 		}
 	}
 
@@ -222,7 +202,7 @@ public class AntiLaby extends JavaPlugin {
 	 * Initializes and registers the AntiLaby commands
 	 */
 	private void initCmds() {
-		getCommand("antilaby").setExecutor(new AntiLabyCommand(this));
+		getCommand("antilaby").setExecutor(new AntiLabyCommand());
 		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
 		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
 	}
