@@ -9,19 +9,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 
-public class EventsPost18 implements Listener{
-	
+public class EventsPost18 implements Listener {
+
 	@EventHandler
 	public void onChangeLocale(PlayerLocaleChangeEvent e) {
-		if(AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB)) return;
+		if(AntiLaby.getInstance().loadedFeatures.contains(PluginFeature.PROTOCOL_LIB)) return;
 		final Player player = e.getPlayer();
 		LanguageManager.INSTANCE.setLanguageForPlayer(player, e.getLocale());
 	}
-	
+
 	@EventHandler
 	public void onJoin(PlayerJoinEvent event) {
 		final Player player = event.getPlayer();
-		if(!AntiLaby.getInstance().isSupportEnabled(PluginFeature.PROTOCOL_LIB))
+		if(!AntiLaby.getInstance().loadedFeatures.contains(PluginFeature.PROTOCOL_LIB))
 			LanguageManager.INSTANCE.setLanguageForPlayer(player, player.getLocale());
 	}
 }

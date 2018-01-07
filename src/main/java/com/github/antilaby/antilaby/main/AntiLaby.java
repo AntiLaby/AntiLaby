@@ -153,7 +153,6 @@ public class AntiLaby extends JavaPlugin {
 		DataManager.loadData();
 		// Is the server part of a BungeeCord network?
 		bungeeChecker = new BungeeChecker();
-		bungeeChecker.init();
 		// Start plug-in metrics for MCStats.org
 		try {
 			Metrics metrics = new Metrics(this);
