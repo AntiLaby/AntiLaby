@@ -14,7 +14,7 @@ import java.util.TreeMap;
  * Does all Converting Magic.
  */
 public final class YAMLConverter {
-	
+
 	/**
 	 * Flats the given Map by joining keys
 	 *
@@ -36,10 +36,8 @@ public final class YAMLConverter {
 				String separator = "";
 				for(Object element : ((Collection) value)) {
 					Map<String, Object> subMap = flatten(Collections.singletonMap(key, element));
-					joiner
-							.append(separator)
-							.append(subMap.entrySet().iterator().next().getValue().toString());
-					
+					joiner.append(separator).append(subMap.entrySet().iterator().next().getValue().toString());
+
 					separator = ",";
 				}
 				result.put(key, joiner.toString());
@@ -47,7 +45,7 @@ public final class YAMLConverter {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Converts the given Yaml Language Configuration to the new one.
 	 * There are two ways of using this:<br><br>
@@ -67,7 +65,7 @@ public final class YAMLConverter {
 	 *
 	 * @return the resulting Map
 	 */
-	public static Map<String, String> convertToLocale(boolean appendVersion, YamlConfiguration yaml) {
+	public static SortedMap<String, String> convertToLocale(boolean appendVersion, YamlConfiguration yaml) {
 		System.out.println("#version" + LanguageVersion.CURRENT_VERSION);
 		SortedMap<String, String> result = new TreeMap<>();
 		if(appendVersion) result.put("#version", LanguageVersion.CURRENT_VERSION.toString());
@@ -75,9 +73,9 @@ public final class YAMLConverter {
 			if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
 		return result;
 	}
-	
+
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private YAMLConverter() {}
+	private YAMLConverter() {throw new UnsupportedOperationException();}
 }

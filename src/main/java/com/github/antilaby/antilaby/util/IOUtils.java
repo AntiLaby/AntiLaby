@@ -15,7 +15,7 @@ import java.net.URL;
  * @author heisluft
  */
 public final class IOUtils {
-	
+
 	/**
 	 * Passes all read bytes from the given {@link InputStream} to the given {@link OutputStream}
 	 *
@@ -29,10 +29,9 @@ public final class IOUtils {
 	 */
 	public static void copyStream(InputStream readFrom, OutputStream writeTo) throws IOException {
 		int nextByte;
-		while((nextByte = readFrom.read()) != -1)
-			writeTo.write(nextByte);
+		while((nextByte = readFrom.read()) != -1) writeTo.write(nextByte);
 	}
-	
+
 	/**
 	 * Reads the next object from the given {@link ObjectStreamException} and casts it to T
 	 *
@@ -51,11 +50,10 @@ public final class IOUtils {
 	 * 		The read object is not an instance of T
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T readObject(ObjectInputStream inputStream)
-			throws ClassNotFoundException, IOException, ClassCastException {
+	public static <T> T readObject(ObjectInputStream inputStream) throws ClassNotFoundException, IOException, ClassCastException {
 		return (T) inputStream.readObject();
 	}
-	
+
 	/**
 	 * Gets the text from a web page
 	 *
@@ -75,17 +73,16 @@ public final class IOUtils {
 			final StringBuilder builder = new StringBuilder();
 			int read;
 			final char[] chars = new char[1024];
-			while((read = reader.read(chars)) != -1)
-				builder.append(chars, 0, read);
+			while((read = reader.read(chars)) != -1) builder.append(chars, 0, read);
 			return builder.toString();
 		} finally {
 			if(reader != null) reader.close();
 		}
 	}
-	
+
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private IOUtils() {}
-	
+	private IOUtils() {throw new UnsupportedOperationException();}
+
 }

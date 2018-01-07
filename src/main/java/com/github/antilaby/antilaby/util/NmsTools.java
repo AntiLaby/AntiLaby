@@ -1,9 +1,8 @@
-package com.github.antilaby.antilaby.nms;
+package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.Reflection;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
@@ -16,6 +15,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 /**
  * The class for NMS reflection magic
@@ -27,7 +27,6 @@ public final class NmsTools {
 	private static final String NMS = "net.minecraft.server.";
 	private static final String OBC = "org.bukkit.craftbukkit.";
 	private static Class<?> craftPlayer;
-	private static Class<?> packetDataSerializer;
 	private static Class<?> packetClass;
 	private static Constructor<?> packetDataSerializerConstructor;
 	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
@@ -54,7 +53,7 @@ public final class NmsTools {
 		} catch(final ReflectiveOperationException e) {
 			LOG.error(e.getMessage());
 		}
-		return Reflection.getField(Reflection.invokeNoArgsMethod(craftPlayer.cast(p), "getHandle"), "locale");
+		return Reflection.getField(Objects.requireNonNull(Reflection.invokeNoArgsMethod(craftPlayer.cast(p), "getHandle")), "locale");
 	}
 
 	/**
@@ -68,7 +67,7 @@ public final class NmsTools {
 		final String name = Bukkit.getServer().getClass().getPackage().getName();
 		version = name.substring(name.lastIndexOf('.') + 1);
 		packetClass = Class.forName(NMS + version + ".Packet");
-		packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
+		Class<?> packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
 		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
 		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializer);
 		craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
@@ -116,6 +115,6 @@ public final class NmsTools {
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private NmsTools() {}
+	private NmsTools() {throw new UnsupportedOperationException();}
 
 }
