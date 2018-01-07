@@ -3,8 +3,7 @@ package com.github.antilaby.antilaby.lang.impl;
 import com.github.antilaby.antilaby.lang.IClientLanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.NmsTools;
-import org.bukkit.Bukkit;
+import com.github.antilaby.antilaby.util.NmsUtils;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -27,8 +26,6 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 		new File(RESOURCE_PATH).mkdirs();
 		for(final Locale l : Locale.values())
 			l.init(false);
-		for(final Player p : Bukkit.getOnlinePlayers())
-			setLanguageForPlayer(p, p.getLocale());
 		isInit = true;
 	}
 
@@ -40,7 +37,7 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 		if(hasPrinted) return;
 		final String uuid = player.getUniqueId().toString();
 		if(uuid.equals("a4395e2f-cddd-466c-a0b2-d5c2fcf44c45") || uuid.equals("e823471a-0ca1-41d0-b7e1-4a0561de7d76"))
-			player.sendMessage(translate("info.specialDef", player, AntiLaby.getInstance().getDescription().getVersion(), NmsTools.getVersion()));
+			player.sendMessage(translate("info.specialDef", player, AntiLaby.getInstance().getDescription().getVersion(), NmsUtils.getVersion()));
 	}
 
 	@Override
@@ -60,7 +57,9 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 
 	@Override
 	public Locale getLanguageForPlayer(Player p) {
-		if(!mappedLanguages.containsKey(p)) mappedLanguages.put(p, Locale.byName(NmsTools.getLang(p), Locale.EN_US));
+		if(AntiLaby.getInstance().isPrior19()) {
+			return Locale.byName(NmsUtils.getLang(p), Locale.EN_US);
+		}
 		return mappedLanguages.get(p);
 	}
 

@@ -12,6 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,14 +24,17 @@ import java.util.Objects;
  *
  * @author heisluft
  */
-public final class NmsTools {
+public final class NmsUtils {
 	private static final Logger LOG = new Logger("Reflection");
 	private static final String NMS = "net.minecraft.server.";
 	private static final String OBC = "org.bukkit.craftbukkit.";
-	private static Class<?> craftPlayer;
 	private static Class<?> packetClass;
 	private static Constructor<?> packetDataSerializerConstructor;
 	private static Constructor<?> packetPlayOutCustomPayloadConstructor;
+	private static Field localeField;
+	private static Field playerConnectionField;
+	private static Method sendPacketMethod;
+	private static Method getHandleMethod;
 	private static boolean init;
 	private static String version;
 
@@ -48,12 +53,13 @@ public final class NmsTools {
 	}
 
 	public static String getLang(Player p) {
-		if(!init) try {
-			init();
-		} catch(final ReflectiveOperationException e) {
+		try {
+			if(!init) init();
+			return ((String) localeField.get(Objects.requireNonNull(getHandleMethod.invoke(p)))).toLowerCase();
+		} catch(ReflectiveOperationException e) {
 			LOG.error(e.getMessage());
+			return "en_us";
 		}
-		return Reflection.getField(Objects.requireNonNull(Reflection.invokeNoArgsMethod(craftPlayer.cast(p), "getHandle")), "locale");
 	}
 
 	/**
@@ -70,7 +76,12 @@ public final class NmsTools {
 		Class<?> packetDataSerializer = Class.forName(NMS + version + ".PacketDataSerializer");
 		packetDataSerializerConstructor = packetDataSerializer.getConstructor(ByteBuf.class);
 		packetPlayOutCustomPayloadConstructor = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializer);
-		craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
+		Class<?> craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
+		getHandleMethod = craftPlayer.getMethod("getHandle");
+		Class<?> entityPlayer = Class.forName(NMS + version + ".EntityPlayer");
+		localeField = entityPlayer.getField("locale");
+		playerConnectionField = entityPlayer.getField("playerConnection");
+		sendPacketMethod = Class.forName(NMS + version + ".PlayerConnection").getMethod("sendPacket", packetClass);
 		init = true;
 	}
 
@@ -84,12 +95,8 @@ public final class NmsTools {
 	 *
 	 * @throws IOException
 	 * 		If the connection to the client could somehow not be established
-	 * @throws IllegalArgumentException
-	 * 		Somehow the accepted method parameter types changed. I'm impressed.
 	 * @throws ReflectiveOperationException
 	 * 		If something goes wrong during {@link #init}.
-	 * @throws SecurityException
-	 * 		Someone created a {@link SecurityManager}. Not good.
 	 */
 	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
 		if(!init) init();
@@ -101,11 +108,11 @@ public final class NmsTools {
 		out.writeObject(nList);
 		final ByteBuf a = Unpooled.copiedBuffer(byteOut.toByteArray());
 		Object dataSerializer = packetDataSerializerConstructor.newInstance(a);
-		Object packet = packetPlayOutCustomPayloadConstructor.newInstance("LABYMOD", dataSerializer);
-		Object handle = craftPlayer.getMethod("getHandle").invoke(player);
-		Object connection = handle.getClass().getField("playerConnection").get(handle);
-		connection.getClass().getMethod("sendPacket", packetClass).invoke(connection, packetClass.cast(packet));
-		final StringBuilder b = new StringBuilder("[AntiLaby/INFO] Disabled some LabyMod functions (");
+		Object packet = packetPlayOutCustomPayloadConstructor.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
+		Object handle = getHandleMethod.invoke(player);
+		Object connection = playerConnectionField.get(handle);
+		sendPacketMethod.invoke(connection, packetClass.cast(packet));
+		final StringBuilder b = new StringBuilder("Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
 			if(!n.getValue()) b.append(n.getKey()).append(", ");
 		AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
@@ -115,6 +122,6 @@ public final class NmsTools {
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private NmsTools() {throw new UnsupportedOperationException();}
+	private NmsUtils() {throw new UnsupportedOperationException();}
 
 }

@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.examples;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.api.LabyPlayer;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.antilaby.antilaby.util.NmsTools;
+import com.github.antilaby.antilaby.util.NmsUtils;
 import org.bukkit.entity.Player;
 
 import java.util.EnumMap;
@@ -11,7 +11,7 @@ import java.util.EnumMap;
 /**
  * This class gives a few examples on how to use the AntiLaby API<br>
  * WARNING: It's highly recommended to use only methods from the package 'com.github.antilaby.antilaby.api', or, if you
- * really know what you are doing, use {@link NmsTools} directly and handle the exceptions properly! Other solutions may
+ * really know what you are doing, use {@link NmsUtils} directly and handle the exceptions properly! Other solutions may
  * or may not work or be compatible for multiple Minecraft versions!
  */
 public class Example {

@@ -47,28 +47,18 @@ public final class YAMLConverter {
 	}
 
 	/**
-	 * Converts the given Yaml Language Configuration to the new one.
-	 * There are two ways of using this:<br><br>
-	 * 1.
-	 * appendHeader == true, Just print the configuration via<br><br>
-	 * <code>for(Map.Entry&lt;String, String&gt; e : convertToLocale (true, yaml).entrySet())<br>
-	 * yourWritingMethod(e.getKey() + '=' + e.getValue());</code><br><br>
-	 * 2. appendHeader == false, set header manually:<br><br>
-	 * <code>yourWritingMethod("&#35;version: " + LanguageVersion.CURRENT_VERSION.toString());<br>
-	 * for(Map.Entry&lt;String, String&gt; e : convertToLocale (false, yaml).entrySet())<br>
-	 * yourWritingMethod(e.getKey() + '=' + e.getValue());</code>
+	 * Converts the given Yaml String-only Configuration to Properties.<p>Usage:</p>
+	 * <p><code>yourWritingMethod("&#35;version: " + {@link LanguageVersion#CURRENT_VERSION}.toString());<br>
+	 * for(Map.Entry&lt;String, String&gt; e : convertToLocale (yaml).entrySet())<br> yourWritingMethod(e.getKey() + '='
+	 * + e.getValue());</code></p><i>Warning: Non-String entries (like Collections) will be lost</i>
 	 *
-	 * @param appendVersion
-	 * 		whether the LanguageVersion header should be printed
 	 * @param yaml
 	 * 		the YamlConfiguration to convert
 	 *
 	 * @return the resulting Map
 	 */
-	public static SortedMap<String, String> convertToLocale(boolean appendVersion, YamlConfiguration yaml) {
-		System.out.println("#version" + LanguageVersion.CURRENT_VERSION);
+	public static SortedMap<String, String> convertYmlToProperties(YamlConfiguration yaml) {
 		SortedMap<String, String> result = new TreeMap<>();
-		if(appendVersion) result.put("#version", LanguageVersion.CURRENT_VERSION.toString());
 		for(Map.Entry<String, Object> entry : flatten(new Yaml().load(yaml.saveToString())).entrySet())
 			if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
 		return result;

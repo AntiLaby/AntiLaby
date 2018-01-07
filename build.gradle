@@ -39,7 +39,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 dependencies {
-    compile 'com.comphenix.protocol:ProtocolLib:4.4.0-SNAPSHOT'
+    compile 'com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT'
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }
@@ -53,9 +53,9 @@ task buildAll() {}
 
 buildAll.dependsOn jar, sourcesJar, javadocJar
 
-task copyJarToTestserver(type: Copy, dependsOn: jar) {
-    def ts = System.getProperty("testserver")
-    if(ts != null) {
+task copyToServer(type: Copy, dependsOn: jar) {
+    def ts = System.getProperty("serverDir")
+    if (ts != null) {
         ts.replace('\\', '/')
         ts += (!ts.endsWith('/') ? '/' : "").concat("plugins")
         from jar

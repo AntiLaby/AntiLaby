@@ -20,7 +20,7 @@ import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.metrics.BStats;
 import com.github.antilaby.antilaby.metrics.Metrics;
-import com.github.antilaby.antilaby.util.NmsTools;
+import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.update.UpdateDownloader;
 import com.github.antilaby.antilaby.util.Constants;
@@ -63,6 +63,12 @@ public class AntiLaby extends JavaPlugin {
 	private BungeeChecker bungeeChecker;
 
 	private UpdateDownloader ud;
+
+	private boolean before19 = false;
+
+	public boolean isPrior19() {
+		return before19;
+	}
 
 	/**
 	 * Disables the desired {@link PluginFeature}
@@ -126,7 +132,7 @@ public class AntiLaby extends JavaPlugin {
 		// Delete datamanager file on exit
 		Runtime.getRuntime().addShutdownHook(new Thread(DataManager::cleanup, "AntiLabyCleanup"));
 		// Check if the server is compatible with AntiLaby
-		final String nmsver = NmsTools.getVersion();
+		final String nmsver = NmsUtils.getVersion();
 		int version = 0;
 		try {
 			version = Integer.parseInt(nmsver.split("_")[1]);
@@ -156,9 +162,12 @@ public class AntiLaby extends JavaPlugin {
 		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) ProtocolLibSupport.init();
 		else if(version > 8)
 			LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
-		else LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+		else {
+			LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+			before19 = true;
+		}
 		initCmds();
-		initEvents(version);
+		initEvents();
 		// Load data
 		DataManager.loadData();
 		// Is the server part of a BungeeCord network?
@@ -221,16 +230,15 @@ public class AntiLaby extends JavaPlugin {
 	/**
 	 * Initializes and registers the EventListeners
 	 */
-	private void initEvents(int version) {
+	private void initEvents() {
 		final PluginManager pm = Bukkit.getPluginManager();
-		if(version > 8) pm.registerEvents(new EventsPost18(), this);
+		if(!before19) pm.registerEvents(new EventsPost18(), this);
 		pm.registerEvents(new PlayerJoin(), this);
 		pm.registerEvents(new IncomingPluginChannel(), this);
 	}
 
 	/**
-	 * Initializes the
-	 * <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
+	 * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
 	 */
 	private void initBMetrics() {
 		// Start plug-in metrics for bStats.org

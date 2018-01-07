@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.api.antilabypackages;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.NmsTools;
+import com.github.antilaby.antilaby.util.NmsUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -117,7 +117,7 @@ public class AntiLabyPackager {
 			}
 		if(ignorePlayer) disabledLabyModFeatures = allowEverything();
 		else if(!disabledLabyModFeatures.isEmpty()) try {
-			NmsTools.setLabyModFeature(p, disabledLabyModFeatures);
+			NmsUtils.setLabyModFeature(p, disabledLabyModFeatures);
 		} catch(final Exception e) {
 			e.printStackTrace();
 			AntiLaby.LOG.error("An unknown error has occurred: Can't send AntiLaby packages to player " + p.getName() + " (" + p.getUniqueId() + ")!");
