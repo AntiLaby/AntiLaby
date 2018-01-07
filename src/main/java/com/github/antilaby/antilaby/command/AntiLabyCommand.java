@@ -1,13 +1,17 @@
 package com.github.antilaby.antilaby.command;
 
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-public class AntiLabyCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AntiLabyCommand extends CommandBase {
+
+	public AntiLabyCommand() {
+		super(AntiLaby.getInstance(), "antiLaby");
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -23,10 +27,14 @@ public class AntiLabyCommand implements CommandExecutor {
 		return true;
 	}
 
-	public void sendUsage(CommandSender sender) {
-		if(sender instanceof Player) {
-			final Player p = (Player) sender;
-			p.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.antiLaby.usage", p));
-		} else sender.sendMessage("Usage: /antilaby <info|reload>");
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+		if(args.length == 1) {
+			List<String> list = new ArrayList<>(2);
+			list.add("info");
+			list.add("reload");
+			return list;
+		}
+		return new ArrayList<>(0);
 	}
 }

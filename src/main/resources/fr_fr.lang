@@ -8,4 +8,3 @@ antilaby.command.labyInfo.usage=&cSyntaxe : /labyinfo <joueur>
 antilaby.command.labyInfo.labyMod=&6Le joueur &o%s&6 utilise LabyMod.
 antilaby.command.labyInfo.noLabyMod=&6Le joueur &o%s&6 &ln'utilise pas&6 LabyMod.
 antilaby.command.labyInfo.playerOffline=&cLe joueur &o%s&c est offline.
-antilaby.command.labyInfo.reload=&cSorry, but LabyInfo is currently not available after a server reload. Please restart your server to use LabyInfo! Reload-support will be available in a future update.

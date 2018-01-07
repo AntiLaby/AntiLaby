@@ -1,9 +1,14 @@
 package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.lang.impl.LanguageVersion;
+import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -61,6 +66,30 @@ public final class YAMLConverter {
 		SortedMap<String, String> result = new TreeMap<>();
 		for(Map.Entry<String, Object> entry : flatten(new Yaml().load(yaml.saveToString())).entrySet())
 			if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
+		return result;
+	}
+
+
+	/**
+	 * Converts the given Yaml String-only Configuration to Properties.<p>Usage:</p>
+	 * <p><code>yourWritingMethod("&#35;version: " + {@link LanguageVersion#CURRENT_VERSION}.toString());<br>
+	 * for(Map.Entry&lt;String, String&gt; e : convertToLocale (yaml).entrySet())<br> yourWritingMethod(e.getKey() + '='
+	 * + e.getValue());</code></p><i>Warning: Non-String entries (like Collections) will be lost</i>
+	 *
+	 * @param yaml
+	 * 		the YamlFile to convert
+	 *
+	 * @return the resulting Map
+	 */
+	public static SortedMap<String, String> convertYmlToProperties(File yaml) {
+		SortedMap<String, String> result = new TreeMap<>();
+		try(FileInputStream fileInputStream = new FileInputStream(yaml)) {
+			for(Map.Entry<String, Object> entry : flatten(new Yaml().load(fileInputStream)).entrySet())
+				if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
+			fileInputStream.close();
+		} catch(IOException e) {
+			AntiLaby.LOG.error(e.getMessage());
+		}
 		return result;
 	}
 

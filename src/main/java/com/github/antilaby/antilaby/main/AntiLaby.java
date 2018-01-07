@@ -6,7 +6,6 @@ import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.api.spigot.BungeeChecker;
 import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
-import com.github.antilaby.antilaby.command.AntiLabyTabComplete;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.Config;
@@ -201,9 +200,8 @@ public class AntiLaby extends JavaPlugin {
 	 * Initializes and registers the AntiLaby commands
 	 */
 	private void initCmds() {
-		getCommand("antilaby").setExecutor(new AntiLabyCommand());
-		getCommand("antilaby").setTabCompleter(new AntiLabyTabComplete());
-		getCommand("labyinfo").setExecutor(new LabyInfoCommand());
+		new AntiLabyCommand();
+		new LabyInfoCommand();
 	}
 
 	/**
