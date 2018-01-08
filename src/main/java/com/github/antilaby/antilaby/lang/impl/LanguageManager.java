@@ -12,9 +12,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +30,7 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 
 	private LanguageManager() {}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Override
 	public void init() {
 		File newDataPath = new File(RESOURCE_PATH);
@@ -56,7 +54,27 @@ public class LanguageManager implements IClientLanguageManager<Locale> {
 					FileOutputStream stream = new FileOutputStream(converted);
 					stream.write(("#version: " + LanguageVersion.CURRENT_VERSION + "\n").getBytes("UTF-8"));
 					Map<String, String> mp = YAMLConverter.convertYmlToProperties(f);
-					stream.write(Joiner.on("\n").withKeyValueSeparator("=").join(mp).getBytes("UTF-8"));
+					for(Map.Entry<String, String> entry : mp.entrySet()) {
+						switch(entry.getKey()) {
+							case "NoPermission":
+								mp.put("antilaby.command.noPermission", entry.getValue());
+								break;
+							case "LabyModPlayerKick":
+								mp.put("antilaby.playerKickMessage", entry.getValue());
+								break;
+							case "LabyInfo.LabyMod":
+								mp.put("antilaby.command.labyInfo.labyMod", entry.getValue().replaceFirst("%PLAYER%", "%s"));
+								break;
+							case "LabyInfo.NoLabyMod":
+								mp.put("antilaby.command.labyInfo.noLabyMod", entry.getValue().replaceFirst("%PLAYER%", "%s"));
+								break;
+							case "LabyInfo.PlayerOffline":
+								mp.put("antilaby.command.labyInfo.playerOffline", entry.getValue().replaceFirst("%PLAYER%", "%s"));
+								break;
+						}
+						mp.remove(entry.getKey());
+					}
+					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(mp).getBytes("UTF-8"));
 					stream.close();
 				} catch(IOException e) {
 					LOG.error(e.getMessage());
