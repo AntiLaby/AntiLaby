@@ -4,6 +4,13 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 
 import java.util.List;
 
+/**
+ * Get values from the configuration file. This class will get removed or
+ * reworked in the future.
+ * 
+ * @author NathanNr
+ */
+
 public class Config {
 
 	public static boolean getANIMATIONS() {

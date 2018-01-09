@@ -26,7 +26,8 @@ public final class Constants {
 	 */
 	public static final String PERMISSION_BYPASS = "antilaby.bypass";
 	/**
-	 * The permission for bypassing the commands invoked when joining while having LabyMod activated
+	 * The permission for bypassing the commands invoked when joining while having
+	 * LabyMod activated
 	 */
 	public static final String PERMISSION_BYPASS_JOIN_COMMANDS = "antilaby.bypasscommands";
 	/**
@@ -41,6 +42,8 @@ public final class Constants {
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private Constants() {throw new UnsupportedOperationException();}
+	private Constants() {
+		throw new UnsupportedOperationException();
+	}
 
 }

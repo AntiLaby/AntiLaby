@@ -106,7 +106,6 @@ public class AntiLaby extends JavaPlugin {
 		LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
 	}
 
-	@SuppressWarnings("ResultOfMethodCallIgnored")
 	@Override
 	public void onEnable() {
 		// Delete datamanager file on exit

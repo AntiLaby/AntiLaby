@@ -7,6 +7,14 @@ import com.github.antilaby.antilaby.util.Constants;
 
 import java.util.List;
 
+/**
+ * Initialize the configuration file and update it from older versions. This
+ * class will be removed in the future if the new configuration system is ready
+ * to use!
+ * 
+ * @author NathanNr
+ */
+
 public class InitConfig {
 
 	private static final Logger LOG = new Logger("Config");
