@@ -39,29 +39,32 @@ public class ConfigInit {
 		cfg.options().header(
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
+		// LabyMod 3 features:
 		cfg.addDefault("AntiLaby.LabyModPlayerKick.Enable", true);
-		cfg.addDefault("AntiLaby.Feature.SATURATION_BAR", true);
-		cfg.addDefault("AntiLaby.Feature.CHAT", true);
-		cfg.addDefault("AntiLaby.Feature.GUI_ALL", true);
-		cfg.addDefault("AntiLaby.Feature.GUI_POTION_EFFECTS", true);
-		cfg.addDefault("AntiLaby.Feature.GUI_ARMOR_HUD", true);
-		cfg.addDefault("AntiLaby.Feature.GUI_ITEM_HUD", true);
-		cfg.addDefault("AntiLaby.Feature.TAGS", true);
-		cfg.addDefault("AntiLaby.Feature.ANIMATIONS", true);
-		cfg.addDefault("AntiLaby.Feature.BLOCKBUILD", false);
-		cfg.addDefault("AntiLaby.Feature.IMPROVED_LAVA", false);
-		cfg.addDefault("AntiLaby.Feature.CROSSHAIR_SYNC", false);
-		cfg.addDefault("AntiLaby.Feature.REFILL_FIX", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.FOOD", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.GUI", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.NICK", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.EXTRAS", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.ANIMATIONS", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.POTIONS", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.ARMOR", false);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR", true);
-		cfg.addDefault("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", true);
-		cfg.addDefault("AntiLaby.Update.AutoUpdate", true); // TODO: New auto-updater
+		cfg.addDefault("AntiLaby.LabyModFeature.SATURATION_BAR", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.CHAT", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ALL", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.GUI_POTION_EFFECTS", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ARMOR_HUD", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ITEM_HUD", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.TAGS", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.ANIMATIONS", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.BLOCKBUILD", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.IMPROVED_LAVA", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.CROSSHAIR_SYNC", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.REFILL_FIX", false);
+		// Old LabyMod features:
+		cfg.addDefault("AntiLaby.LabyModFeature.FOOD", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.GUI", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.NICK", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.EXTRAS", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.ANIMATIONS", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.POTIONS", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.ARMOR", false);
+		cfg.addDefault("AntiLaby.LabyModFeature.DAMAGEINDICATOR", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true);
+		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
+		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
 		final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 		commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
 		commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
@@ -69,8 +72,8 @@ public class ConfigInit {
 		commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
 		if (cfg.getList("AntiLaby.LabyModPlayerCommands") == null)
 			cfg.set("AntiLaby.LabyModPlayerCommands", commands);
-		cfg.addDefault("AntiLaby.ConfigVersion", 3);
 		cfg.addDefault("AntiLaby.DebugMode", false);
+		cfg.addDefault("AntiLaby.ConfigVersion", 3);
 		cfg.options().copyDefaults(true);
 	}
 

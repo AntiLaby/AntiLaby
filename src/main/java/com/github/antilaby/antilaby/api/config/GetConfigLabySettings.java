@@ -6,9 +6,9 @@ package com.github.antilaby.antilaby.api.config;
  * @author NathanNr
  */
 
-public class ConfigLabySettings implements ConfigurationValues {
+public class GetConfigLabySettings implements ConfigurationReader {
 
-	private final String PATH = "";
+	private final String PATH = "AntiLaby.LabyModFeature";
 
 	@Override
 	public String getPath() {
