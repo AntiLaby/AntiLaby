@@ -5,7 +5,6 @@ package com.github.antilaby.antilaby.api.config;
  * 
  * @author NathanNr
  */
-
 public interface ConfigurationReader {
 
 	public String getPath();

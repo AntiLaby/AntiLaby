@@ -5,7 +5,6 @@ package com.github.antilaby.antilaby.api.config;
  * 
  * @author NathanNr
  */
-
 public class GetConfigUpdateSettings implements ConfigurationReader {
 
 	private final String PATH = "AntiLaby.Update";

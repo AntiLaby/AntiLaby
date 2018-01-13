@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import com.github.antilaby.antilaby.config.ConfigFile;
+import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 
 /**
@@ -13,7 +16,6 @@ import com.github.antilaby.antilaby.util.Constants;
  * 
  * @author NathanNr
  */
-
 public class ConfigInit {
 
 	private File file;
@@ -34,6 +36,9 @@ public class ConfigInit {
 		}
 	}
 
+	/**
+	 * Add the default values to the configuration file.
+	 */
 	private void addDefaults() {
 		// TODO: create new configuration design
 		cfg.options().header(
@@ -77,22 +82,77 @@ public class ConfigInit {
 		cfg.options().copyDefaults(true);
 	}
 
+	/**
+	 * Update the configuration file from an older version to the latest
+	 * configuration version.
+	 */
 	private void update() {
 		if (cfg.getString("AntiLaby.ConfigVersion") != null)
 			oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
 		else
 			oldVersion = 0;
 		if (oldVersion == 1) {
-			// TODO: update
+			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
+					.getBoolean("AntiLaby.EnableBypassWithPermission");
+			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
+			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
+			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
+			final boolean nick = ConfigFile.getCfg().getBoolean("AntiLaby.disable.NICK");
+			final boolean chat = ConfigFile.getCfg().getBoolean("AntiLaby.disable.CHAT");
+			final boolean extras = ConfigFile.getCfg().getBoolean("AntiLaby.disable.EXTRAS");
+			final boolean animations = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ANIMATIONS");
+			final boolean potions = ConfigFile.getCfg().getBoolean("AntiLaby.disable.POTIONS");
+			final boolean armor = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ARMOR");
+			final boolean damageIndicator = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
+			final boolean minimapRadar = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
+			final List<String> commands = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
+			try {
+				delete();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			addDefaults();
+			// TODO: Delete the old file and create the new one with the stored values
 			try {
 				save();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else if (oldVersion == 2) {
-			// TODO: update
+			boolean bypassWithPermission = cfg.getBoolean("AntiLaby.EnableBypassWithPermission");
+			boolean labyModPlayerKickEnabled = cfg.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
+			// LabyMod 3 features:
+			boolean saturationBar = cfg.getBoolean("AntiLaby.Features.Disable.SATURATION_BAR");
+			boolean chat = cfg.getBoolean("AntiLaby.Features.Disable.CHAT");
+			boolean guiAll = cfg.getBoolean("AntiLaby.Features.Disable.GUI_ALL");
+			boolean guiPotion = cfg.getBoolean("AntiLaby.Features.Disable.GUI_POTION_EFFECTS");
+			boolean guiArmor = cfg.getBoolean("AntiLaby.Features.Disable.GUI_ARMOR_HUD");
+			boolean guiItem = cfg.getBoolean("AntiLaby.Features.Disable.GUI_ITEM_HUD");
+			boolean tags = cfg.getBoolean("AntiLaby.Features.Disable.TAGS");
+			boolean animations = cfg.getBoolean("AntiLaby.Features.Disable.ANIMATIONS");
+			boolean blockbuild = cfg.getBoolean("AntiLaby.Features.Enable.BLOCKBUILD");
+			boolean improvedLava = cfg.getBoolean("AntiLaby.Features.Enable.IMPROVED_LAVA");
+			boolean crosshairSync = cfg.getBoolean("AntiLaby.Features.Enable.CROSSHAIR_SYNC");
+			boolean refillFix = cfg.getBoolean("AntiLaby.Features.Enable.REFILL_FIX");
+			// Features from earlier versions of LabyMod:
+			boolean food = cfg.getBoolean("AntiLaby.OldFeatures.Disable.FOOD");
+			boolean gui = cfg.getBoolean("AntiLaby.OldFeatures.Disable.GUI");
+			boolean nick = cfg.getBoolean("AntiLaby.OldFeatures.Disable.NICK");
+			boolean extras = cfg.getBoolean("AntiLaby.OldFeatures.Disable.EXTRAS");
+			boolean potions = cfg.getBoolean("AntiLaby.OldFeatures.Disable.POTIONS");
+			boolean armor = cfg.getBoolean("AntiLaby.OldFeatures.Disable.ARMOR");
+			boolean damageIndicator = cfg.getBoolean("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR");
+			boolean minimapRadar = cfg.getBoolean("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR");
+			List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
+			boolean autoUpdate = cfg.getBoolean("AntiLaby.Update.AutoUpdate");
+			boolean debugMode = cfg.getBoolean("AntiLaby.DebugMode");
+			try {
+				delete();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			addDefaults();
+			// TODO: Delete the old file and create the new one with the stored values
 			try {
 				save();
 			} catch (IOException e) {
@@ -101,8 +161,25 @@ public class ConfigInit {
 		}
 	}
 
+	/**
+	 * Save the configuration file.
+	 * 
+	 * @throws IOException
+	 */
 	private void save() throws IOException {
 		cfg.save(file);
+	}
+
+	/**
+	 * Delete the configuration file. This method is used after updating the
+	 * configuration file from an older version.
+	 * 
+	 * @throws IOException
+	 */
+	private void delete() throws IOException {
+		file.delete();
+		file = new File(AntiLaby.getInstance().getDataFolder() + "/config.yml");
+		cfg = YamlConfiguration.loadConfiguration(file);
 	}
 
 }

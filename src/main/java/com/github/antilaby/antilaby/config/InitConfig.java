@@ -14,7 +14,6 @@ import java.util.List;
  * 
  * @author NathanNr
  */
-
 public class InitConfig {
 
 	private static final Logger LOG = new Logger("Config");
@@ -82,7 +81,6 @@ public class InitConfig {
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.GUI", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.NICK", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.EXTRAS", false);
-		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.ANIMATIONS", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.POTIONS", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.ARMOR", false);
 		ConfigFile.getCfg().addDefault("AntiLaby.OldFeatures.Disable.DAMAGEINDICATOR", true);

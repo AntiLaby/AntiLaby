@@ -15,7 +15,6 @@ import com.github.antilaby.antilaby.log.Logger;
  * 
  * @author NathanNr
  */
-
 public abstract class ConfigFile {
 
 	/**
