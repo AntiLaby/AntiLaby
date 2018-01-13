@@ -7,7 +7,6 @@ import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 
@@ -37,10 +36,10 @@ public class ConfigInit {
 	 * Add the default values to the configuration file.
 	 */
 	private void addDefaults() {
-		// TODO: create new configuration design
 		cfg.options().header(
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
+		// TODO collect all LabyMod feature settings in a String list
 		// LabyMod 3 features:
 		cfg.addDefault("AntiLaby.LabyModPlayerKick.Enable", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.SATURATION_BAR", true);
@@ -83,6 +82,7 @@ public class ConfigInit {
 	 * Updates the configuration file from an older version to the latest
 	 * configuration version.
 	 */
+	@SuppressWarnings("unused")
 	private void update() {
 		int oldVersion;
 		if (cfg.getString("AntiLaby.ConfigVersion") != null)
@@ -90,23 +90,22 @@ public class ConfigInit {
 		else
 			oldVersion = 0;
 		if (oldVersion == 1) {
-			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
-					.getBoolean("AntiLaby.EnableBypassWithPermission");
-			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
-			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
-			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
-			final boolean nick = ConfigFile.getCfg().getBoolean("AntiLaby.disable.NICK");
-			final boolean chat = ConfigFile.getCfg().getBoolean("AntiLaby.disable.CHAT");
-			final boolean extras = ConfigFile.getCfg().getBoolean("AntiLaby.disable.EXTRAS");
-			final boolean animations = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ANIMATIONS");
-			final boolean potions = ConfigFile.getCfg().getBoolean("AntiLaby.disable.POTIONS");
-			final boolean armor = ConfigFile.getCfg().getBoolean("AntiLaby.disable.ARMOR");
-			final boolean damageIndicator = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
-			final boolean minimapRadar = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
-			final List<String> commands = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
+			final boolean bypassPermissionEnabled = cfg.getBoolean("AntiLaby.EnableBypassWithPermission");
+			final boolean labyKick = cfg.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
+			final boolean food = cfg.getBoolean("AntiLaby.disable.FOOD");
+			final boolean gui = cfg.getBoolean("AntiLaby.disable.GUI");
+			final boolean nick = cfg.getBoolean("AntiLaby.disable.NICK");
+			final boolean chat = cfg.getBoolean("AntiLaby.disable.CHAT");
+			final boolean extras = cfg.getBoolean("AntiLaby.disable.EXTRAS");
+			final boolean animations = cfg.getBoolean("AntiLaby.disable.ANIMATIONS");
+			final boolean potions = cfg.getBoolean("AntiLaby.disable.POTIONS");
+			final boolean armor = cfg.getBoolean("AntiLaby.disable.ARMOR");
+			final boolean damageIndicator = cfg.getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
+			final boolean minimapRadar = cfg.getBoolean("AntiLaby.disable.MINIMAP_RADAR");
+			final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 			delete();
 			addDefaults();
-			// TODO: Delete the old file and create the new one with the stored values
+			// TODO Delete the old file and create the new one with the stored values.
 			try {
 				save();
 			} catch (IOException e) {
@@ -142,7 +141,7 @@ public class ConfigInit {
 			boolean debugMode = cfg.getBoolean("AntiLaby.DebugMode");
 			delete();
 			addDefaults();
-			// TODO: Delete the old file and create the new one with the stored values
+			// TODO Delete the old file and create the new one with the stored values.
 			try {
 				save();
 			} catch (IOException e) {
@@ -154,7 +153,8 @@ public class ConfigInit {
 	/**
 	 * Save the configuration file.
 	 * 
-	 * @throws IOException If the config somehow failed to save
+	 * @throws IOException
+	 *             If the configuration somehow failed to save
 	 */
 	private void save() throws IOException {
 		cfg.save(file);
