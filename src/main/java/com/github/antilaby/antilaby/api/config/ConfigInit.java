@@ -20,20 +20,17 @@ public class ConfigInit {
 
 	private File file;
 	private FileConfiguration cfg;
-	private int oldVersion;
 	public static final int CURRENT_CONFIG_VERSION = 3;
 	public static final String CONFIG_VERSION_PATH = "AntiLaby.ConfigVersion";
 
 	public ConfigInit(File file, FileConfiguration cfg) throws IOException {
 		this.file = file;
 		this.cfg = cfg;
-		if (cfg.getInt(CONFIG_VERSION_PATH) == 3) {
+		if (cfg.getInt(CONFIG_VERSION_PATH) == CURRENT_CONFIG_VERSION) {
 			addDefaults();
 			save();
-			return;
-		} else {
+		} else
 			update();
-		}
 	}
 
 	/**
@@ -83,10 +80,11 @@ public class ConfigInit {
 	}
 
 	/**
-	 * Update the configuration file from an older version to the latest
+	 * Updates the configuration file from an older version to the latest
 	 * configuration version.
 	 */
 	private void update() {
+		int oldVersion;
 		if (cfg.getString("AntiLaby.ConfigVersion") != null)
 			oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
 		else
@@ -106,11 +104,7 @@ public class ConfigInit {
 			final boolean damageIndicator = ConfigFile.getCfg().getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
 			final boolean minimapRadar = ConfigFile.getCfg().getBoolean("AntiLaby.disable.MINIMAP_RADAR");
 			final List<String> commands = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
-			try {
-				delete();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			delete();
 			addDefaults();
 			// TODO: Delete the old file and create the new one with the stored values
 			try {
@@ -146,11 +140,7 @@ public class ConfigInit {
 			List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 			boolean autoUpdate = cfg.getBoolean("AntiLaby.Update.AutoUpdate");
 			boolean debugMode = cfg.getBoolean("AntiLaby.DebugMode");
-			try {
-				delete();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+			delete();
 			addDefaults();
 			// TODO: Delete the old file and create the new one with the stored values
 			try {
@@ -164,7 +154,7 @@ public class ConfigInit {
 	/**
 	 * Save the configuration file.
 	 * 
-	 * @throws IOException
+	 * @throws IOException If the config somehow failed to save
 	 */
 	private void save() throws IOException {
 		cfg.save(file);
@@ -173,10 +163,8 @@ public class ConfigInit {
 	/**
 	 * Delete the configuration file. This method is used after updating the
 	 * configuration file from an older version.
-	 * 
-	 * @throws IOException
 	 */
-	private void delete() throws IOException {
+	private void delete() {
 		file.delete();
 		file = new File(AntiLaby.getInstance().getDataFolder() + "/config.yml");
 		cfg = YamlConfiguration.loadConfiguration(file);

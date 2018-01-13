@@ -50,14 +50,14 @@ public final class IOUtils {
 	 * 		The read object is not an instance of T
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T readObject(ObjectInputStream inputStream) throws ClassNotFoundException, IOException, ClassCastException {
+	public static <T> T readObject(ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
 		return (T) inputStream.readObject();
 	}
 
 	/**
 	 * Gets the text from a web page
 	 *
-	 * @param urlString
+	 * @param urlString+
 	 * 		The URL to be read
 	 *
 	 * @return The text
