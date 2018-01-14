@@ -68,7 +68,7 @@ public enum Locale {
 			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) LanguageManager.LOG.info(
 					"Updating language resource " + this + ".lang from version " + v + " to version " +
 							LanguageVersion.CURRENT_VERSION);
-			if(!overwrite || LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) {
+			if(overwrite || LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) {
 				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
 				final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
 				IOUtils.copyStream(is, new FileOutputStream(f));
