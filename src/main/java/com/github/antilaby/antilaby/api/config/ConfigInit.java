@@ -34,7 +34,6 @@ public class ConfigInit {
 	 * Add the default values to the configuration file.
 	 */
 	private void addDefaults() {
-		// TODO: create new configuration design
 		cfg.options().header(
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.options().header(
@@ -148,7 +147,7 @@ public class ConfigInit {
 	}
 
 	/**
-	 * Saves the configuration file.
+	 * Save the configuration file.
 	 *
 	 * @throws IOException
 	 * 		If the configuration somehow failed to save
@@ -158,8 +157,7 @@ public class ConfigInit {
 	}
 
 	/**
-	 * Delete the configuration file. This method is used after updating the configuration file from an older
-	 * version.
+	 * Delete the configuration file. This method is used after updating the configuration file from an older version.
 	 */
 	private void delete() {
 		file.delete();

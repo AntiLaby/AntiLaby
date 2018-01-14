@@ -23,8 +23,6 @@ public class LanguageManager implements IClientLanguageManager {
 	public static final LanguageManager INSTANCE = new LanguageManager();
 	public static final String RESOURCE_PATH = AntiLaby.getInstance().getDataFolder() + "/lang";
 	private static final Pattern YAML_ENDING = Pattern.compile("\\.ya?ml$");
-	private static final Pattern PLAYER_PATTERN = Pattern.compile("%PLAYER%");
-	private static final Pattern UUID_PATTERN = Pattern.compile("%PLAYERUUID%");
 
 	static final Logger LOG = new Logger("Localization");
 	private final Map<Player, Locale> mappedLanguages = new HashMap<>();
@@ -38,34 +36,20 @@ public class LanguageManager implements IClientLanguageManager {
 		File newDataPath = new File(RESOURCE_PATH);
 		newDataPath.mkdirs();
 		File oldDataPath = new File(AntiLaby.getInstance().getDataFolder(), "language");
-<<<<<<< HEAD
 		if(oldDataPath.exists()) {
 			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
 				if(f.isDirectory() || f.length() == 0) {
 					LOG.info(
 							"you have an invalid file in your language directory (" + f.getName() + "). It wont be " +
 									"converted.");
-=======
-		if (oldDataPath.exists()) {
-			for (File f : Objects.requireNonNull(oldDataPath.listFiles())) {
-				if (f.isDirectory() || f.length() == 0) {
-					LOG.info("you have an invalid file in your language directory (" + f.getName()
-							+ "). It wont be converted.");
->>>>>>> 175cff665265222346f3e02eff6e3e147bb5e9eb
 					continue;
 				}
 				String name = f.getName().toLowerCase();
 				Matcher m = YAML_ENDING.matcher(name);
-<<<<<<< HEAD
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
 					LOG.info(
 							"you have an invalid file in your language directory (" + name + "). It wont be converted"
 									+ ".");
-=======
-				if (!m.find() || !Locale.isLangNameValid(m.replaceAll(""))) {
-					LOG.info("you have an invalid file in your language directory (" + name
-							+ "). It wont be converted.");
->>>>>>> 175cff665265222346f3e02eff6e3e147bb5e9eb
 					continue;
 				}
 				File converted = new File(newDataPath, m.replaceAll(".lang"));
@@ -74,7 +58,6 @@ public class LanguageManager implements IClientLanguageManager {
 					FileOutputStream stream = new FileOutputStream(converted);
 					stream.write(("#version: " + LanguageVersion.CURRENT_VERSION + "\n").getBytes("UTF-8"));
 					Map<String, String> mp = YAMLConverter.convertYmlToProperties(f);
-<<<<<<< HEAD
 					for(Map.Entry<String, String> entry : mp.entrySet()) {
 						switch(entry.getKey()) {
 							case "NoPermission":
@@ -85,54 +68,32 @@ public class LanguageManager implements IClientLanguageManager {
 								break;
 							case "LabyInfo.LabyMod":
 								mp.put("antilaby.command.labyInfo.labyMod",
-										PLAYER_PATTERN.matcher(entry.getValue()).replaceFirst("%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%s"));
 								break;
 							case "LabyInfo.NoLabyMod":
 								mp.put("antilaby.command.labyInfo.noLabyMod",
-										PLAYER_PATTERN.matcher(entry.getValue()).replaceFirst("%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%s"));
 								break;
 							case "LabyInfo.PlayerOffline":
 								mp.put("antilaby.command.labyInfo.playerOffline",
-										PLAYER_PATTERN.matcher(entry.getValue()).replaceFirst("%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%s"));
 								break;
-=======
-					for (Map.Entry<String, String> entry : mp.entrySet()) {
-						switch (entry.getKey()) {
-						case "NoPermission":
-							mp.put("antilaby.command.noPermission", entry.getValue());
-							break;
-						case "LabyModPlayerKick":
-							mp.put("antilaby.playerKickMessage", entry.getValue());
-							break;
-						case "LabyInfo.LabyMod":
-							mp.put("antilaby.command.labyInfo.labyMod",
-									entry.getValue().replaceFirst("%PLAYER%", "%s"));
-							break;
-						case "LabyInfo.NoLabyMod":
-							mp.put("antilaby.command.labyInfo.noLabyMod",
-									entry.getValue().replaceFirst("%PLAYER%", "%s"));
-							break;
-						case "LabyInfo.PlayerOffline":
-							mp.put("antilaby.command.labyInfo.playerOffline",
-									entry.getValue().replaceFirst("%PLAYER%", "%s"));
-							break;
->>>>>>> 175cff665265222346f3e02eff6e3e147bb5e9eb
 						}
 						mp.remove(entry.getKey());
 					}
 					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(mp).getBytes("UTF-8"));
 					stream.close();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					LOG.error(e.getMessage());
 				}
 			}
 			try {
 				FileUtils.deleteDirectory(oldDataPath);
-			} catch (IOException e) {
+			} catch(IOException e) {
 				LOG.error(e.getMessage());
 			}
 		}
-		for (final Locale l : Locale.values())
+		for(final Locale l : Locale.values())
 			l.init(false);
 		isInit = true;
 	}
@@ -140,7 +101,6 @@ public class LanguageManager implements IClientLanguageManager {
 	@Override
 	public void setLanguageForPlayer(Player player, String locale) {
 		final boolean hasPrinted = mappedLanguages.containsKey(player);
-<<<<<<< HEAD
 		setLanguageForPlayer(player, Locale.byName(locale, Locale.EN_US));
 		if(hasPrinted) return;
 		final String uuid = player.getUniqueId().toString();
@@ -148,15 +108,6 @@ public class LanguageManager implements IClientLanguageManager {
 			player.sendMessage(
 					translate("info.specialDef", player, AntiLaby.getInstance().getDescription().getVersion(),
 							NmsUtils.getVersion()));
-=======
-		setLanguageForPlayer(player, l);
-		if (hasPrinted)
-			return;
-		final String uuid = player.getUniqueId().toString();
-		if (uuid.equals("a4395e2f-cddd-466c-a0b2-d5c2fcf44c45") || uuid.equals("e823471a-0ca1-41d0-b7e1-4a0561de7d76"))
-			player.sendMessage(translate("info.specialDef", player,
-					AntiLaby.getInstance().getDescription().getVersion(), NmsUtils.getVersion()));
->>>>>>> 175cff665265222346f3e02eff6e3e147bb5e9eb
 	}
 
 	@Override
@@ -166,8 +117,7 @@ public class LanguageManager implements IClientLanguageManager {
 
 	@Override
 	public String translate(String unlocalized, Player translatedTo, Object... args) {
-		if (getLanguageForPlayer(translatedTo) == null)
-			System.out.println("lol");
+		if(getLanguageForPlayer(translatedTo) == null) System.out.println("lol");
 		return translate(unlocalized, getLanguageForPlayer(translatedTo), args);
 	}
 
@@ -178,11 +128,10 @@ public class LanguageManager implements IClientLanguageManager {
 
 	@Override
 	public Locale getLanguageForPlayer(Player p) {
-		if (AntiLaby.getInstance().isPrior19()) {
+		if(AntiLaby.getInstance().isPrior19()) {
 			return Locale.byName(NmsUtils.getLang(p), Locale.EN_US);
 		}
-		if (!mappedLanguages.containsKey(p))
-			mappedLanguages.put(p, Locale.byName(NmsUtils.getLang(p), Locale.EN_US));
+		if(!mappedLanguages.containsKey(p)) mappedLanguages.put(p, Locale.byName(NmsUtils.getLang(p), Locale.EN_US));
 		return mappedLanguages.get(p);
 	}
 
