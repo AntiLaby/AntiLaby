@@ -53,9 +53,11 @@ public enum Locale {
 	public String translate(String toTranslate, Object... args) {
 		if(isNoOp()) return EN_US.translate(toTranslate, args);
 		if(!init) init(false);
-		return translation.containsKey(toTranslate) ? ChatColor.translateAlternateColorCodes('&',
-				String.format(translation.get(toTranslate), args)) : translation.getOrDefault("translation.error",
-				"Error with translation...");
+		if(translation.containsKey(toTranslate))
+			return ChatColor.translateAlternateColorCodes('&', String.format(translation.get(toTranslate), args));
+		if(EN_US.translation.containsKey(toTranslate)) return EN_US.translate(toTranslate, args);
+		return translation.getOrDefault("translation.error",
+				EN_US.translation.getOrDefault("translation.error", "Error with translation..."));
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
