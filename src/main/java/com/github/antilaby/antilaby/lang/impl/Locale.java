@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.jar.JarFile;
 
 public enum Locale {
@@ -23,15 +24,13 @@ public enum Locale {
 	ES_UY, AST_ES, FA_IR, SK_SK, KO_KR, MT_MT, CA_ES, ES_VE, CY_GB, EN_NZ, JA_JP, RO_RO, LOL_US, ZH_CN, UK_UA,
 	UNDEFINED;
 
-	private boolean operating() {
-		if(this == UNDEFINED) return false;
-		if(new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang").exists()) return true;
-		else {
-			try {
-				return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") != null;
-			} catch(IOException e) {
-				return false;
-			}
+	private boolean isNoOp() {
+		if(this == UNDEFINED) return true;
+		if(new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang").exists()) return false;
+		try {
+			return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") == null;
+		} catch(IOException e) {
+			return true;
 		}
 	}
 
@@ -52,15 +51,16 @@ public enum Locale {
 	private boolean init = false;
 
 	public String translate(String toTranslate, Object... args) {
-		if(!operating()) return EN_US.translate(toTranslate, args);
+		if(isNoOp()) return EN_US.translate(toTranslate, args);
 		if(!init) init(false);
 		return translation.containsKey(toTranslate) ? ChatColor.translateAlternateColorCodes('&',
 				String.format(translation.get(toTranslate), args)) : translation.getOrDefault("translation.error",
 				"Error with translation...");
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public void init(boolean overwrite) {
-		if(init || !operating()) return;
+		if(init || isNoOp()) return;
 		try {
 			final File f = new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang");
 			if(!f.exists()) f.createNewFile();
@@ -74,7 +74,7 @@ public enum Locale {
 				IOUtils.copyStream(is, new FileOutputStream(f));
 				file.close();
 			}
-			translation.putAll(LangFileParser.parse(f));
+			translation.putAll(Objects.requireNonNull(LangFileParser.parse(f)));
 		} catch(final IOException e) {
 			e.printStackTrace();
 		}
