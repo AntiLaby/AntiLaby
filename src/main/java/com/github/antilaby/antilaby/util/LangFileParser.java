@@ -29,7 +29,7 @@ public final class LangFileParser {
 		try {
 			return getVersion((r = new BufferedReader(new FileReader(lFile))).readLine());
 		} catch(final Exception e) {
-			e.printStackTrace();
+			// ignore silently
 		} finally {
 			try {
 				if(r != null) r.close();
