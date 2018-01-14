@@ -35,11 +35,6 @@ public enum Locale {
 		}
 	}
 
-	@Deprecated
-	public static boolean isLangNameValid(String name) {
-		return byName(name, UNDEFINED) != UNDEFINED;
-	}
-
 	public static Locale byName(String name, Locale fallback) {
 		try {
 			return valueOf(name.toUpperCase(java.util.Locale.ROOT));
