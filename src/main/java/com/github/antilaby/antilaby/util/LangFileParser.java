@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public final class LangFileParser {
 
-	private static final Logger LOG = new Logger("");
+	private static final Logger LOG = new Logger("Localization");
 	private static final Pattern VERSION_PATTERN = Pattern.compile("^#\\s?version:\\s?\\d*\\.?\\d*\\.?\\d*$");
 	private static final Pattern REPLACER = Pattern.compile("^.*version:\\s?");
 
@@ -67,12 +67,11 @@ public final class LangFileParser {
 				line++;
 				String ln = r.readLine();
 				ln = ln.trim();
-				if(!ln.startsWith("#")) if(!ln.contains("=")) LanguageManager.LOG.warn(
-						"Could not parse line in resource " + nameToUse + " line " + line + ": " + ln);
+				if(!ln.startsWith("#")) if(!ln.contains("="))
+					LOG.warn("Could not parse line in resource " + nameToUse + " line " + line + ": " + ln);
 				else {
 					final String[] s = ln.split("=", 2);
 					result.put(s[0].trim().replace(" ", ""), s[1].trim());
-
 				}
 			}
 			r.close();
