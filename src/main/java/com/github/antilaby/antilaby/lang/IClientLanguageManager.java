@@ -1,56 +1,48 @@
 package com.github.antilaby.antilaby.lang;
 
+import com.github.antilaby.antilaby.lang.impl.Locale;
 import org.bukkit.entity.Player;
 
 /**
- * A {@link Player}-specific Translator Interface holding an {@link ILocale} implementation
- *
- * @param <T>
- * 		The {@link ILocale} implementation
+ * A {@link Player}-specific Translator Interface
  *
  * @author heisluft
  * @since 2.0
  */
-public interface IClientLanguageManager<T extends ILocale> extends ILanguageManager<T> {
-	
+public interface IClientLanguageManager extends ILanguageManager {
+
 	/**
-	 * Gets the {@link T ILocale} implementation for the specified {@link Player}
+	 * Gets the {@link Locale} for the specified {@link Player}
 	 *
 	 * @param player
 	 * 		The player to get the ILocale implementation for
 	 *
 	 * @return the ILocale implementation for the specified Player
-	 *
-	 * @author heisluft
 	 */
-	T getLanguageForPlayer(Player player);
-	
+	Locale getLanguageForPlayer(Player player);
+
 	/**
-	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
+	 * Sets the {@link Locale} for the specified {@link Player}
 	 *
 	 * @param player
 	 * 		The player to set the ILocale implementation for
 	 * @param locale
 	 * 		The name of the ILocale instance
-	 *
-	 * @author heisluft
 	 */
 	void setLanguageForPlayer(Player player, String locale);
-	
+
 	/**
-	 * Sets the {@link T ILocale} implementation for the specified {@link Player}
+	 * Sets the {@link Locale} for the specified {@link Player}
 	 *
 	 * @param player
-	 * 		The player to set the ILocale implementation for
+	 * 		The player to set the Locale for
 	 * @param locale
-	 * 		An instance of the ILocale implementation for the specified Player
-	 *
-	 * @author heisluft
+	 * 		The Locale for the specified Player
 	 */
-	void setLanguageForPlayer(Player player, T locale);
-	
+	void setLanguageForPlayer(Player player, Locale locale);
+
 	/**
-	 * Translates the unlocalized String to the specified {@link Player}s {@link T ILocale} implementation
+	 * Translates the unlocalized String to the specified {@link Player}s {@link Locale}
 	 *
 	 * @param unlocalized
 	 * 		The unlocalized String to translate
@@ -60,8 +52,6 @@ public interface IClientLanguageManager<T extends ILocale> extends ILanguageMana
 	 * 		Optional arguments used to replace variables
 	 *
 	 * @return the correctly formatted, localized String
-	 *
-	 * @author heisluft
 	 */
 	String translate(String unlocalized, Player translateTo, Object... args);
 }

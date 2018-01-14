@@ -1,4 +1,8 @@
-package com.github.antilaby.antilaby.lang.impl;
+package com.github.antilaby.antilaby.util;
+
+import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.impl.LanguageVersion;
+import com.github.antilaby.antilaby.log.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,13 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class LangFileParser {
+public final class LangFileParser {
 
+	private static final Logger LOG = new Logger("");
 	private static final Pattern VERSION_PATTERN = Pattern.compile("^#\\s?version:\\s?\\d*\\.?\\d*\\.?\\d*$");
 	private static final Pattern REPLACER = Pattern.compile("^.*version:\\s?");
 
 	public static LanguageVersion getVersion(File lFile) {
-		if(lFile == null || !lFile.exists()) throw new NullPointerException("File does not exist");
+		if(!lFile.exists()) throw new NullPointerException("File does not exist");
 		BufferedReader r = null;
 		try {
 			return getVersion((r = new BufferedReader(new FileReader(lFile))).readLine());
@@ -37,7 +42,7 @@ public class LangFileParser {
 	}
 
 	public static LanguageVersion getVersion(String headerFrom) {
-		if(headerFrom == null || headerFrom.isEmpty()) return LanguageVersion.UNDEFINED;
+		if(headerFrom.isEmpty()) return LanguageVersion.UNDEFINED;
 		if(VERSION_PATTERN.matcher(headerFrom).matches())
 			return LanguageVersion.getOrCreate(REPLACER.matcher(headerFrom).replaceAll(""));
 		return LanguageVersion.UNDEFINED;
@@ -53,9 +58,8 @@ public class LangFileParser {
 	}
 
 	public static Map<String, String> parse(InputStream resource, String nameToUse) {
-		LanguageManager.LOG.debug("Trying to load language resource: " + nameToUse);
+		LOG.debug("Trying to load language resource: " + nameToUse);
 		final Map<String, String> result = new HashMap<>();
-		if(resource == null) return result;
 		int line = 0;
 		try {
 			final BufferedReader r = new BufferedReader(new InputStreamReader(resource, Charset.forName("UTF-8")));
@@ -63,8 +67,8 @@ public class LangFileParser {
 				line++;
 				String ln = r.readLine();
 				ln = ln.trim();
-				if(!ln.startsWith("#")) if(!ln.contains("="))
-					LanguageManager.LOG.warn("Could not parse line in resource " + nameToUse + " line " + line + ": " + ln);
+				if(!ln.startsWith("#")) if(!ln.contains("=")) LanguageManager.LOG.warn(
+						"Could not parse line in resource " + nameToUse + " line " + line + ": " + ln);
 				else {
 					final String[] s = ln.split("=", 2);
 					result.put(s[0].trim().replace(" ", ""), s[1].trim());
@@ -73,24 +77,13 @@ public class LangFileParser {
 			}
 			r.close();
 		} catch(final Exception e) {
-			LanguageManager.LOG.error("Could not parse lang resource " + nameToUse + " (failed at line " + line + "): " + e.getMessage());
+			LOG.error(
+					"Could not parse lang resource " + nameToUse + " (failed at line " + line + "): " + e.getMessage
+							());
 			e.printStackTrace();
 		}
 		return result;
 	}
 
-	public static Map<String, String> parse(InputStream resource) {
-		return parse(resource, "unknown");
-	}
-
-	private final Locale l;
-
-	public LangFileParser(Locale l) {
-		this.l = l;
-	}
-
-	public Map<String, String> parse() {
-		return parse(getClass().getClassLoader().getResourceAsStream(l.getName() + ".lang"), l.getName() + ".lang");
-	}
-
+	private LangFileParser() {throw new UnsupportedOperationException();}
 }

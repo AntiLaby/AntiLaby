@@ -1,5 +1,6 @@
 package com.github.antilaby.antilaby.util;
 
+import javax.annotation.Nonnull;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,6 +51,7 @@ public final class IOUtils {
 	 * 		The read object is not an instance of T
 	 */
 	@SuppressWarnings("unchecked")
+	@Nonnull
 	public static <T> T readObject(ObjectInputStream inputStream) throws ClassNotFoundException, IOException {
 		return (T) inputStream.readObject();
 	}
@@ -57,7 +59,7 @@ public final class IOUtils {
 	/**
 	 * Gets the text from a web page
 	 *
-	 * @param urlString+
+	 * @param urlString
 	 * 		The URL to be read
 	 *
 	 * @return The text
@@ -65,6 +67,7 @@ public final class IOUtils {
 	 * @throws IOException
 	 * 		If an IO Error occurred
 	 */
+	@Nonnull
 	public static String readUrl(String urlString) throws IOException {
 		BufferedReader reader = null;
 		try {

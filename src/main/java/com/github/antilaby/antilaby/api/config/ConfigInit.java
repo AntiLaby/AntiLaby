@@ -13,7 +13,7 @@ import com.github.antilaby.antilaby.util.Constants;
 
 /**
  * Initialize the configuration file and update it from older versions.
- * 
+ *
  * @author NathanNr
  */
 public class ConfigInit {
@@ -26,11 +26,10 @@ public class ConfigInit {
 	public ConfigInit(File file, FileConfiguration cfg) throws IOException {
 		this.file = file;
 		this.cfg = cfg;
-		if (cfg.getInt(CONFIG_VERSION_PATH) == CURRENT_CONFIG_VERSION) {
+		if(cfg.getInt(CONFIG_VERSION_PATH) == CURRENT_CONFIG_VERSION) {
 			addDefaults();
 			save();
-		} else
-			update();
+		} else update();
 	}
 
 	/**
@@ -38,8 +37,7 @@ public class ConfigInit {
 	 */
 	private void addDefaults() {
 		// TODO: create new configuration design
-		cfg.options().header(
-				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
+		cfg.options().header("AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		// LabyMod 3 features:
 		cfg.addDefault("AntiLaby.LabyModPlayerKick.Enable", true);
@@ -72,26 +70,21 @@ public class ConfigInit {
 		commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
 		commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
 		commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
-		if (cfg.getList("AntiLaby.LabyModPlayerCommands") == null)
-			cfg.set("AntiLaby.LabyModPlayerCommands", commands);
+		if(cfg.getList("AntiLaby.LabyModPlayerCommands") == null) cfg.set("AntiLaby.LabyModPlayerCommands", commands);
 		cfg.addDefault("AntiLaby.DebugMode", false);
 		cfg.addDefault("AntiLaby.ConfigVersion", 3);
 		cfg.options().copyDefaults(true);
 	}
 
 	/**
-	 * Updates the configuration file from an older version to the latest
-	 * configuration version.
+	 * Updates the configuration file from an older version to the latest configuration version.
 	 */
 	private void update() {
 		int oldVersion;
-		if (cfg.getString("AntiLaby.ConfigVersion") != null)
-			oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
-		else
-			oldVersion = 0;
-		if (oldVersion == 1) {
-			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
-					.getBoolean("AntiLaby.EnableBypassWithPermission");
+		if(cfg.getString("AntiLaby.ConfigVersion") != null) oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
+		else oldVersion = 0;
+		if(oldVersion == 1) {
+			final boolean bypassPermissionEnabled = ConfigFile.getCfg().getBoolean("AntiLaby.EnableBypassWithPermission");
 			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
 			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
@@ -109,10 +102,10 @@ public class ConfigInit {
 			// TODO: Delete the old file and create the new one with the stored values
 			try {
 				save();
-			} catch (IOException e) {
+			} catch(IOException e) {
 				e.printStackTrace();
 			}
-		} else if (oldVersion == 2) {
+		} else if(oldVersion == 2) {
 			boolean bypassWithPermission = cfg.getBoolean("AntiLaby.EnableBypassWithPermission");
 			boolean labyModPlayerKickEnabled = cfg.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 			// LabyMod 3 features:
@@ -145,7 +138,7 @@ public class ConfigInit {
 			// TODO: Delete the old file and create the new one with the stored values
 			try {
 				save();
-			} catch (IOException e) {
+			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -153,16 +146,16 @@ public class ConfigInit {
 
 	/**
 	 * Save the configuration file.
-	 * 
-	 * @throws IOException If the config somehow failed to save
+	 *
+	 * @throws IOException
+	 * 		If the config somehow failed to save
 	 */
 	private void save() throws IOException {
 		cfg.save(file);
 	}
 
 	/**
-	 * Delete the configuration file. This method is used after updating the
-	 * configuration file from an older version.
+	 * Delete the configuration file. This method is used after updating the configuration file from an older version.
 	 */
 	private void delete() {
 		file.delete();

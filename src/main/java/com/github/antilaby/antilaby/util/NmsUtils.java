@@ -8,6 +8,7 @@ import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -55,6 +56,7 @@ public final class NmsUtils {
 		return version;
 	}
 
+	@Nonnull
 	public static String getLang(Player p) {
 		try {
 			if(!init) init();
@@ -78,7 +80,8 @@ public final class NmsUtils {
 		packet = Class.forName(NMS + version + ".Packet");
 		Class<?> packetDataSerializerC = Class.forName(NMS + version + ".PacketDataSerializer");
 		packetDataSerializer = packetDataSerializerC.getConstructor(ByteBuf.class);
-		packetPlayOutCustomPayload = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializerC);
+		packetPlayOutCustomPayload = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(
+				String.class, packetDataSerializerC);
 		Class<?> craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
 		getHandle = craftPlayer.getMethod("getHandle");
 		Class<?> entityPlayer = Class.forName(NMS + version + ".EntityPlayer");
@@ -101,7 +104,8 @@ public final class NmsUtils {
 	 * @throws ReflectiveOperationException
 	 * 		If something goes wrong during {@link #init}.
 	 */
-	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
+	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws
+			IOException, ReflectiveOperationException {
 		if(!init) init();
 		//convert to LabyMod-readable Map
 		final HashMap<String, Boolean> nList = new HashMap<>();
@@ -119,7 +123,9 @@ public final class NmsUtils {
 		final StringBuilder b = new StringBuilder("Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
 			if(!n.getValue()) b.append(n.getKey()).append(", ");
-		AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
+		AntiLaby.LOG.info(
+				b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(
+						" (").append(player.getUniqueId()).append(')').toString());
 		//close stream
 		out.close();
 	}
