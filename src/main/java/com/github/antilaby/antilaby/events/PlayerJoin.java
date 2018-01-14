@@ -7,14 +7,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * The player join event.
+ */
 public class PlayerJoin implements Listener {
 
-	
 	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		LanguageManager.INSTANCE.unmapPlayerLanguage(e.getPlayer());
+	public void onLeave(PlayerQuitEvent event) {
+		LanguageManager.INSTANCE.unmapPlayerLanguage(event.getPlayer());
 	}
-	
+
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		// Disable LabyMod functions for the new player

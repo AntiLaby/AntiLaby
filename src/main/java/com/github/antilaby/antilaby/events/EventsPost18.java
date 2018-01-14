@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerLocaleChangeEvent;
 public class EventsPost18 implements Listener {
 
 	@EventHandler
-	public void onChangeLocale(PlayerLocaleChangeEvent e) {
-		if(!AntiLaby.getInstance().loadedFeatures.contains(PluginFeature.PROTOCOL_LIB))
-			LanguageManager.INSTANCE.setLanguageForPlayer(e.getPlayer(), e.getLocale());
+	public void onChangeLocale(PlayerLocaleChangeEvent event) {
+		if (!AntiLaby.getInstance().loadedFeatures.contains(PluginFeature.PROTOCOL_LIB))
+			LanguageManager.INSTANCE.setLanguageForPlayer(event.getPlayer(), event.getLocale());
 	}
 }
