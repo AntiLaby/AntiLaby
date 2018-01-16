@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class DataManager {
 	 * Loads all LabyPlayerInformation
 	 */
 	public static void loadData() {
-		if(dataFile.exists() && Bukkit.getOnlinePlayers() != null) {
+		if(dataFile.exists() && Bukkit.getOnlinePlayers().size() != 0) {
 			ObjectInputStream ois = null;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(dataFile));
@@ -29,12 +28,10 @@ public class DataManager {
 				for(final Entry<String, String> e : p.entrySet())
 					System.out.println(e);
 				IncomingPluginChannel.setLabyModPlayers(p);
-			} catch(IOException | ClassNotFoundException e) {
+			} catch(Exception e) {
 				e.printStackTrace();
 			} finally {
-				if(ois != null) try {
-					ois.close();
-				} catch(final IOException e) {}
+				IOUtils.closeSilently(ois);
 			}
 			cleanup();
 		}
@@ -53,12 +50,10 @@ public class DataManager {
 		try {
 			oos = new ObjectOutputStream(new FileOutputStream(dataFile));
 			oos.writeObject(IncomingPluginChannel.getLabyModPlayers());
-		} catch(final IOException e) {
+		} catch(final Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(oos != null) try {
-				oos.close();
-			} catch(final IOException e) {}
+			IOUtils.closeSilently(oos);
 		}
 	}
 

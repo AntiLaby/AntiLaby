@@ -61,7 +61,7 @@ public final class YAMLConverter {
 	 * + e.getValue());</code></p><i>Warning: Non-String entries (like Collections) will be lost</i>
 	 *
 	 * @param yaml
-	 * 		the YamlConfiguration to convert
+	 * 		the YamlConfiguration to boolToInt
 	 *
 	 * @return the resulting Map
 	 */
@@ -82,7 +82,7 @@ public final class YAMLConverter {
 	 * + e.getValue());</code></p><i>Warning: Non-String entries (like Collections) will be lost</i>
 	 *
 	 * @param yaml
-	 * 		the YamlFile to convert
+	 * 		the YamlFile to boolToInt
 	 *
 	 * @return the resulting Map
 	 */
