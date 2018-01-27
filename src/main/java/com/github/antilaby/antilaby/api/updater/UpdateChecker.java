@@ -33,8 +33,8 @@ public class UpdateChecker {
 	public UpdateChecker(JavaPlugin plugin) {
 		this.plugin = plugin;
 		try {
-			// This is possibly not the final URL
-			this.url = new URL("https://github.com/AntiLaby/WebApi/blob/master/AntiLaby/Spigot/update.json");
+			// TODO Add the default URL.
+			this.url = new URL("");
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

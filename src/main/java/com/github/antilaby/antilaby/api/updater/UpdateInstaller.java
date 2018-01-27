@@ -52,6 +52,12 @@ public class UpdateInstaller {
 	 */
 	public void install() throws UpdateInstallationException {
 		// Download and save the update file
+		if(update.getUpdateRawMessages() != null) {
+			for(UpdateRawMessage updateRawMessage : update.getUpdateRawMessages()) {
+				if(updateRawMessage.getLoc() == UpdateRawMessageLocation.CONSOLE_BEGINNING)
+					LOG.info("UPDATE RAW MESSAGE: " + updateRawMessage.getMessage());
+			}
+		}
 		LOG.info("Downloading update to version " + update.getUpdateVersion() + "...");
 		if (update.getUpdateShortMessage() != null)
 			LOG.info("Update message: " + update.getUpdateShortMessage());
@@ -94,6 +100,12 @@ public class UpdateInstaller {
 		}
 		LOG.info("The update to version " + update.getUpdateVersion()
 				+ " has been finished. Please reload or restart you server to enable the new version!");
+		if(update.getUpdateRawMessages() != null) {
+			for(UpdateRawMessage updateRawMessage : update.getUpdateRawMessages()) {
+				if(updateRawMessage.getLoc() == UpdateRawMessageLocation.CONSOLE_END)
+					LOG.info("UPDATE RAW MESSAGE: " + updateRawMessage.getMessage());
+			}
+		}
 	}
 
 	/**
@@ -106,7 +118,7 @@ public class UpdateInstaller {
 	 *             If the update file does not match the provided requirements.
 	 */
 	private void validateUpdate(File tmpUpdateFile) throws UpdateInstallationException {
-		// TODO: Better validation of the update
+		// TODO: Better validation of the file
 		HashMap<String, String> validationInfos = update.getValidationInfos();
 		if (validationInfos != null) {
 			if (validationInfos.containsKey("minsize") && validationInfos.containsKey("maxsize")) {

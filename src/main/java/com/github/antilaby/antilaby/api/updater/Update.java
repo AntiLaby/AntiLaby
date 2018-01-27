@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.api.updater;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,7 @@ public class Update {
 	private boolean updateConfigUpdateAuto;
 	private UpdatePriority updatePriority = UpdatePriority.UNKNOWN;
 	private HashMap<String, String> validationInfos;
+	private ArrayList<UpdateRawMessage> updateRawMessages;
 
 	/**
 	 * @param plugin
@@ -197,6 +199,22 @@ public class Update {
 	 */
 	public void setValidationInfos(HashMap<String, String> validationInfos) {
 		this.validationInfos = validationInfos;
+	}
+	
+	/**
+	 * @return The update raw messages
+	 */
+	public ArrayList<UpdateRawMessage> getUpdateRawMessages() {
+		return updateRawMessages;
+	}
+
+	/**
+	 * @param validationInfos
+	 *            Set the information to check, if the file has been downloaded
+	 *            correctly
+	 */
+	public void setUpdateRawMessages(ArrayList<UpdateRawMessage> updateRawMessages) {
+		this.updateRawMessages = updateRawMessages;
 	}
 
 }
