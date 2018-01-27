@@ -1,7 +1,9 @@
 package com.github.antilaby.antilaby.util;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +33,21 @@ public final class IOUtils {
 	public static void copyStream(InputStream readFrom, OutputStream writeTo) throws IOException {
 		int nextByte;
 		while((nextByte = readFrom.read()) != -1) writeTo.write(nextByte);
+	}
+
+	/**
+	 * Closes the given {@link Closeable}, ignoring thrown Exception
+	 *
+	 * @param toClose
+	 * 		the Closable to close
+	 */
+	public static void closeSilently(@Nullable Closeable toClose) {
+		if(toClose == null) return;
+		try {
+			toClose.close();
+		} catch(IOException e) {
+			// ignore
+		}
 	}
 
 	/**

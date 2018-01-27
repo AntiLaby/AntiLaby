@@ -8,10 +8,9 @@ import com.github.antilaby.antilaby.util.Constants;
 import java.util.List;
 
 /**
- * Initialize the configuration file and update it from older versions. This
- * class will be removed in the future if the new configuration system is ready
- * to use!
- * 
+ * Initialize the configuration file and update it from older versions. This class will be removed in the future if the
+ * new configuration system is ready to use!
+ *
  * @author NathanNr
  */
 public class InitConfig {
@@ -38,26 +37,25 @@ public class InitConfig {
 	public void init() {
 		// Init config
 		ConfigFile.init();
-		if (ConfigFile.getCfg().getString("AntiLaby.ConfigVersion") == null) {
+		if(ConfigFile.getCfg().getString("AntiLaby.ConfigVersion") == null) {
 			// No config or old config
-			if (plugin.getConfig().getString("AntiLaby.disable.FOOD") == null) {
+			if(plugin.getConfig().getString("AntiLaby.disable.FOOD") == null) {
 				// No config
 				configVersion = 0;
 				generateNewConfig();
 			} else {
-				// Old config, convert
+				// Old config, boolToInt
 				configVersion = 1;
 				convertConfig();
 			}
-		} else if (ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") == 2) {
+		} else if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") == 2) {
 			// New config
 			configVersion = 2;
 			generateNewConfig();
 		} else // Unknown config, reset config
 			resetConfig();
-		if (ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") > 2
-				|| ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") < 1)
-			resetConfig();
+		if(ConfigFile.getCfg().getInt("AntiLaby.ConfigVersion") > 2 || ConfigFile.getCfg().getInt(
+				"AntiLaby.ConfigVersion") < 1) resetConfig();
 	}
 
 	private void generateNewConfig() {
@@ -90,32 +88,31 @@ public class InitConfig {
 		commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
 		commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
 		commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
-		if (ConfigFile.getCfg().getList("AntiLaby.LabyModPlayerCommands") == null)
+		if(ConfigFile.getCfg().getList("AntiLaby.LabyModPlayerCommands") == null)
 			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", commands);
-		if (plugin.getVersionType().equals(VersionType.RELEASE))
+		if(plugin.getVersionType().equals(VersionType.RELEASE))
 			ConfigFile.getCfg().addDefault("AntiLaby.Update.AutoUpdate", true);
-		else
-			ConfigFile.getCfg().set("AntiLaby.Update.AutoUpdate",
-					"Auto-update is not available in " + plugin.getVersionType().toString().toLowerCase()
-							+ " versions! You can update manually: https://www.spigotmc.org/resources/"
-							+ Constants.RESOURCE_ID + '/');
+		else ConfigFile.getCfg().set("AntiLaby.Update.AutoUpdate",
+				"Auto-update is not available in " + plugin.getVersionType().toString().toLowerCase() + " versions! "
+						+ "You can update manually: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID +
+						'/');
 		ConfigFile.getCfg().addDefault("AntiLaby.ConfigVersion", 2);
 		ConfigFile.getCfg().addDefault("AntiLaby.DebugMode", false);
 		ConfigFile.getCfg().options().copyDefaults(true);
 		ConfigFile.saveFile();
-		if (!ConfigFile.getCfg().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true"))
-			if (!ConfigFile.getCfg().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false"))
-				if (plugin.getVersionType().equals(VersionType.RELEASE)) {
+		if(!ConfigFile.getCfg().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("true"))
+			if(!ConfigFile.getCfg().getString("AntiLaby.Update.AutoUpdate").equalsIgnoreCase("false"))
+				if(plugin.getVersionType().equals(VersionType.RELEASE)) {
 					ConfigFile.getCfg().set("AntiLaby.Update.AutoUpdate", true);
 					ConfigFile.saveFile();
 				}
 	}
 
 	public void convertConfig() {
-		if (configVersion == 1) {
+		if(configVersion == 1) {
 			// Convert...
-			final boolean bypassPermissionEnabled = ConfigFile.getCfg()
-					.getBoolean("AntiLaby.EnableBypassWithPermission");
+			final boolean bypassPermissionEnabled = ConfigFile.getCfg().getBoolean(
+					"AntiLaby.EnableBypassWithPermission");
 			final boolean labyKick = ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 			final boolean food = ConfigFile.getCfg().getBoolean("AntiLaby.disable.FOOD");
 			final boolean gui = ConfigFile.getCfg().getBoolean("AntiLaby.disable.GUI");
@@ -150,12 +147,13 @@ public class InitConfig {
 			ConfigFile.getCfg().set("AntiLaby.OldFeatures.Disable.MINIMAP_RADAR", minimapRadar);
 			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", null);
 			ConfigFile.getCfg().set("AntiLaby.LabyModPlayerCommands", commands);
-			LOG.info("Your configuration file has been converted from version '" + configVersion + "' to version '"
-					+ CURRENT_CONFIG_VERSION + "'.");
+			LOG.info(
+					"Your configuration file has been converted from version '" + configVersion + "' to version '" +
+							CURRENT_CONFIG_VERSION + "'.");
 			ConfigFile.saveFile();
-		} else
-			LOG.error("Failed to convert configuration file from version '" + configVersion + "' to version '"
-					+ CURRENT_CONFIG_VERSION + "'!");
+		} else LOG.error(
+				"Failed to boolToInt configuration file from version '" + configVersion + "' to version '" +
+						CURRENT_CONFIG_VERSION + "'!");
 	}
 
 	private void resetConfig() {
