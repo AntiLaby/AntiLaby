@@ -1,6 +1,4 @@
 /**
- * This package contains the auto updater.
- * 
- * @author NathanNr
+ * This package contains the legacy auto updater.
  */
 package com.github.antilaby.antilaby.update;

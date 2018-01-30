@@ -22,6 +22,10 @@ public final class Constants {
 	 */
 	public static final String RESOURCE_LINK = "https://www.spigotmc.org/resources/" + RESOURCE_ID + '/';
 	/**
+	 * The SpigotMC.org legacy version link
+	 */
+	public static final String UPDATE_URL = "https://api.spigotmc.org/legacy/update.php?resource=" + RESOURCE_ID;
+	/**
 	 * The permission for bypassing the {@link AntiLabyPackager}
 	 */
 	public static final String PERMISSION_BYPASS = "antilaby.bypass";
