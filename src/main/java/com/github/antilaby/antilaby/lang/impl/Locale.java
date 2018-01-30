@@ -50,27 +50,34 @@ public enum Locale {
 	private final Map<String, String> translation = new HashMap<>();
 	private boolean init = false;
 
+	private String format(String toFormat, Object... args) {
+		for(int i = 0; i < args.length; i++)
+			toFormat = toFormat.replace("%" + (i + 1), args[i].toString());
+		return toFormat;
+	}
+
 	public String translate(String toTranslate, Object... args) {
 		if(isNoOp()) return EN_US.translate(toTranslate, args);
-		if(!init) init(false);
+		if(!init) init();
 		if(translation.containsKey(toTranslate))
-			return ChatColor.translateAlternateColorCodes('&', String.format(translation.get(toTranslate), args));
+			return ChatColor.translateAlternateColorCodes('&', format(translation.get(toTranslate), args));
 		if(EN_US.translation.containsKey(toTranslate)) return EN_US.translate(toTranslate, args);
 		return translation.getOrDefault("translation.error",
 				EN_US.translation.getOrDefault("translation.error", "Error with translation..."));
 	}
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public void init(boolean overwrite) {
+	public void init() {
 		if(init || isNoOp()) return;
 		try {
 			final File f = new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang");
 			if(!f.exists()) f.createNewFile();
 			final LanguageVersion v = LangFileParser.getVersion(f);
-			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) LanguageManager.LOG.info(
-					"Updating language resource " + this + ".lang from version " + v + " to version " +
-							LanguageVersion.CURRENT_VERSION);
-			if(overwrite || LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) {
+			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0 && v != LanguageVersion.UNDEFINED)
+				LanguageManager.LOG.info(
+						"Updating language resource " + this + ".lang from version " + v + " to version " +
+								LanguageVersion.CURRENT_VERSION);
+			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) {
 				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
 				final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
 				IOUtils.copyStream(is, new FileOutputStream(f));

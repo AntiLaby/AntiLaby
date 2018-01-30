@@ -64,7 +64,10 @@ public final class LangFileParser {
 					LOG.warn("Could not parse line " + line + " in resource " + nameToUse + ": " + ln);
 				else {
 					final String[] s = ln.split("=", 2);
-					result.put(s[0].trim().replace(" ", ""), s[1].trim());
+					String value = s[1].trim();
+
+					value = value.replaceFirst("#.*", "").trim();
+					result.put(s[0].trim().replace(" ", ""), value);
 				}
 			}
 			r.close();

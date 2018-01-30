@@ -68,15 +68,15 @@ public class LanguageManager implements IClientLanguageManager {
 								break;
 							case "LabyInfo.LabyMod":
 								mp.put("antilaby.command.labyInfo.labyMod",
-										entry.getValue().replaceFirst("%PLAYER%", "%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.NoLabyMod":
 								mp.put("antilaby.command.labyInfo.noLabyMod",
-										entry.getValue().replaceFirst("%PLAYER%", "%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.PlayerOffline":
 								mp.put("antilaby.command.labyInfo.playerOffline",
-										entry.getValue().replaceFirst("%PLAYER%", "%s"));
+										entry.getValue().replaceFirst("%PLAYER%", "%1"));
 								break;
 						}
 						mp.remove(entry.getKey());
@@ -94,7 +94,7 @@ public class LanguageManager implements IClientLanguageManager {
 			}
 		}
 		for(final Locale l : Locale.values())
-			l.init(false);
+			l.init();
 		isInit = true;
 	}
 
