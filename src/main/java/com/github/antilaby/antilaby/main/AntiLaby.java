@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.main;
 import com.github.antilaby.antilaby.util.Miscellaneous;
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.antilaby.antilaby.api.spigot.ServerHelper;
+import com.github.antilaby.antilaby.util.ServerHelper;
 import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.compat.PluginFeature;
@@ -63,8 +63,6 @@ public class AntiLaby extends JavaPlugin {
 	private boolean compatible;
 	// Is this a beta version?
 	private VersionType versionType;
-	// Is the server part of a BungeeCord network?
-	private ServerHelper serverHelper;
 	// The cleanup Thread deletes the saved LabyPlayer data
 	private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
 	// The Updater (The old one)
@@ -152,8 +150,6 @@ public class AntiLaby extends JavaPlugin {
 		initEvents();
 		// Load data
 		DataManager.loadData();
-		// Is the server part of a BungeeCord network?
-		serverHelper = new ServerHelper();
 		// Start plug-in metrics for MCStats.org
 		try {
 			Metrics metrics = new Metrics(this);
@@ -229,7 +225,7 @@ public class AntiLaby extends JavaPlugin {
 		bstats.addCustomChart(
 				new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config.isAutoUpdateEnabled())));
 		bstats.addCustomChart(
-				new BStats.SimplePie("is_bungee_server", () -> String.valueOf(serverHelper.isBungeeCord())));
+				new BStats.SimplePie("is_bungee_server", () -> String.valueOf(ServerHelper.isBungeeCord())));
 		bstats.addCustomChart(
 				new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config.getEnableBypassWithPermission())));
 		bstats.addCustomChart(
@@ -301,7 +297,7 @@ public class AntiLaby extends JavaPlugin {
 			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else LOG.info("Reloading AntiLaby...");
-		ConfigFile.reloadFile();
+		ConfigFile.init();
 		for(final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
 			pack.sendPackages();

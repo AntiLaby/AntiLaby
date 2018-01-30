@@ -5,9 +5,8 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 import java.util.List;
 
 /**
- * Get values from the configuration file. This class will get removed if the
- * new configuration API is ready to use!
- * 
+ * Get values from the configuration file. This class will get removed if the new configuration API is ready to use!
+ *
  * @author NathanNr
  */
 public class Config {
@@ -46,14 +45,6 @@ public class Config {
 
 	public static boolean getGUI() {
 		return AntiLaby.getInstance().getConfig().getBoolean("AntiLaby.disable.GUI");
-	}
-
-	/**
-	 * Please use LabyModJoinCommands#getLabyModJoinCommands()
-	 */
-	@Deprecated
-	public static List<String> getLabyModPlayerCommands() {
-		return AntiLaby.getInstance().getConfig().getStringList("AntiLaby.LabyModPlayerCommands");
 	}
 
 	public static boolean getLabyModPlayerKickEnable() {

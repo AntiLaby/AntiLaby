@@ -18,10 +18,6 @@ public class InitConfig {
 	private static final Logger LOG = new Logger("Config");
 	public static final int CURRENT_CONFIG_VERSION = 2;
 
-	public static int getCurrentConfigVersion() {
-		return CURRENT_CONFIG_VERSION;
-	}
-
 	private final AntiLaby plugin;
 
 	private int configVersion;
@@ -108,7 +104,7 @@ public class InitConfig {
 				}
 	}
 
-	public void convertConfig() {
+	private void convertConfig() {
 		if(configVersion == 1) {
 			// Convert...
 			final boolean bypassPermissionEnabled = ConfigFile.getCfg().getBoolean(

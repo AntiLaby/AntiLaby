@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.api.spigot;
+package com.github.antilaby.antilaby.util;
 
 import java.lang.reflect.Field;
 
@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  *
  * @author NathanNr, heisluft
  */
-public class ServerHelper {
+public final class ServerHelper {
 
 	/**
 	 * The servers Bukkit implementation
@@ -17,19 +17,25 @@ public class ServerHelper {
 		/** Server is PaperSpigot */PAPERSPIGOT
 	}
 
-	private final boolean isBungeeCord;
-	private final ServerType type;
+	private static boolean isBungeeCord;
+	private static ServerType type;
 
 	/**
 	 * Gets this servers Bukkit implementation
 	 *
 	 * @return the ServerType
 	 */
-	public ServerType getServerType() {
+	public static ServerType getServerType() {
+		if(type == null) init();
 		return type;
 	}
 
-	public ServerHelper() {
+	/**
+	 * Private constructor, no need to instantiate this class
+	 */
+	private ServerHelper() {throw new UnsupportedOperationException();}
+
+	private static void init() {
 		Class<?> spigotClass;
 		try {
 			spigotClass = Class.forName("org.spigotmc.SpigotConfig");
@@ -62,7 +68,8 @@ public class ServerHelper {
 	 *
 	 * @return true if User enabled the bungeeCord option in the servers spigot.yml
 	 */
-	public boolean isBungeeCord() {
+	public static boolean isBungeeCord() {
+		if(type == null) init();
 		return isBungeeCord;
 	}
 
