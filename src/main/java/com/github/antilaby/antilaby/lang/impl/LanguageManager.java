@@ -8,34 +8,44 @@ import com.github.antilaby.antilaby.util.YAMLConverter;
 import com.google.common.base.Joiner;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LanguageManager implements IClientLanguageManager {
 
 	public static final LanguageManager INSTANCE = new LanguageManager();
-	public static final String RESOURCE_PATH = AntiLaby.getInstance().getDataFolder() + "/lang";
 	private static final Pattern YAML_ENDING = Pattern.compile("\\.ya?ml$");
 
-	static final Logger LOG = new Logger("Localization");
+	private static final Logger LOG = new Logger("Localization");
 	private final Map<Player, Locale> mappedLanguages = new HashMap<>();
-	private boolean isInit = false;
 
-	private LanguageManager() {
+	private LanguageManager() {}
+
+	final Set<JavaPlugin> plugins = new HashSet<>();
+
+	public void registerPlugin(JavaPlugin instance) {
+		plugins.add(instance);
+		if(instance instanceof AntiLaby) initAL();
+		else initPlugin(instance);
+		for(final Locale l : Locale.values())
+			l.init(instance);
 	}
 
-	@Override
-	public void init() {
-		File newDataPath = new File(RESOURCE_PATH);
+	private void initPlugin(JavaPlugin instance) {
+		LOG.info("Loading Lang resources for Plugin " + instance.getName());
+		File newDataPath = new File(instance.getDataFolder() + "/lang");
 		newDataPath.mkdirs();
-		File oldDataPath = new File(AntiLaby.getInstance().getDataFolder(), "language");
+		File oldDataPath = new File(instance.getDataFolder(), "language");
 		if(oldDataPath.exists()) {
 			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
 				if(f.isDirectory() || f.length() == 0) {
@@ -44,19 +54,58 @@ public class LanguageManager implements IClientLanguageManager {
 									"converted.");
 					continue;
 				}
-				String name = f.getName().toLowerCase();
-				Matcher m = YAML_ENDING.matcher(name);
+				Matcher m = YAML_ENDING.matcher(f.getName().toLowerCase(java.util.Locale.ROOT));
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
 					LOG.info(
-							"you have an invalid file in your language directory (" + name + "). It wont be converted"
-									+ ".");
+							"you have an invalid file in your language directory (" + f.getName() + "). It wont be " +
+									"converted" + ".");
 					continue;
 				}
 				File converted = new File(newDataPath, m.replaceAll(".lang"));
 				try {
 					converted.createNewFile();
 					FileOutputStream stream = new FileOutputStream(converted);
-					stream.write(("#version: " + LanguageVersion.CURRENT_VERSION + "\n").getBytes("UTF-8"));
+					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(
+							YAMLConverter.convertYmlToProperties(f)).getBytes("UTF-8"));
+					stream.close();
+				} catch(IOException e) {
+					LOG.error(e.getMessage());
+				}
+			}
+			try {
+				FileUtils.deleteDirectory(oldDataPath);
+			} catch(IOException e) {
+				LOG.error(e.getMessage());
+			}
+		}
+	}
+
+	public void initAL() {
+		JavaPlugin plugin = AntiLaby.getInstance();
+		File newDataPath = new File(plugin.getDataFolder(), "lang");
+		newDataPath.mkdirs();
+		File oldDataPath = new File(plugin.getDataFolder(), "language");
+		if(oldDataPath.exists()) {
+			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
+				if(f.isDirectory() || f.length() == 0) {
+					LOG.info(
+							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
+									"be" + " " + "converted.");
+
+					continue;
+				}
+				String name = f.getName().toLowerCase();
+				Matcher m = YAML_ENDING.matcher(name);
+				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
+					LOG.info(
+							"you have an invalid file in your language directory (" + name + "). It wont be " +
+									"converted" + ".");
+					continue;
+				}
+				File converted = new File(newDataPath, m.replaceAll(".lang"));
+				try {
+					converted.createNewFile();
+					FileOutputStream stream = new FileOutputStream(converted);
 					Map<String, String> mp = YAMLConverter.convertYmlToProperties(f);
 					for(Map.Entry<String, String> entry : mp.entrySet()) {
 						switch(entry.getKey()) {
@@ -93,9 +142,6 @@ public class LanguageManager implements IClientLanguageManager {
 				LOG.error(e.getMessage());
 			}
 		}
-		for(final Locale l : Locale.values())
-			l.init();
-		isInit = true;
 	}
 
 	@Override
@@ -133,11 +179,6 @@ public class LanguageManager implements IClientLanguageManager {
 		}
 		if(!mappedLanguages.containsKey(p)) mappedLanguages.put(p, Locale.byName(NmsUtils.getLang(p), Locale.EN_US));
 		return mappedLanguages.get(p);
-	}
-
-	@Override
-	public boolean isInit() {
-		return isInit;
 	}
 
 	@Override

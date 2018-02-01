@@ -4,6 +4,7 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.IOUtils;
 import com.github.antilaby.antilaby.util.LangFileParser;
 import org.bukkit.ChatColor;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.jar.JarFile;
 
 public enum Locale {
@@ -26,7 +26,8 @@ public enum Locale {
 
 	private boolean isNoOp() {
 		if(this == UNDEFINED) return true;
-		if(new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang").exists()) return false;
+		for(JavaPlugin plugin : LanguageManager.INSTANCE.plugins)
+			if(new File(plugin.getDataFolder() + "/lang/" + this + ".lang").exists()) return false;
 		try {
 			return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") == null;
 		} catch(IOException e) {
@@ -48,7 +49,6 @@ public enum Locale {
 	}
 
 	private final Map<String, String> translation = new HashMap<>();
-	private boolean init = false;
 
 	private String format(String toFormat, Object... args) {
 		for(int i = 0; i < args.length; i++)
@@ -58,7 +58,6 @@ public enum Locale {
 
 	public String translate(String toTranslate, Object... args) {
 		if(isNoOp()) return EN_US.translate(toTranslate, args);
-		if(!init) init();
 		if(translation.containsKey(toTranslate))
 			return ChatColor.translateAlternateColorCodes('&', format(translation.get(toTranslate), args));
 		if(EN_US.translation.containsKey(toTranslate)) return EN_US.translate(toTranslate, args);
@@ -66,27 +65,22 @@ public enum Locale {
 				EN_US.translation.getOrDefault("translation.error", "Error with translation..."));
 	}
 
+
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public void init() {
-		if(init || isNoOp()) return;
-		try {
-			final File f = new File(LanguageManager.RESOURCE_PATH + File.separator + this + ".lang");
-			if(!f.exists()) f.createNewFile();
-			final LanguageVersion v = LangFileParser.getVersion(f);
-			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0 && v != LanguageVersion.UNDEFINED)
-				LanguageManager.LOG.info(
-						"Updating language resource " + this + ".lang from version " + v + " to version " +
-								LanguageVersion.CURRENT_VERSION);
-			if(LanguageVersion.CURRENT_VERSION.compareTo(v) > 0) {
+	public void init(JavaPlugin plugin) {
+		if(isNoOp()) return;
+		final File f = new File(plugin.getDataFolder() + "/lang/" + this + ".lang");
+		if(!f.exists() && plugin instanceof AntiLaby) {
+			try {
+				f.createNewFile();
 				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
 				final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
 				IOUtils.copyStream(is, new FileOutputStream(f));
 				file.close();
+			} catch(final IOException e) {
+				e.printStackTrace();
 			}
-			translation.putAll(Objects.requireNonNull(LangFileParser.parse(f)));
-		} catch(final IOException e) {
-			e.printStackTrace();
 		}
-		init = true;
+		if(f.exists()) translation.putAll(LangFileParser.parse(f));
 	}
 }

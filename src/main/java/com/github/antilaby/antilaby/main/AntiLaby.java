@@ -160,8 +160,7 @@ public class AntiLaby extends JavaPlugin {
 		// Start plug-in metrics for bStats.org
 		initBMetrics();
 		// Init LanguageManager
-		final LanguageManager lang = LanguageManager.INSTANCE;
-		if(!lang.isInit()) lang.init();
+		LanguageManager.INSTANCE.registerPlugin(this);
 		// Resend AntiLaby packages (on reload)
 		for(final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);
