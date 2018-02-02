@@ -39,7 +39,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 dependencies {
-    compile 'com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT'
+    compile('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
+        exclude module: 'BukkitExecutors'
+        exclude module: 'cglib-nodep'
+    }
     compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }

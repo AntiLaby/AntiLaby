@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.api.config;
 
 /**
  * Get the auto update settings from the configuration file.
- * 
+ *
  * @author NathanNr
  */
 public class GetConfigUpdateSettings extends ConfigFile implements ConfigurationReader {
@@ -27,6 +27,8 @@ public class GetConfigUpdateSettings extends ConfigFile implements Configuration
 
 	/**
 	 * Are release auto updates enabled?
+	 *
+	 * @return whether auto-update of releases is enabled.
 	 */
 	public boolean getRelease() {
 		return getCfg().getBoolean(PATH + ".Release");
@@ -34,6 +36,8 @@ public class GetConfigUpdateSettings extends ConfigFile implements Configuration
 
 	/**
 	 * Are beta auto updates enabled?
+	 *
+	 * @return whether auto-update is enabled
 	 */
 	public boolean getBeta() {
 		return getCfg().getBoolean(PATH + ".Beta");

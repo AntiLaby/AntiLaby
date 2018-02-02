@@ -18,16 +18,27 @@ public class Example {
 
 	/**
 	 * same as {@link #antiLabyPackageExample(Player)}, but uses chaining
+	 *
+	 * @param player
+	 * 		the Player to send to
+	 *
+	 * @return same as {@link #antiLabyPackageExample(Player)}
 	 */
 	public static boolean antiLabyChainedPackagerExample(Player player) {
 		final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
 		myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
 		myPackageSettings.put(LabyModFeature.POTIONS, true);
-		return new AntiLabyPackager(player).setDisabledLabyModFeatures(myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
+		return new AntiLabyPackager(player).setDisabledLabyModFeatures(
+				myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
 	}
 
 	/**
 	 * Example AntiLaby API method
+	 *
+	 * @param player
+	 * 		the Player to send to
+	 *
+	 * @return if the {@link AntiLabyPackager} completed successfully
 	 */
 	public static boolean antiLabyPackageExample(Player player) {
 		// Create instance
@@ -65,6 +76,11 @@ public class Example {
 
 	/**
 	 * Example simple AntiLaby API method
+	 *
+	 * @param player
+	 * 		the Player to send to
+	 *
+	 * @return same as {@link #antiLabyPackageExample(Player)}
 	 */
 	public static boolean simpleAntiLabyPackageExample(Player player) {
 		// Create a LabyPlayer

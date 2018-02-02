@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Provides information of an available update
- * 
+ *
  * @author NathanNr
  */
 
@@ -29,11 +29,11 @@ public class Update {
 
 	/**
 	 * @param plugin
-	 *            The JavaPlugin
+	 * 		The JavaPlugin
 	 * @param updateVersion
-	 *            The version number of the update
+	 * 		The version number of the update
 	 * @param updateUrl
-	 *            The update download URL
+	 * 		The update download URL
 	 */
 	public Update(JavaPlugin plugin, String updateVersion, URL updateUrl) {
 		this.plugin = plugin;
@@ -57,7 +57,7 @@ public class Update {
 
 	/**
 	 * @param updateVersionType
-	 *            Set the version type of the update
+	 * 		Set the version type of the update
 	 */
 	public void setUpdateVersionType(VersionType updateVersionType) {
 		this.updateVersionType = updateVersionType;
@@ -72,7 +72,7 @@ public class Update {
 
 	/**
 	 * @param updateVersion
-	 *            Set the version number of the update
+	 * 		Set the version number of the update
 	 */
 	public void setUpdateVersion(String updateVersion) {
 		this.updateVersion = updateVersion;
@@ -87,7 +87,7 @@ public class Update {
 
 	/**
 	 * @param updateUrl
-	 *            Set the update download URL
+	 * 		Set the update download URL
 	 */
 	public void setUpdateUrl(URL updateUrl) {
 		this.updateUrl = updateUrl;
@@ -102,7 +102,7 @@ public class Update {
 
 	/**
 	 * @param updateShortMessage
-	 *            A short update message
+	 * 		A short update message
 	 */
 	public void setUpdateShortMessage(String updateShortMessage) {
 		this.updateShortMessage = updateShortMessage;
@@ -117,7 +117,7 @@ public class Update {
 
 	/**
 	 * @param updateChangelog
-	 *            Set the full update change log
+	 * 		Set the full update change log
 	 */
 	public void setUpdateChangelog(String updateChangelog) {
 		this.updateChangelog = updateChangelog;
@@ -132,7 +132,7 @@ public class Update {
 
 	/**
 	 * @param updateApiChanges
-	 *            Set if the update includes changes to the AntiLaby API
+	 * 		Set if the update includes changes to the AntiLaby API
 	 */
 	public void setUpdateApiChanges(boolean updateApiChanges) {
 		this.updateApiChanges = updateApiChanges;
@@ -147,15 +147,14 @@ public class Update {
 
 	/**
 	 * @param updateRequiresConfigUpdate
-	 *            Set if the update requires a configuration update
+	 * 		Set if the update requires a configuration update
 	 */
 	public void setUpdateRequiresConfigUpdate(boolean updateRequiresConfigUpdate) {
 		this.updateRequiresConfigUpdate = updateRequiresConfigUpdate;
 	}
 
 	/**
-	 * @return Indicates if the configuration file will be converted automatically
-	 *         to the new design
+	 * @return Indicates if the configuration file will be converted automatically to the new design
 	 */
 	public boolean isUpdateConfigUpdateAuto() {
 		return updateConfigUpdateAuto;
@@ -163,8 +162,7 @@ public class Update {
 
 	/**
 	 * @param updateConfigUpdateAuto
-	 *            Set if the configuration file will be converted automatically to
-	 *            the new design
+	 * 		Set if the configuration file will be converted automatically to the new design
 	 */
 	public void setUpdateConfigUpdateAuto(boolean updateConfigUpdateAuto) {
 		this.updateConfigUpdateAuto = updateConfigUpdateAuto;
@@ -179,7 +177,7 @@ public class Update {
 
 	/**
 	 * @param updatePriority
-	 *            Set the priority of the update
+	 * 		Set the priority of the update
 	 */
 	public void setUpdatePriority(UpdatePriority updatePriority) {
 		this.updatePriority = updatePriority;
@@ -194,13 +192,12 @@ public class Update {
 
 	/**
 	 * @param validationInfos
-	 *            Set the information to check, if the file has been downloaded
-	 *            correctly
+	 * 		Set the information to check, if the file has been downloaded correctly
 	 */
 	public void setValidationInfos(HashMap<String, String> validationInfos) {
 		this.validationInfos = validationInfos;
 	}
-	
+
 	/**
 	 * @return The update raw messages
 	 */
@@ -209,9 +206,8 @@ public class Update {
 	}
 
 	/**
-	 * @param validationInfos
-	 *            Set the information to check, if the file has been downloaded
-	 *            correctly
+	 * @param updateRawMessages
+	 * 		Set the information to check, if the file has been downloaded correctly
 	 */
 	public void setUpdateRawMessages(ArrayList<UpdateRawMessage> updateRawMessages) {
 		this.updateRawMessages = updateRawMessages;
