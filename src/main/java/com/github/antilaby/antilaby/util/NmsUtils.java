@@ -118,6 +118,11 @@ public final class NmsUtils {
 		//Reflection sending magic
 		Object dataSerializer = packetDataSerializer.newInstance(Unpooled.copiedBuffer(byteOut.toByteArray()));
 		Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
+		if(!labymodFunctions.get(LabyModFeature.DAMAGEINDICATOR)) {
+			Object ser = packetDataSerializer.newInstance(Unpooled.buffer().writeBoolean(false));
+			Object packet2 = packetPlayOutCustomPayload.newInstance("DAMAGEINDICATOR", ser);
+			sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet2));
+		}
 		sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
 		//logback
 		final StringBuilder b = new StringBuilder("Disabled some LabyMod functions (");
