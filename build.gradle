@@ -1,9 +1,14 @@
-version = "2.0-pre1"
+group = 'com.github.antilaby'
+version = '2.0-pre1'
+
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
 
 // Apply IDE plugins for easy build
 apply plugin: 'eclipse'
+
+// For Heisluft
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 
@@ -14,7 +19,7 @@ repositories {
     mavenCentral()
     // For ProtocolLib
     maven {
-        url "http://repo.dmulloy2.net/content/groups/public/"
+        url 'http://repo.dmulloy2.net/content/groups/public/'
     }
 }
 
@@ -52,9 +57,22 @@ artifacts {
     archives javadocJar
 }
 
-task buildAll {}
+publishing {
+    repositories {
+        maven {
+            url "file://" + System.getProperty("user.home") + "/.m2/repository/"
+        }
+    }
+    publications {
+        testing(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
 
-buildAll.dependsOn jar, sourcesJar, javadocJar
+publish.dependsOn jar, sourcesJar, javadocJar
 
 task copyToServer(type: Copy, dependsOn: jar) {
     def ts = System.getProperty("serverDir")
