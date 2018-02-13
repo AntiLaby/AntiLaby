@@ -1,4 +1,4 @@
-version = "pre-2.0"
+version = "2.0-pre1"
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
 
@@ -52,7 +52,7 @@ artifacts {
     archives javadocJar
 }
 
-task buildAll() {}
+task buildAll {}
 
 buildAll.dependsOn jar, sourcesJar, javadocJar
 
