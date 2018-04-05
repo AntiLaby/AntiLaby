@@ -62,7 +62,7 @@ public enum Locale {
 			return ChatColor.translateAlternateColorCodes('&', format(translation.get(toTranslate), args));
 		if(EN_US.translation.containsKey(toTranslate)) return EN_US.translate(toTranslate, args);
 		return translation.getOrDefault("translation.error",
-				EN_US.translation.getOrDefault("translation.error", "Error with translation..."));
+				EN_US.translation.getOrDefault("translation.error", toTranslate));
 	}
 
 

@@ -58,16 +58,19 @@ artifacts {
 }
 
 publishing {
-    repositories {
-        maven {
-            url "file://" + System.getProperty("user.home") + "/.m2/repository/"
+    def server = System.getProperty("maven")
+    if (server != null) {
+        repositories {
+            maven {
+                url server
+            }
         }
-    }
-    publications {
-        testing(MavenPublication) {
-            from components.java
-            artifact sourcesJar
-            artifact javadocJar
+        publications {
+            testing(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+            }
         }
     }
 }

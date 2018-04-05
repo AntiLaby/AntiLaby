@@ -32,6 +32,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -69,6 +70,14 @@ public class AntiLaby extends JavaPlugin {
 	private Updater ud;
 	// is this pre 1.9?
 	private boolean before19 = false;
+
+	/**
+	 * This should be used instead of accessing {@link #loadedFeatures} directly
+	 * @return an unmodifiable set of all enabled plugin features
+	 */
+	public Set<PluginFeature> getLoadedFeatures() {
+		return Collections.unmodifiableSet(loadedFeatures);
+	}
 
 	/**
 	 * Gets whether the mc version is pre 1.9, used by the {@link LanguageManager} system

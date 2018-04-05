@@ -1,5 +1,6 @@
 package com.github.antilaby.antilaby.lang.impl;
 
+import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.lang.IClientLanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
@@ -117,15 +118,15 @@ public class LanguageManager implements IClientLanguageManager {
 								break;
 							case "LabyInfo.LabyMod":
 								mp.put("antilaby.command.labyInfo.labyMod",
-										entry.getValue().replaceFirst("%PLAYER%", "%1"));
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.NoLabyMod":
 								mp.put("antilaby.command.labyInfo.noLabyMod",
-										entry.getValue().replaceFirst("%PLAYER%", "%1"));
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.PlayerOffline":
 								mp.put("antilaby.command.labyInfo.playerOffline",
-										entry.getValue().replaceFirst("%PLAYER%", "%1"));
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 						}
 						mp.remove(entry.getKey());
@@ -163,7 +164,6 @@ public class LanguageManager implements IClientLanguageManager {
 
 	@Override
 	public String translate(String unlocalized, Player translatedTo, Object... args) {
-		if(getLanguageForPlayer(translatedTo) == null) System.out.println("lol");
 		return translate(unlocalized, getLanguageForPlayer(translatedTo), args);
 	}
 
@@ -174,7 +174,8 @@ public class LanguageManager implements IClientLanguageManager {
 
 	@Override
 	public Locale getLanguageForPlayer(Player p) {
-		if(AntiLaby.getInstance().isPrior19()) {
+		final AntiLaby al = AntiLaby.getInstance();
+		if(al.isPrior19() && !al.getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB)) {
 			return Locale.byName(NmsUtils.getLang(p), Locale.EN_US);
 		}
 		if(!mappedLanguages.containsKey(p)) mappedLanguages.put(p, Locale.byName(NmsUtils.getLang(p), Locale.EN_US));
