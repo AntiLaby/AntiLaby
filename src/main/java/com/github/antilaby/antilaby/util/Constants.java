@@ -38,6 +38,10 @@ public final class Constants {
 	 */
 	public static final String PERMISSION_LABYINFO = "antilaby.labyinfo";
 	/**
+	 * The permission to receive notifications about players who are using LabyMod
+	 */
+	public static final String PERMISSION_LABYINFO_NOTIFICATIONS = "antilaby.labyinfo.notifications";
+	/**
 	 * The plugin channel LabyMod uses to exchange information with the server
 	 */
 	public static final String LABYMOD_CHANNEL = "LABYMOD";

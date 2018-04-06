@@ -37,6 +37,13 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 				AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses "
 						+ new String(data) + '!');
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
+				// Send notification
+				for (Player all : Bukkit.getOnlinePlayers()) {
+					if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
+						// TODO: Add the message to the language files
+						all.sendMessage(Constants.PREFIX + "The player '" + player.getName() + "' uses LabyMod.");
+					}
+				}
 			}
 			if (Config.getLabyModPlayerKickEnable())
 				if (AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission")
@@ -66,6 +73,13 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
 		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
 				+ ") is not allowed to use LabyMod and has been kicked.");
+		// Send notification
+		for (Player all : Bukkit.getOnlinePlayers()) {
+			if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
+				// TODO: Add the message to the language files
+				all.sendMessage(Constants.PREFIX + "The player '" + player.getName() + "' is not allowed to use LabyMod and has been kicked.");
+			}
+		}
 	}
 
 	@EventHandler

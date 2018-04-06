@@ -21,6 +21,9 @@ permission:
   antilaby.labyinfo:
     description: Allows you to use the command /labyinfo.
     default: OP
+  antilaby.labyinfo.notifications:
+    description: You will receive notifications if a player uses LabyMod.
+    default: false
 commands:
   antilaby:
     usage: /antilaby <info|reload>
