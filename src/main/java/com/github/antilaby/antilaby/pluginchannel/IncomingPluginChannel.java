@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.pluginchannel;
 
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.config.Config;
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;

@@ -1,11 +1,11 @@
 #version: 1.0.0
 translation.error=Fehler in der Übersetzung
-info.specialDef=&aDieser Server nutzt AntiLaby Version &b%1 &aund NMS Version &b%2&a.                             #1: AL-Version, 2: NMS-Version
+info.specialDef=&aDieser Server nutzt AntiLaby Version &b%1 &aund NMS Version &b%2&a.                            #1: AL-Version, 2: NMS-Version
 antilaby.playerKickMessage=&cDu nutzt &aLabyMod&c, was dir auf diesem Server verboten ist!
-antilaby.notifyKickMessage=&7Der Spieler %1 hat nicht die Berechtigung mit LabyMod zu spielen und wurde gekickt.  #1: Der Spieler
+antilaby.notifyKickMessage=&7Der Spieler %1 hat nicht die Berechtigung mit LabyMod zu spielen und wurde gekickt. #1: Der Spieler
 antilaby.command.noPermission=&cDu hast nicht die benötigte Berechtigung, diesen Befehl auszuführen
 antilaby.command.antiLaby.usage=&cSyntax: /antilaby <info|reload>
 antilaby.command.labyInfo.usage=&cSyntax: /labyinfo <Spieler>
-antilaby.command.labyInfo.labyMod=&6Der Spieler &o%1&6 spielt mit LabyMod.                                        #1: Der Spieler
-antilaby.command.labyInfo.noLabyMod=&6Der Spieler &o%1&6 spielt &lnicht&6 mit LabyMod.                            #1: Der Spieler
-antilaby.command.labyInfo.playerOffline=&cDer Spieler &o%1&c ist offline.                                         #1: Der Spieler
+antilaby.command.labyInfo.labyMod=Der Spieler &o%1&r spielt mit LabyMod.                                         #1: Der Spieler
+antilaby.command.labyInfo.noLabyMod=Der Spieler &o%1&r spielt &lnicht&r mit LabyMod.                             #1: Der Spieler
+antilaby.command.labyInfo.playerOffline=&cDer Spieler &o%1&c ist offline.                                        #1: Der Spieler

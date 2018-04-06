@@ -1,6 +1,6 @@
 package com.github.antilaby.antilaby.command;
 
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

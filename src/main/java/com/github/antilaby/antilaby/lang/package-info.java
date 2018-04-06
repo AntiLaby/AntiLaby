@@ -1,8 +1,9 @@
 /**
- * A localization package. Provides both Interfaces (the {@link com.github.antilaby.antilaby.lang.ILanguageManager
- * ILanguageManager} interface and the {@link com.github.antilaby.antilaby.lang.IClientLanguageManager
- * IClientLanguageManager} interface) as well as their AntiLaby default implementations.
+ * This package provides the internal AntiLaby localization implementation
  *
  * @since 2.0
  */
+@ParametersAreNonnullByDefault
 package com.github.antilaby.antilaby.lang;
+
+import javax.annotation.ParametersAreNonnullByDefault;

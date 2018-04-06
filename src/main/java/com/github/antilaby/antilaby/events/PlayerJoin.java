@@ -6,7 +6,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 
 /**
  * The player join event.

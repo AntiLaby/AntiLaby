@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.events;
 
 import com.github.antilaby.antilaby.compat.PluginFeature;
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

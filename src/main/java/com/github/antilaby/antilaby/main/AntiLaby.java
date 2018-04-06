@@ -15,7 +15,7 @@ import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
 import com.github.antilaby.antilaby.util.DataManager;
 import com.github.antilaby.antilaby.command.LabyInfoCommand;
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.metrics.BStats;
 import com.github.antilaby.antilaby.metrics.Metrics;
@@ -136,7 +136,7 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			compatible = false;
 			LOG.error(
-					"Your server is not compatible with this version of AntiLaby! Your NMS-version is \"" + nmsver +
+					"Your server is not compatible with AntiLaby! Your NMS-version is \"" + nmsver +
 							"\", which was released before the first LabyMod version.");
 			disableIfNotCompatible();
 		}
@@ -170,7 +170,7 @@ public class AntiLaby extends JavaPlugin {
 		// Start plug-in metrics for bStats.org
 		initBMetrics();
 		// Init LanguageManager
-		LanguageManager.INSTANCE.registerPlugin(this);
+		LanguageManager.INSTANCE.initAL();
 		// Resend AntiLaby packages (on reload)
 		for(final Player all : Bukkit.getOnlinePlayers()) {
 			final AntiLabyPackager pack = new AntiLabyPackager(all);

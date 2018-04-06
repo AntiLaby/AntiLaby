@@ -1,11 +1,11 @@
 #version: 1.0.0
 translation.error=Error with translation
-info.specialDef=&aThis server uses AntiLaby version &b%1 &awith NMS version &b%2&a.               #1: AL-Version, 2: NMS-Version
+info.specialDef=&aThis server uses AntiLaby version &b%1 &awith NMS version &b%2&a.           #1: AL-Version, 2: NMS-Version
 antilaby.playerKickMessage=&cYou are not allowed to use &aLabyMod &con this Server!
-antilaby.notifyKickMessage=&7The player %1 is not allowed to use LabyMod and has been kicked.   #1 The Player
+antilaby.notifyKickMessage=&7The player %1 is not allowed to use LabyMod and has been kicked. #1 The Player
 antilaby.command.noPermission=&cYou do not have permission to use this command
 antilaby.command.antiLaby.usage=&cUsage: /antilaby <info|reload>
 antilaby.command.labyInfo.usage=&cUsage: /labyinfo <player>
-antilaby.command.labyInfo.labyMod=The player &o%1&r is using LabyMod.                           #1 The Player
-antilaby.command.labyInfo.noLabyMod=The player &o%1&r &ldoesn't&r use LabyMod.                  #1 The Player
-antilaby.command.labyInfo.playerOffline=&cThe player &o%1&c is offline.                           #1 The Player
+antilaby.command.labyInfo.labyMod=The player &o%1&r is using LabyMod.                         #1 The Player
+antilaby.command.labyInfo.noLabyMod=The player &o%1&r &ldoesn't&r use LabyMod.                #1 The Player
+antilaby.command.labyInfo.playerOffline=&cThe player &o%1&c is offline.                       #1 The Player

@@ -1,7 +1,6 @@
 package com.github.antilaby.antilaby.command;
 
-import com.comphenix.protocol.PacketType;
-import com.github.antilaby.antilaby.lang.impl.LanguageManager;
+import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.util.Constants;

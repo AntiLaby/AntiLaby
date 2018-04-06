@@ -1,7 +1,6 @@
-package com.github.antilaby.antilaby.lang.impl;
+package com.github.antilaby.antilaby.lang;
 
 import com.github.antilaby.antilaby.compat.PluginFeature;
-import com.github.antilaby.antilaby.lang.IClientLanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.NmsUtils;
@@ -15,14 +14,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LanguageManager implements IClientLanguageManager {
+public class LanguageManager {
 
 	public static final LanguageManager INSTANCE = new LanguageManager();
 	private static final Pattern YAML_ENDING = Pattern.compile("\\.ya?ml$");
@@ -32,55 +29,6 @@ public class LanguageManager implements IClientLanguageManager {
 
 	private LanguageManager() {}
 
-	final Set<JavaPlugin> plugins = new HashSet<>();
-
-	public void registerPlugin(JavaPlugin instance) {
-		plugins.add(instance);
-		if(instance instanceof AntiLaby) initAL();
-		else initPlugin(instance);
-		for(final Locale l : Locale.values())
-			l.init(instance);
-	}
-
-	private void initPlugin(JavaPlugin instance) {
-		LOG.info("Loading Lang resources for Plugin " + instance.getName());
-		File newDataPath = new File(instance.getDataFolder() + "/lang");
-		newDataPath.mkdirs();
-		File oldDataPath = new File(instance.getDataFolder(), "language");
-		if(oldDataPath.exists()) {
-			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
-				if(f.isDirectory() || f.length() == 0) {
-					LOG.info(
-							"you have an invalid file in your language directory (" + f.getName() + "). It wont be " +
-									"converted.");
-					continue;
-				}
-				Matcher m = YAML_ENDING.matcher(f.getName().toLowerCase(java.util.Locale.ROOT));
-				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
-					LOG.info(
-							"you have an invalid file in your language directory (" + f.getName() + "). It wont be " +
-									"converted" + ".");
-					continue;
-				}
-				File converted = new File(newDataPath, m.replaceAll(".lang"));
-				try {
-					converted.createNewFile();
-					FileOutputStream stream = new FileOutputStream(converted);
-					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(
-							YAMLConverter.convertYmlToProperties(f)).getBytes("UTF-8"));
-					stream.close();
-				} catch(IOException e) {
-					LOG.error(e.getMessage());
-				}
-			}
-			try {
-				FileUtils.deleteDirectory(oldDataPath);
-			} catch(IOException e) {
-				LOG.error(e.getMessage());
-			}
-		}
-	}
-
 	public void initAL() {
 		JavaPlugin plugin = AntiLaby.getInstance();
 		File newDataPath = new File(plugin.getDataFolder(), "lang");
@@ -89,18 +37,16 @@ public class LanguageManager implements IClientLanguageManager {
 		if(oldDataPath.exists()) {
 			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
 				if(f.isDirectory() || f.length() == 0) {
-					LOG.info(
-							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
-									"be" + " " + "converted.");
+					LOG.info("you have an invalid file in your language directory (" + f.getName() + "). It wont " +
+							"be converted.");
 
 					continue;
 				}
 				String name = f.getName().toLowerCase();
 				Matcher m = YAML_ENDING.matcher(name);
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
-					LOG.info(
-							"you have an invalid file in your language directory (" + name + "). It wont be " +
-									"converted" + ".");
+					LOG.info("you have an invalid file in your language directory (" + f.getName() + "). It wont " +
+							"be converted.");
 					continue;
 				}
 				File converted = new File(newDataPath, m.replaceAll(".lang"));
@@ -145,7 +91,6 @@ public class LanguageManager implements IClientLanguageManager {
 		}
 	}
 
-	@Override
 	public void setLanguageForPlayer(Player player, String locale) {
 		final boolean hasPrinted = mappedLanguages.containsKey(player);
 		setLanguageForPlayer(player, Locale.byName(locale, Locale.EN_US));
@@ -157,22 +102,18 @@ public class LanguageManager implements IClientLanguageManager {
 							NmsUtils.getVersion()));
 	}
 
-	@Override
 	public void setLanguageForPlayer(Player p, Locale l) {
 		mappedLanguages.put(p, l);
 	}
 
-	@Override
 	public String translate(String unlocalized, Player translatedTo, Object... args) {
 		return translate(unlocalized, getLanguageForPlayer(translatedTo), args);
 	}
 
-	@Override
 	public String translate(String unlocalized, Locale language, Object... args) {
 		return language.translate(unlocalized, args);
 	}
 
-	@Override
 	public Locale getLanguageForPlayer(Player p) {
 		final AntiLaby al = AntiLaby.getInstance();
 		if(al.isPrior19() && !al.getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB)) {
@@ -182,7 +123,6 @@ public class LanguageManager implements IClientLanguageManager {
 		return mappedLanguages.get(p);
 	}
 
-	@Override
 	public String translate(String unlocalized, String language, Object... args) {
 		return translate(unlocalized, Locale.byName(language, Locale.EN_US), args);
 	}

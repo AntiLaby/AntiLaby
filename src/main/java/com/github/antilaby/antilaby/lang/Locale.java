@@ -1,10 +1,9 @@
-package com.github.antilaby.antilaby.lang.impl;
+package com.github.antilaby.antilaby.lang;
 
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.IOUtils;
 import com.github.antilaby.antilaby.util.LangFileParser;
 import org.bukkit.ChatColor;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,8 +25,7 @@ public enum Locale {
 
 	private boolean isNoOp() {
 		if(this == UNDEFINED) return true;
-		for(JavaPlugin plugin : LanguageManager.INSTANCE.plugins)
-			if(new File(plugin.getDataFolder() + "/lang/" + this + ".lang").exists()) return false;
+		if(new File(AntiLaby.getInstance().getDataFolder() + "/lang/" + this + ".lang").exists()) return false;
 		try {
 			return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") == null;
 		} catch(IOException e) {
@@ -67,10 +65,11 @@ public enum Locale {
 
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public void init(JavaPlugin plugin) {
+	public void init() {
+		AntiLaby plugin = AntiLaby.getInstance();
 		if(isNoOp()) return;
 		final File f = new File(plugin.getDataFolder() + "/lang/" + this + ".lang");
-		if(!f.exists() && plugin instanceof AntiLaby) {
+		if(!f.exists()) {
 			try {
 				f.createNewFile();
 				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
