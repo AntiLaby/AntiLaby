@@ -1,8 +1,15 @@
-# Welcome to AntiLaby Rework!
-AntiLaby is a free open source [Minecraft](https://minecraft.net/) [Bukkit](https://bukkit.org/) plug-in by [NathanNr](https://github.com/NathanNr/) and [heisluft](https://github.com/heisluft) to disable functions of the [LabyMod](https://www.labymod.net/).
+# Welcome to AntiLaby!
+AntiLaby is a free open source [Minecraft](https://minecraft.net/) [Bukkit](https://bukkit.org/) plug-in by [NathanNr](https://github.com/NathanNr/) and [heisluft](https://github.com/heisluft) to disable functions of the Minecraft modification [LabyMod](https://www.labymod.net/). [Read more ...](https://github.com/AntiLaby/AntiLaby/wiki/Home)
 
-## We now have a maven repo!!!
-### In Maven:
+Useful links:
+* [Getting started](https://github.com/AntiLaby/AntiLaby/wiki/Getting-started)
+* [Find the plugin on SpigotMC](https://www.spigotmc.org/resources/21347/)
+* [About AntiLaby](https://github.com/AntiLaby/AntiLaby/wiki/Home)
+* [Ask questions, send suggestions and report bugs](https://github.com/AntiLaby/AntiLaby/wiki/Support)
+* [Source code](https://github.com/AntiLaby/AntiLaby)
+
+## AntiLaby in
+### Maven:
 ````xml
 ...
 <repositories>
@@ -26,7 +33,7 @@ AntiLaby is a free open source [Minecraft](https://minecraft.net/) [Bukkit](http
 </dependencies>
 ...
 ````
-### In Gradle:
+### Gradle:
 ````gradle
 ...
 repositories {
@@ -44,11 +51,3 @@ dependencies {
 }
 ...
 ````
-
-Useful links:
-* [Getting started](https://github.com/AntiLaby/AntiLaby/wiki/Getting-started)
-* [Find the plugin on SpigotMC](https://www.spigotmc.org/resources/antilaby-1-8-1-12-2-disable-labymod-functions-api.21347/)
-* [About AntiLaby](https://github.com/AntiLaby/AntiLaby/wiki/About)
-* [Wiki](https://github.com/AntiLaby/AntiLaby/wiki)
-* [Ask questions, send suggestions and report bugs](https://github.com/AntiLaby/AntiLaby/wiki/Support)
-* [Source code](https://github.com/AntiLaby/AntiLaby)
