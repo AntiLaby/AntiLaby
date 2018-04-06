@@ -73,6 +73,7 @@ public class AntiLaby extends JavaPlugin {
 
 	/**
 	 * This should be used instead of accessing {@link #loadedFeatures} directly
+	 *
 	 * @return an unmodifiable set of all enabled plugin features
 	 */
 	public Set<PluginFeature> getLoadedFeatures() {

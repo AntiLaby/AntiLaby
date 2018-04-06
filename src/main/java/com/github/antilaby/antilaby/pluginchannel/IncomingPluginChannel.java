@@ -32,23 +32,25 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] data) {
-		if (channel.equals(Constants.LABYMOD_CHANNEL)) {
-			if (!labyModPlayers.containsKey(player.getUniqueId().toString())) {
-				AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses "
-						+ new String(data) + '!');
+		if(channel.equals(Constants.LABYMOD_CHANNEL)) {
+			if(!labyModPlayers.containsKey(player.getUniqueId().toString())) {
+				AntiLaby.LOG.debug(
+						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses " + new String(
+								data) + '!');
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 				// Send notification
-				for (Player all : Bukkit.getOnlinePlayers()) {
+				if(!Config.getLabyModPlayerKickEnable()) for(Player all : Bukkit.getOnlinePlayers()) {
 					if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
 						// TODO: Add the message to the language files
-						all.sendMessage(Constants.PREFIX + "The player '" + player.getName() + "' uses LabyMod.");
+						all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(
+								"antilaby.command.labyInfo.labyMod", all, player.getName()));
 					}
 				}
 			}
-			if (Config.getLabyModPlayerKickEnable())
-				if (AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission")
-						.equals("true")) {
-					if (!player.hasPermission(Constants.PERMISSION_BYPASS)) {
+			if(Config.getLabyModPlayerKickEnable())
+				if(AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission").equals
+						("true")) {
+					if(!player.hasPermission(Constants.PERMISSION_BYPASS)) {
 						kickPlayer(player);
 						return;
 					}
@@ -56,14 +58,13 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 					kickPlayer(player);
 					return;
 				}
-			if (!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
+			if(!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
 				LabyModJoinCommands labyModJoinCommands = new LabyModJoinCommands();
-				for (final String command : labyModJoinCommands.getLabyModJoinCommands(false)) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-							UUID_PATTERN
-									.matcher(PLAYER_PATTERN.matcher(command)
-											.replaceAll(Matcher.quoteReplacement(player.getName())))
-									.replaceAll(Matcher.quoteReplacement(player.getUniqueId().toString())));
+				for(final String command : labyModJoinCommands.getLabyModJoinCommands(false)) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(
+							PLAYER_PATTERN.matcher(command).replaceAll(
+									Matcher.quoteReplacement(player.getName()))).replaceAll(
+							Matcher.quoteReplacement(player.getUniqueId().toString())));
 				}
 			}
 		}
@@ -71,20 +72,23 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	private void kickPlayer(Player player) {
 		player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
-		AntiLaby.LOG.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
-				+ ") is not allowed to use LabyMod and has been kicked.");
+		AntiLaby.LOG.info(
+				"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") is not allowed to use " +
+						"LabyMod and has been kicked.");
 		// Send notification
-		for (Player all : Bukkit.getOnlinePlayers()) {
+		for(Player all : Bukkit.getOnlinePlayers()) {
 			if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
 				// TODO: Add the message to the language files
-				all.sendMessage(Constants.PREFIX + "The player '" + player.getName() + "' is not allowed to use LabyMod and has been kicked.");
+				all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate("antilaby.notifyKickMessage",
+						all,
+						player.getName()));
 			}
 		}
 	}
 
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event) {
-		if (labyModPlayers.containsKey(event.getPlayer().getUniqueId().toString()))
+		if(labyModPlayers.containsKey(event.getPlayer().getUniqueId().toString()))
 			labyModPlayers.remove(event.getPlayer().getUniqueId().toString());
 	}
 

@@ -1,5 +1,6 @@
 package com.github.antilaby.antilaby.command;
 
+import com.comphenix.protocol.PacketType;
 import com.github.antilaby.antilaby.lang.impl.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
@@ -24,20 +25,25 @@ public class LabyInfoCommand extends CommandBase {
 		if(args.length == 1) {
 			final Player targetPlayer = Bukkit.getPlayer(args[0]);
 			if(Bukkit.getOnlinePlayers().contains(targetPlayer)) {
-				final boolean uses = IncomingPluginChannel.getLabyModPlayers().containsKey(targetPlayer.getUniqueId().toString());
+				final boolean uses = IncomingPluginChannel.getLabyModPlayers().containsKey(
+						targetPlayer.getUniqueId().toString());
 				if(sender instanceof Player) {
 					final Player player = (Player) sender;
 					if(player.hasPermission(Constants.PERMISSION_LABYINFO)) {
 						if(uses) player.sendMessage(lan.translate(prefix + "labyMod", player, targetPlayer.getName()));
 						else player.sendMessage(lan.translate(prefix + "noLabyMod", player, targetPlayer.getName()));
 					} else {
-						player.sendMessage(lan.translate("antilaby.command.noPermission", player));
-						AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId() + ") to use LabyInfo: Permission 'antilaby.labyinfo' is " + "missing!");
+						player.sendMessage(Constants.PREFIX + lan.translate("antilaby.command.noPermission", player));
+						AntiLaby.LOG.debug(
+								"Player " + player.getName() + " (" + player.getUniqueId() + ") to use LabyInfo: " +
+										"Permission 'antilaby.labyinfo' is " + "missing!");
 					}
-				} else if(uses) sender.sendMessage("Player '" + args[0] + "' uses LabyMod.");
-				else sender.sendMessage("Player '" + args[0] + "' doesn't use LabyMod.");
+				} else if(uses) sender.sendMessage(Constants.PREFIX + "Player '" + args[0] + "' uses LabyMod.");
+				else sender.sendMessage(
+							Constants.PREFIX + lan.translate(prefix + "playerOffline", (Player) sender, args[0]));
 			} else if(sender instanceof Player) {
-				sender.sendMessage(lan.translate(prefix + "playerOffline", (Player) sender, args[0]));
+				sender.sendMessage(
+						Constants.PREFIX + lan.translate(prefix + "playerOffline", (Player) sender, args[0]));
 			} else AntiLaby.LOG.info("Player '" + args[0] + "' is offline!");
 		} else sendUsage(sender);
 		return true;

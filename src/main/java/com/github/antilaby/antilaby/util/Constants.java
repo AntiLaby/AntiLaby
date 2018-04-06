@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
+import org.bukkit.ChatColor;
 
 /**
  * Contains all relevant constants of AntiLaby
@@ -16,7 +17,7 @@ public final class Constants {
 	/**
 	 * The AntiLaby chat prefix
 	 */
-	public static final String PREFIX = "§8[§e§lAntiLaby§8]§r ";
+	public static final String PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&e&lAntiLaby&8]&r ");
 	/**
 	 * The SpigotMC.org resource link
 	 */
