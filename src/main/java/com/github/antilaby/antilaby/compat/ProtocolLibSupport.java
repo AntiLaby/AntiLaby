@@ -6,7 +6,9 @@ import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.github.antilaby.antilaby.lang.LanguageManager;
-import com.github.antilaby.antilaby.log.Logger;
+
+import static com.github.antilaby.antilaby.compat.PluginFeature.LOG;
+
 import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -20,7 +22,6 @@ import java.util.Locale;
  */
 public class ProtocolLibSupport implements PacketListener {
 
-	private static final Logger LOG = new Logger("ProtocolLib Support");
 
 	/**
 	 * Initializes the AntiLaby ProtocolLib support
@@ -30,7 +31,6 @@ public class ProtocolLibSupport implements PacketListener {
 				"Enabling Support for ProtocolLib version " + ProtocolLibrary.getPlugin().getDescription().getVersion
 						());
 		ProtocolLibrary.getProtocolManager().addPacketListener(new ProtocolLibSupport());
-		AntiLaby.getInstance().loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.github.antilaby.antilaby.main;
 
+import com.github.antilaby.antilaby.compat.HLSCompat;
 import com.github.antilaby.antilaby.util.Miscellaneous;
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
@@ -59,7 +60,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	/** All loaded Features */
-	public final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
+	private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
 	// Compatible?
 	private boolean compatible;
 	// Is this a beta version?
@@ -136,8 +137,8 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			compatible = false;
 			LOG.error(
-					"Your server is not compatible with AntiLaby! Your NMS-version is \"" + nmsver +
-							"\", which was released before the first LabyMod version.");
+					"Your server is not compatible with AntiLaby! Your NMS-version is \"" + nmsver + "\", which was "
+							+ "released before the first LabyMod version.");
 			disableIfNotCompatible();
 		}
 		// Try to update AntiLaby
@@ -148,13 +149,21 @@ public class AntiLaby extends JavaPlugin {
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
 		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
 				new IncomingPluginChannel());
-		// Init ProtocolLib support
-		if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) ProtocolLibSupport.init();
-		else if(version > 8)
-			LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
-		else {
-			LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
-			before19 = true;
+		// If HLS is installed, use HLS
+		if(Bukkit.getPluginManager().isPluginEnabled("HeisluftsLanguageSystem")) {
+			HLSCompat.init();
+			loadedFeatures.add(PluginFeature.HEISLUFTS_LANGUAGE_SYSTEM);
+		} else {
+			// Init ProtocolLib support
+			if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+				ProtocolLibSupport.init();
+				loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
+			} else if(version > 8)
+				LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+			else {
+				LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+				before19 = true;
+			}
 		}
 		initCmds();
 		initEvents();
@@ -167,14 +176,13 @@ public class AntiLaby extends JavaPlugin {
 		} catch(final IOException e) {
 			LOG.error(e.getMessage());
 		}
-		// Start plug-in metrics for bStats.org
-		initBMetrics();
 		// Init LanguageManager
 		LanguageManager.INSTANCE.initAL();
+		// Start plug-in metrics for bStats.org
+		initBMetrics();
 		// Resend AntiLaby packages (on reload)
 		for(final Player all : Bukkit.getOnlinePlayers()) {
-			final AntiLabyPackager pack = new AntiLabyPackager(all);
-			pack.sendPackages();
+			new AntiLabyPackager(all).sendPackages();
 		}
 		LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
 	}

@@ -5,7 +5,7 @@ version: ${version}
 description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
 website: https://www.spigotmc.org/resources/21347/
 main: com.github.antilaby.antilaby.main.AntiLaby
-softdepend: [ProtocolLib]
+softdepend: [HeisluftsLanguageSystem, ProtocolLib]
 permission:
   antilaby.*:
     description: Antilaby permission

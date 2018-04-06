@@ -37,16 +37,18 @@ public class LanguageManager {
 		if(oldDataPath.exists()) {
 			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
 				if(f.isDirectory() || f.length() == 0) {
-					LOG.info("you have an invalid file in your language directory (" + f.getName() + "). It wont " +
-							"be converted.");
+					LOG.info(
+							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
+									"be converted.");
 
 					continue;
 				}
 				String name = f.getName().toLowerCase();
 				Matcher m = YAML_ENDING.matcher(name);
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
-					LOG.info("you have an invalid file in your language directory (" + f.getName() + "). It wont " +
-							"be converted.");
+					LOG.info(
+							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
+									"be converted.");
 					continue;
 				}
 				File converted = new File(newDataPath, m.replaceAll(".lang"));
@@ -89,6 +91,7 @@ public class LanguageManager {
 				LOG.error(e.getMessage());
 			}
 		}
+		for(Locale locale : Locale.values()) locale.init();
 	}
 
 	public void setLanguageForPlayer(Player player, String locale) {
