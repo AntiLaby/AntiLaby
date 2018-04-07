@@ -7,9 +7,26 @@ package com.github.antilaby.antilaby.api;
  */
 public enum LabyModFeature {
 	// Old LabyMod 2 features
-	FOOD, GUI, NICK, EXTRAS, POTIONS, ARMOR, DAMAGEINDICATOR, MINIMAP_RADAR,
+	FOOD("enabled"), GUI("enabled"), NICK("enabled"), EXTRAS("enabled"), POTIONS("enabled"), ARMOR(
+			"enabled"), DAMAGEINDICATOR("enabled"), MINIMAP_RADAR("enabled"),
 
 	// LabyMod 3 features
-	BLOCKBUILD, IMPROVED_LAVA, CROSSHAIR_SYNC, REFILL_FIX, GUI_ALL, GUI_POTION_EFFECTS, GUI_ARMOR_HUD, GUI_ITEM_HUD,
-	TAGS, CHAT, ANIMATIONS, SATURATION_BAR
+	BLOCKBUILD("false"), IMPROVED_LAVA("false"), CROSSHAIR_SYNC("false"), REFILL_FIX("false"), GUI_ALL(
+			"enabled"), GUI_POTION_EFFECTS("enabled"), GUI_ARMOR_HUD("enabled"), GUI_ITEM_HUD(
+					"enabled"), TAGS("enabled"), CHAT("enabled"), ANIMATIONS("enabled"), SATURATION_BAR("enabled");
+
+	private final String defaultValue;
+
+	LabyModFeature(String defaultValue) {
+		this.defaultValue = defaultValue;
+	}
+
+	/**
+	 * Get the default value from LabyMod
+	 * 
+	 * @return default value
+	 */
+	public String getDefaultValue() {
+		return this.defaultValue;
+	}
 }

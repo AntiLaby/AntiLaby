@@ -1,5 +1,5 @@
 /**
- * This internal package defines different classes for compatibility with other plugins
+ * This internal package defines different classes for compatibility with other plug-ins.
  *
  * @author heisluft
  */

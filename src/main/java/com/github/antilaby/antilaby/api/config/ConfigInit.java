@@ -40,7 +40,7 @@ public class ConfigInit {
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		// TODO collect all LabyMod feature settings in a String list
-		// LabyMod 3 features:
+	/*	// LabyMod 3 features:
 		cfg.addDefault("AntiLaby.LabyModPlayerKick.Enable", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.SATURATION_BAR", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.CHAT", true);
@@ -65,7 +65,20 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.LabyModFeature.DAMAGEINDICATOR", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true);
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
-		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
+		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false); */
+		
+		if(cfg.getList("AntiLaby.LabyModFeatures.Disable") == null) {
+			final List<String> disabledFeatures = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
+			disabledFeatures.add("" /* TODO Add the default values */);
+			cfg.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
+		}
+		
+		if(cfg.getList("AntiLaby.LabyModFeatures.Enable") == null) {
+			final List<String> enabledFeatures = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
+			enabledFeatures.add("" /* TODO Add the default values */);
+			cfg.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
+		}
+		
 		final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 		commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
 		commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
