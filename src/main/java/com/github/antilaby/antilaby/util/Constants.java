@@ -43,13 +43,17 @@ public final class Constants {
 	 */
 	public static final String PERMISSION_LABYINFO_NOTIFICATIONS = "antilaby.labyinfo.notifications";
 	/**
-	 * The plugin channel LabyMod uses to exchange information with the server
+	 * The plug-in channel LabyMod uses to exchange information with the server
 	 */
 	public static final String LABYMOD_CHANNEL = "LABYMOD";
 	/**
 	 * The current configuration version
 	 */
 	public static final int CURRENT_CONFIG_VERSION = 3;
+	/**
+	 * Link to the bugtracker
+	 */
+	public static final String BUG_REPORT_URL = "https://github.com/AntiLaby/AntiLaby/issues";
 
 	/**
 	 * Private constructor, no need to instantiate this class
