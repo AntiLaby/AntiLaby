@@ -1,6 +1,4 @@
 /**
- * This package contains the commands.
- * 
- * @author NathanNr
+ * This package contains the command system.
  */
 package com.github.antilaby.antilaby.command;

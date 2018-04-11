@@ -10,7 +10,6 @@ import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.Config;
-import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.config.InitConfig;
 import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
@@ -25,8 +24,6 @@ import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.update.Updater;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -296,51 +293,4 @@ public class AntiLaby extends JavaPlugin {
 		instance = this;
 		versionType = VersionType.fromName(getDescription().getVersion().toLowerCase());
 	}
-
-	public void reloadPlugin(CommandSender sender) {
-		// Reload the plug-in
-		if(sender instanceof Player) {
-			final Player player = (Player) sender;
-			if(!player.hasPermission("antilaby.reload")) {
-				player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.noPermission", player));
-				LOG.info(
-						"Player " + player.getName() + " (" + player.getUniqueId() + ") tried to reload AntiLaby: " +
-								"Permission 'antilaby.reload' is missing!");
-				return;
-			}
-		}
-		if(sender instanceof Player) {
-			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
-			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
-		} else LOG.info("Reloading AntiLaby...");
-		ConfigFile.init();
-		for(final Player all : Bukkit.getOnlinePlayers()) {
-			final AntiLabyPackager pack = new AntiLabyPackager(all);
-			pack.sendPackages();
-		}
-		if(sender instanceof Player) {
-			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
-			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
-		} else LOG.info("Reload complete!");
-	}
-
-	public void sendInfo(CommandSender sender) {
-		// Send information about this plug-in to a command sender (console /
-		// player)
-		sender.sendMessage(
-				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-		sender.sendMessage(
-				ChatColor.BLUE + "AntiLaby plugin version " + getDescription().getVersion() + " by the AntiLaby Team"
-						+ ChatColor.RESET);
-		sender.sendMessage(
-				ChatColor.BLUE + "More information about the plugin: " + Constants.RESOURCE_LINK + ChatColor.RESET);
-		sender.sendMessage(ChatColor.BLUE + "Use '/antilaby reload' to reload the plugin." + ChatColor.RESET);
-		sender.sendMessage(
-				ChatColor.BLUE + "Use '/labyinfo <player>' to check if a player uses LabyMod." + ChatColor.RESET);
-		sender.sendMessage(
-				ChatColor.DARK_BLUE + "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-" + ChatColor.RESET);
-	}
-
 }
