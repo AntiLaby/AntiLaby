@@ -41,7 +41,6 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 				// Send notification
 				if(!Config.getLabyModPlayerKickEnable()) for(Player all : Bukkit.getOnlinePlayers()) {
 					if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-						// TODO: Add the message to the language files
 						all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(
 								"antilaby.command.labyInfo.labyMod", all, player.getName()));
 					}
@@ -78,7 +77,6 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 		// Send notification
 		for(Player all : Bukkit.getOnlinePlayers()) {
 			if(all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-				// TODO: Add the message to the language files
 				all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate("antilaby.notifyKickMessage",
 						all,
 						player.getName()));

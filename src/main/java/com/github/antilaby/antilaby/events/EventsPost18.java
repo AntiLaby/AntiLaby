@@ -1,6 +1,5 @@
 package com.github.antilaby.antilaby.events;
 
-import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import org.bukkit.event.EventHandler;
@@ -11,7 +10,7 @@ public class EventsPost18 implements Listener {
 
 	@EventHandler
 	public void onChangeLocale(PlayerLocaleChangeEvent event) {
-		if(!AntiLaby.getInstance().getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB))
+		if(AntiLaby.getInstance().getLoadedFeatures().isEmpty())
 			LanguageManager.INSTANCE.setLanguageForPlayer(event.getPlayer(), event.getLocale());
 	}
 }

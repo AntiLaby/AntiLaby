@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
-import com.github.antilaby.antilaby.api.exceptions.InternalErrorException;
+import com.github.antilaby.antilaby.api.exceptions.InternalException;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 
@@ -68,7 +68,7 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true);
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false); */
-		
+
 		final List<String> disabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Disable");
 		final List<String> enabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Enable");
 		for(LabyModFeature labyModFeature : LabyModFeature.values()) {
@@ -77,20 +77,21 @@ public class ConfigInit {
 			} else if(labyModFeature.getDefaultValue().equals("disabled")) {
 				enabledFeatures.add(labyModFeature.toString());
 			} else {
-				throw new InternalErrorException("Configuration", "Unknown default LabyMod feature value.", null);
+				throw new InternalException("Configuration", "Unknown default LabyMod feature value.", null);
 			}
 		}
-		
-		if (cfg.getList("AntiLaby.LabyModFeatures.Disable") == null)
+
+		if(cfg.getList("AntiLaby.LabyModFeatures.Disable") == null)
 			cfg.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
-		
-		if (cfg.getList("AntiLaby.LabyModFeatures.Enable") == null)
+
+		if(cfg.getList("AntiLaby.LabyModFeatures.Enable") == null)
 			cfg.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
-		
-		if (cfg.getList("AntiLaby.LabyModPlayerCommands") == null) {
+
+		if(cfg.getList("AntiLaby.LabyModPlayerCommands") == null) {
 			final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 			commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
-			commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
+			commands.add(
+					"#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
 			commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
 			commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
 			cfg.set("AntiLaby.LabyModPlayerCommands", commands);
@@ -105,12 +106,12 @@ public class ConfigInit {
 	 */
 	@SuppressWarnings("unused")
 	private void update() {
-		if (file.exists()) {
+		if(file.exists()) {
 			file.delete();
 			cfg = YamlConfiguration.loadConfiguration(file);
 			addDefaults();
 		}
-		if (false) { // Currently not in use
+		if(false) { // Currently not in use
 			int oldVersion;
 			if(cfg.getString("AntiLaby.ConfigVersion") != null) oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
 			else oldVersion = 0;
