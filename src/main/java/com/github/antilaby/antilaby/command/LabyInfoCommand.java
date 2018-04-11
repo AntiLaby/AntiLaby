@@ -34,7 +34,7 @@ public class LabyInfoCommand extends CommandBase {
 					} else {
 						player.sendMessage(Constants.PREFIX + lan.translate("antilaby.command.noPermission", player));
 						AntiLaby.LOG.debug(
-								"Player " + player.getName() + " (" + player.getUniqueId() + ") tried to use" +
+								"Player " + player.getName() + " (" + player.getUniqueId() + ") tried to use " +
 										"LabyInfo: Permission 'antilaby.labyinfo' is " + "missing!");
 					}
 				} else if(uses) AntiLaby.LOG.info("Player '" + args[0] + "' uses LabyMod.");
