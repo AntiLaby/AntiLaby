@@ -29,4 +29,5 @@ public enum LabyModFeature {
 	public String getDefaultValue() {
 		return this.defaultValue;
 	}
+
 }

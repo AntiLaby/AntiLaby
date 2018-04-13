@@ -41,9 +41,9 @@ public class ConfigInit {
 		cfg.options().header(
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
-		// TODO collect all LabyMod feature settings in a String list
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement LabyModPlayerBan
 	/*	// LabyMod 3 features:
-		cfg.addDefault("AntiLaby.LabyModPlayerKick.Enable", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.SATURATION_BAR", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.CHAT", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ALL", true);
@@ -65,9 +65,9 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.LabyModFeature.POTIONS", false);
 		cfg.addDefault("AntiLaby.LabyModFeature.ARMOR", false);
 		cfg.addDefault("AntiLaby.LabyModFeature.DAMAGEINDICATOR", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true);
+		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true); */
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
-		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false); */
+		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
 
 		final List<String> disabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Disable");
 		final List<String> enabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Enable");

@@ -5,7 +5,7 @@ package com.github.antilaby.antilaby.api.config;
  * 
  * @author NathanNr
  */
-public interface ConfigurationReader {
+public interface ConfigReader {
 
 	/**
 	 * Get the name of the configuration section.
@@ -20,14 +20,5 @@ public interface ConfigurationReader {
 	 * @return path
 	 */
 	public String getPath();
-
-	/**
-	 * Get a value from the configuration file.
-	 * 
-	 * @param id
-	 *            the unique id of the requested value
-	 * @return the requested value
-	 */
-	public Object getValue(String id);
 
 }

@@ -5,7 +5,7 @@ package com.github.antilaby.antilaby.api.config;
  *
  * @author NathanNr
  */
-public class GetConfigUpdateSettings extends ConfigFile implements ConfigurationReader {
+public class ConfigUpdateSettingsReader extends ConfigFile implements ConfigReader {
 
 	private final String NAME = "Update";
 	private final String PATH = "AntiLaby.Update.AutoUpdate";
@@ -20,15 +20,10 @@ public class GetConfigUpdateSettings extends ConfigFile implements Configuration
 		return PATH;
 	}
 
-	@Override
-	public Object getValue(String id) {
-		return getCfg().getBoolean(PATH + "." + id);
-	}
-
 	/**
 	 * Are release auto updates enabled?
 	 *
-	 * @return whether auto-update of releases is enabled.
+	 * @return whether auto-update of releases is enabled
 	 */
 	public boolean getRelease() {
 		return getCfg().getBoolean(PATH + ".Release");
