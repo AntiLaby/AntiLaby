@@ -67,9 +67,8 @@ public class AntiLabyCommand extends CommandBase {
 		});
 	}
 
-
 	/**
-	 * Reload the plugin as instructed by the given CommandSender
+	 * Reload the plug-in as instructed by the given CommandSender
 	 *
 	 * @param sender
 	 * 		the sender requesting the reload
@@ -98,4 +97,5 @@ public class AntiLabyCommand extends CommandBase {
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else LOG.info("Reload complete!");
 	}
+
 }

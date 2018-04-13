@@ -51,4 +51,5 @@ public class LabyInfoCommand extends CommandBase {
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		return args.length == 1 ? null : new ArrayList<>();
 	}
+
 }

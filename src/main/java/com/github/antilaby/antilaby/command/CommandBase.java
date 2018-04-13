@@ -86,4 +86,5 @@ public abstract class CommandBase implements CommandExecutor, TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		return null;
 	}
+
 }

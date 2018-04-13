@@ -16,7 +16,7 @@ import java.util.TreeMap;
 /**
  * Does all Converting Magic.
  */
-public final class YAMLConverter {
+public final class YamlConverter {
 
 	/**
 	 * Flats the given Map by joining keys
@@ -26,7 +26,7 @@ public final class YAMLConverter {
 	 *
 	 * @return the flattened Map
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Nonnull
 	public static SortedMap<String, Object> flatten(Map<String, Object> source) {
 		SortedMap<String, Object> result = new TreeMap<>();
@@ -76,5 +76,5 @@ public final class YAMLConverter {
 	/**
 	 * Private constructor, no need to instantiate this class
 	 */
-	private YAMLConverter() {throw new UnsupportedOperationException();}
+	private YamlConverter() {throw new UnsupportedOperationException();}
 }

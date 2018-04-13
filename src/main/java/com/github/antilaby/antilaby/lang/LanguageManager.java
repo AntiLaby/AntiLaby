@@ -4,7 +4,7 @@ import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.NmsUtils;
-import com.github.antilaby.antilaby.util.YAMLConverter;
+import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
@@ -55,7 +55,7 @@ public class LanguageManager {
 				try {
 					converted.createNewFile();
 					FileOutputStream stream = new FileOutputStream(converted);
-					Map<String, String> mp = YAMLConverter.convertYmlToProperties(f);
+					Map<String, String> mp = YamlConverter.convertYmlToProperties(f);
 					for(Map.Entry<String, String> entry : mp.entrySet()) {
 						switch(entry.getKey()) {
 							case "NoPermission":

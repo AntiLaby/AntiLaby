@@ -22,7 +22,6 @@ import java.util.Locale;
  */
 public class ProtocolLibSupport implements PacketListener {
 
-
 	/**
 	 * Initializes the AntiLaby ProtocolLib support
 	 */
@@ -66,4 +65,5 @@ public class ProtocolLibSupport implements PacketListener {
 
 	@Override
 	public void onPacketSending(PacketEvent event) {}
+
 }
