@@ -26,7 +26,7 @@ Useful links:
   <dependency>
     <groupId>com.gihub.antilaby</groupId>
     <artifactId>AntiLaby</artifactId>
-    <version>2.0-pre1</version>
+    <version>2.0-pre2</version>
     <scope>compile</scope>
   </dependency>
   ...
@@ -46,7 +46,7 @@ repositories {
 ...
 dependencies {
   ...
-  compile group: 'com.github.antilaby", name: "AntiLaby", version: "2.0-pre1'
+  compile group: 'com.github.antilaby", name: "AntiLaby", version: "2.0-pre2'
   ...
 }
 ...
