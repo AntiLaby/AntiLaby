@@ -13,4 +13,3 @@
 #Gradle
 /.gradle/
 /build/
-*.properties
