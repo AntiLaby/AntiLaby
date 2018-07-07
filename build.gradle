@@ -50,11 +50,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 dependencies {
     compileOnly 'de.heisluft:HeisluftsLanguageSystem:1.0.0'
     compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
-        exclude module: 'BukkitExecutors'
-        exclude module: 'cglib-nodep'
+        transitive = false
     }
     compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
-    testCompile 'junit:junit:4.12'
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
 }
 
 artifacts {
@@ -64,30 +63,27 @@ artifacts {
 
 publishing {
     def server = System.getProperty("maven")
-    if (server != null) {
-        repositories {
-            maven {
-                url server
-            }
-        }
-        publications {
-            testing(MavenPublication) {
-                from components.java
-                artifact sourcesJar
-                artifact javadocJar
-            }
+    if (server == null) return
+    maven {
+        url server
+    }
+    publications {
+        testing(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
+
 }
 
 publish.dependsOn jar, sourcesJar, javadocJar
 
 task copyToServer(type: Copy, dependsOn: jar) {
     def ts = System.getProperty("serverDir")
-    if (ts != null) {
-        ts.replace('\\', '/')
-        ts += (!ts.endsWith('/') ? '/' : "").concat("plugins")
-        from jar
-        into ts
-    }
+    if (ts == null) return
+    ts.replace('\\', '/')
+    ts += (!ts.endsWith('/') ? '/' : "").concat("plugins")
+    from jar
+    into ts
 }
