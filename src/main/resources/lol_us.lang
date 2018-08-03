@@ -1,0 +1,10 @@
+translation.error=tranzlator cat hat a bik broplem her.
+info.specialDef=&aur servr haz notLabi vertzsion &b%1 &aant allzo somtinkg numbr &b%2&a.           #1: AL-Version, 2: NMS-Version
+antilaby.playerKickMessage=&alabi motz &ckahnt bi usst herr!
+antilaby.notifyKickMessage=&7cat wiz nem %1 uust so hazz bin kikkt awai. #1: The Player
+antilaby.command.noPermission=&cu caant juzzd tu dhiss. sdobp iid!
+antilaby.command.antiLaby.usage=&cUsage: /antilaby <info|reload>
+antilaby.command.labyInfo.usage=&cUsage: /labyinfo <player>
+antilaby.command.labyInfo.labyMod=dhee cat callt &o%1&r ussss labi motz.                           #1: The Player
+antilaby.command.labyInfo.noLabyMod=dhee cat callt &o%1&r &lhaz nu labbi motz.                     #1: The Player
+antilaby.command.labyInfo.playerOffline=&cdhee cat callt &o%1&c izz nouu gonn.                     #1: The Player

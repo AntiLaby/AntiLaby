@@ -1,4 +1,3 @@
-#version: 1.0.0
 translation.error=Fehler in der Übersetzung
 info.specialDef=&aDieser Server nutzt AntiLaby Version &b%1 &aund NMS Version &b%2&a.                            #1: AL-Version, 2: NMS-Version
 antilaby.playerKickMessage=&cDu nutzt &aLabyMod&c, was dir auf diesem Server verboten ist!
