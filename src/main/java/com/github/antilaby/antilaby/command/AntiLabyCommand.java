@@ -86,14 +86,15 @@ public class AntiLabyCommand extends CommandBase {
 		}
 		if(sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReloading AntiLaby...§r");
+			player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload.start", player));
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
 		} else LOG.info("Reloading AntiLaby...");
 		ConfigFile.init();
 		for(final Player all : Bukkit.getOnlinePlayers()) new AntiLabyPackager(all).sendPackages();
 		if(sender instanceof Player) {
 			final Player player = (Player) sender;
-			player.sendMessage(Constants.PREFIX + "§aReload complete!§r");
+			player.sendMessage(
+					Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload.complete", player));
 			LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
 		} else LOG.info("Reload complete!");
 	}
