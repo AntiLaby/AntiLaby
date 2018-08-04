@@ -29,8 +29,11 @@ public class LabyInfoCommand extends CommandBase {
 				if(sender instanceof Player) {
 					final Player player = (Player) sender;
 					if(player.hasPermission(Constants.PERMISSION_LABYINFO)) {
-						if(uses) player.sendMessage(lan.translate(prefix + "labyMod", player, targetPlayer.getName()));
-						else player.sendMessage(lan.translate(prefix + "noLabyMod", player, targetPlayer.getName()));
+						if(uses) player.sendMessage(
+								Constants.PREFIX + lan.translate(prefix + "labyMod", player, targetPlayer.getName()));
+						else player.sendMessage(
+								Constants.PREFIX + lan.translate(prefix + "noLabyMod", player,
+										targetPlayer.getName()));
 					} else {
 						player.sendMessage(Constants.PREFIX + lan.translate("antilaby.command.noPermission", player));
 						AntiLaby.LOG.debug(
