@@ -43,9 +43,13 @@ public final class Constants {
 	 */
 	public static final String PERMISSION_LABYINFO_NOTIFICATIONS = "antilaby.labyinfo.notifications";
 	/**
-	 * The plug-in channel LabyMod uses to exchange information with the server
+	 * The plug-in channel LabyMod uses to exchange information with the server (new name)
 	 */
-	public static final String LABYMOD_CHANNEL = "LABYMOD";
+	public static final String LABYMOD_CHANNEL = "LMC";
+	/**
+	 * The plug-in channel LabyMod uses to exchange information with the server (old name)
+	 */
+	public static final String LABYMOD_CHANNEL_OLD = "LABYMOD";
 	/**
 	 * The current configuration version
 	 */

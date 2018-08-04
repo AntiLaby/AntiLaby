@@ -32,7 +32,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] data) {
-		if(channel.equals(Constants.LABYMOD_CHANNEL)) {
+		if(channel.equals(Constants.LABYMOD_CHANNEL) || channel.equals(Constants.LABYMOD_CHANNEL_OLD)) {
 			if(!labyModPlayers.containsKey(player.getUniqueId().toString())) {
 				AntiLaby.LOG.debug(
 						"Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses " + new String(
@@ -47,8 +47,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 				}
 			}
 			if(Config.getLabyModPlayerKickEnable())
-				if(AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission").equals
-						("true")) {
+				if(AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission").equals("true")) {
 					if(!player.hasPermission(Constants.PERMISSION_BYPASS)) {
 						kickPlayer(player);
 						return;
