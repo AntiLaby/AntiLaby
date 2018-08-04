@@ -1,5 +1,5 @@
 group = 'com.github.antilaby'
-version = '2.0-pre2'
+version = '2.0-pre3'
 
 // Apply the java-library plugin to add support for Java Library
 apply plugin: 'java'
@@ -64,8 +64,10 @@ artifacts {
 publishing {
     def server = System.getProperty("maven")
     if (server == null) return
-    maven {
-        url server
+    repositories {
+        maven {
+            url server
+        }
     }
     publications {
         testing(MavenPublication) {
