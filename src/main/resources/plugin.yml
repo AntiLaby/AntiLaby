@@ -1,5 +1,5 @@
 name: ${name}
-prefix: AntiLaby/Spigot
+prefix: AntiLaby/Main
 authors: [NathanNr, heisluft]
 version: ${version}
 description: Disable LabyMod functions! Bukkit, Spigot + BungeeCord support
