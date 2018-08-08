@@ -15,6 +15,10 @@ sourceCompatibility = 1.8
 repositories {
     // For Spigot
     mavenLocal()
+    // For GlowStone
+    maven {
+        url 'https://repo.glowstone.net/content/repositories/snapshots/'
+    }
     // For JUnit
     mavenCentral()
     // For ProtocolLib
@@ -48,6 +52,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 dependencies {
+    compileOnly 'net.glowstone:glowstone:2018.8.0-SNAPSHOT'
     compileOnly 'de.heisluft:HeisluftsLanguageSystem:1.0.0'
     compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
         transitive = false

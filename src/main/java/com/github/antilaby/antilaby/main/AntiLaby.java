@@ -103,6 +103,7 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
+		if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) return;
 		// Kill update task if it's running
 		if(ud != null) ud.interrupt();
 		// Save Data if compatible
@@ -114,6 +115,8 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		// Glowstone is not supported yet
+		if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) return;
 		// Delete datamanager file on exit
 		Runtime.getRuntime().addShutdownHook(cleanup);
 		// Check if the server is compatible with AntiLaby
@@ -134,8 +137,7 @@ public class AntiLaby extends JavaPlugin {
 		} else {
 			compatible = false;
 			LOG.error(
-					"Your server is not compatible with AntiLaby! Your NMS-version is \"" + nmsver + "\", which was "
-							+ "released before the first LabyMod version.");
+					"Your server is not compatible with AntiLaby! Your NMS-version is \"" + nmsver + "\", which was " + "released before the first LabyMod version.");
 			disableIfNotCompatible();
 		}
 		// Try to update AntiLaby
@@ -203,8 +205,7 @@ public class AntiLaby extends JavaPlugin {
 							"/!");
 		} else {
 			LOG.info(
-					"You are running a " + versionType.toString() + " version! Auto-update is not available. You can "
-							+ "update manually: " + Constants.RESOURCE_LINK);
+					"You are running a " + versionType.toString() + " version! Auto-update is not available. You can " + "update manually: " + Constants.RESOURCE_LINK);
 		}
 	}
 
@@ -290,6 +291,10 @@ public class AntiLaby extends JavaPlugin {
 
 	@Override
 	public void onLoad() {
+		if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
+			LOG.error("Glowstone is not yet supported");
+			Bukkit.getPluginManager().disablePlugin(this);
+		}
 		instance = this;
 		versionType = VersionType.fromName(getDescription().getVersion().toLowerCase());
 	}
