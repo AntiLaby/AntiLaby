@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
@@ -104,26 +105,56 @@ public final class NmsUtils {
 	 * @throws ReflectiveOperationException
 	 * 		If something goes wrong during {@link #init}.
 	 */
+	@SuppressWarnings("unchecked")
 	public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws
 			IOException, ReflectiveOperationException {
 		if(!init) init();
-		//convert to LabyMod-readable Map
+
+		//LabyMod 3 readable JSON object
+		JSONObject jsonObject = new JSONObject();
+
+		//LabyMod-2 readable Map
 		final HashMap<String, Boolean> nList = new HashMap<>();
+
 		for(final Entry<LabyModFeature, Boolean> entry : labymodFunctions.entrySet())
-			nList.put((entry.getKey()).name(), entry.getValue());
+			if(entry.getKey().getVersion() == 2) nList.put((entry.getKey()).name(), entry.getValue());
+			else jsonObject.put(entry.getKey().name(), entry.getValue());
+
 		//write the data to stream
 		final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		final ObjectOutputStream out = new ObjectOutputStream(byteOut);
 		out.writeObject(nList);
-		//Reflection sending magic
-		Object dataSerializer = packetDataSerializer.newInstance(Unpooled.copiedBuffer(byteOut.toByteArray()));
-		Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
-		if(!labymodFunctions.get(LabyModFeature.DAMAGEINDICATOR)) {
-			Object ser = packetDataSerializer.newInstance(Unpooled.buffer().writeBoolean(false));
-			Object packet2 = packetPlayOutCustomPayload.newInstance("DAMAGEINDICATOR", ser);
-			sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet2));
-		}
+		ByteBuf bb = Unpooled.buffer();
+		bb.writeBytes(byteOut.toByteArray());
+
+		//Send LM2 stuff to Client
+		Object dataSerializer = packetDataSerializer.newInstance(bb);
+		Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
 		sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+
+		//LabyMod 3 Damage Indicator
+		if(!labymodFunctions.get(LabyModFeature.DAMAGEINDICATOR)) {
+			dataSerializer = packetDataSerializer.newInstance(Unpooled.buffer().writeBoolean(false));
+			packet = packetPlayOutCustomPayload.newInstance("DAMAGEINDICATOR", dataSerializer);
+			sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+		}
+
+		bb = Unpooled.buffer();
+		bb.writeBytes("PERMISSIONS".getBytes());
+		bb.writeBytes(jsonObject.toJSONString().getBytes());
+		System.out.println(bb.readableBytes());
+
+		dataSerializer = packetDataSerializer.newInstance(bb);
+
+		//LabyMod 3 Features (OLD Channel)
+		packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
+		sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+
+		//LabyMod 3 Features
+		packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
+		sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+
+
 		//logback
 		final StringBuilder b = new StringBuilder("Disabled some LabyMod functions (");
 		for(final Entry<String, Boolean> n : nList.entrySet())
