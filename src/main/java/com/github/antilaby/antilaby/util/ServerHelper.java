@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.util;
 import java.lang.reflect.Field;
 
 /**
- * Check if a server uses BungeeCord
+ * Provides Information about this Server
  *
  * @author NathanNr, heisluft
  */
@@ -12,22 +12,47 @@ public final class ServerHelper {
 	/**
 	 * The servers Bukkit implementation
 	 */
-	public enum ServerType {
-		/** Server is CraftBukkit only */CRAFTBUKKIT, /** Server is Spigot */SPIGOT,
-		/** Server is PaperSpigot */PAPERSPIGOT
+	public enum ImplementationType {
+		/** Server is CraftBukkit based */
+		CRAFT_BUKKIT,
+		/** Server is Glowstone based */
+		GLOWSTONE
+	}
+
+	/**
+	 * The servers Bukkit API type
+	 */
+	public enum ApiType {
+		/** Server only implements Bukkit */
+		BUKKIT,
+		/** Server implements Spigot */
+		SPIGOT,
+		/** Server implements PaperSpigot */
+		PAPER_SPIGOT
 	}
 
 	private static boolean isBungeeCord;
-	private static ServerType type;
+	private static ApiType type;
+	private static ImplementationType implementation;
+
+	/**
+	 * Gets this servers Bukkit Api type
+	 *
+	 * @return the APIType
+	 */
+	public static ApiType getServerType() {
+		if(type == null) init();
+		return type;
+	}
 
 	/**
 	 * Gets this servers Bukkit implementation
 	 *
-	 * @return the ServerType
+	 * @return the ImplementationType
 	 */
-	public static ServerType getServerType() {
-		if(type == null) init();
-		return type;
+	public static ImplementationType getImplementation() {
+		if(implementation == null) init();
+		return implementation;
 	}
 
 	/**
@@ -36,20 +61,27 @@ public final class ServerHelper {
 	private ServerHelper() {throw new UnsupportedOperationException();}
 
 	private static void init() {
+		try {
+			Class.forName("net.glowstone.GlowServer");
+			type = ApiType.PAPER_SPIGOT;
+			implementation = ImplementationType.GLOWSTONE;
+		} catch(ClassNotFoundException e) {
+			implementation = ImplementationType.CRAFT_BUKKIT;
+		}
 		Class<?> spigotClass;
 		try {
 			spigotClass = Class.forName("org.spigotmc.SpigotConfig");
 		} catch(ClassNotFoundException e) {
-			type = ServerType.CRAFTBUKKIT;
+			type = ApiType.BUKKIT;
 			isBungeeCord = false;
 			return;
 		}
-		ServerType spigotType;
+		ApiType spigotType;
 		try {
 			Class.forName("com.destroystokyo.paper.PaperCommand");
-			spigotType = ServerType.PAPERSPIGOT;
+			spigotType = ApiType.PAPER_SPIGOT;
 		} catch(Exception e) {
-			spigotType = ServerType.SPIGOT;
+			spigotType = ApiType.SPIGOT;
 		}
 		type = spigotType;
 		boolean bungeeCord;
