@@ -2,6 +2,7 @@ package com.github.antilaby.antilaby.api.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.file.FileConfiguration;
@@ -66,6 +67,15 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.LabyModFeature.ARMOR", false);
 		cfg.addDefault("AntiLaby.LabyModFeature.DAMAGEINDICATOR", true);
 		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true); */
+
+		// Additional plug-in channels. Clients who use them, will be blocked.
+		// TODO: Rework the config reader and block clients which open these plug-in channels.
+		if(cfg.getStringList("AntiLaby.AdditionalPluginChannels") == null) {
+			ArrayList<String> additionalPluginChannels = new ArrayList<>();
+			additionalPluginChannels.add("#Here you can add additional plug-in channels which will be blocked.");
+			cfg.set("AntiLaby.AdditionalPluginChannels", additionalPluginChannels);
+		}
+
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
 
