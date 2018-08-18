@@ -38,33 +38,10 @@ public class ConfigInit {
 	 */
 	private void addDefaults() {
 		cfg.options().header(
-				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
+				"AntiLaby plugin by NathanNr and heisluft, " + Constants.RESOURCE_LINK);
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement LabyModPlayerBan
-	/*	// LabyMod 3 features:
-		cfg.addDefault("AntiLaby.LabyModFeature.SATURATION_BAR", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.CHAT", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ALL", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.GUI_POTION_EFFECTS", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ARMOR_HUD", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.GUI_ITEM_HUD", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.TAGS", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.ANIMATIONS", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.BLOCKBUILD", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.IMPROVED_LAVA", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.CROSSHAIR_SYNC", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.REFILL_FIX", false);
-		// Old LabyMod features:
-		cfg.addDefault("AntiLaby.LabyModFeature.FOOD", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.GUI", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.NICK", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.EXTRAS", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.ANIMATIONS", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.POTIONS", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.ARMOR", false);
-		cfg.addDefault("AntiLaby.LabyModFeature.DAMAGEINDICATOR", true);
-		cfg.addDefault("AntiLaby.LabyModFeature.MINIMAP_RADAR", true); */
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: Rework the config reader and block clients which open these plug-in channels.
@@ -74,27 +51,31 @@ public class ConfigInit {
 			cfg.set("AntiLaby.AdditionalPluginChannels", additionalPluginChannels);
 		}
 
+		// Add default values for auto-updates
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
 
+		// Add default values for the feature handling of LabyMod
 		final List<String> disabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Disable");
 		final List<String> enabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Enable");
 		for(LabyModFeature labyModFeature : LabyModFeature.values()) {
-			if(labyModFeature.getDefaultValue().equals("enabled")) {
-				disabledFeatures.add(labyModFeature.toString());
-			} else if(labyModFeature.getDefaultValue().equals("disabled")) {
-				enabledFeatures.add(labyModFeature.toString());
-			} else {
-				throw new InternalException("Configuration", "Unknown default LabyMod feature value.", null);
+			switch(labyModFeature.getDefaultValue()) {
+				case "enabled":
+					disabledFeatures.add(labyModFeature.toString());
+					break;
+				case "disabled":
+					enabledFeatures.add(labyModFeature.toString());
+					break;
+				default:
+					throw new InternalException("Configuration", "Detected unknown default LabyMod feature value while creating the configuration file.", null);
 			}
 		}
 
+		// Set the string lists to the configuration file, if they do not exist yet
 		if(cfg.getList("AntiLaby.LabyModFeatures.Disable") == null)
 			cfg.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
-
 		if(cfg.getList("AntiLaby.LabyModFeatures.Enable") == null)
 			cfg.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
-
 		if(cfg.getList("AntiLaby.LabyModPlayerCommands") == null) {
 			final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
 			commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
@@ -105,7 +86,7 @@ public class ConfigInit {
 			cfg.set("AntiLaby.LabyModPlayerCommands", commands);
 		}
 		cfg.addDefault("AntiLaby.DebugMode", false);
-		cfg.addDefault("AntiLaby.ConfigVersion", 3);
+		cfg.addDefault("AntiLaby.ConfigVersion", Constants.CURRENT_CONFIG_VERSION);
 		cfg.options().copyDefaults(true);
 	}
 

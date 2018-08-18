@@ -39,7 +39,7 @@ public class ConfigFile {
 	 *
 	 * @return configuration as File
 	 */
-	public static File getFile() {
+	protected static File getFile() {
 		return file;
 	}
 
@@ -48,7 +48,7 @@ public class ConfigFile {
 	 *
 	 * @return configuration as FileConfiguration
 	 */
-	public static FileConfiguration getCfg() {
+	protected static FileConfiguration getCfg() {
 		return cfg;
 	}
 

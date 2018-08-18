@@ -15,10 +15,6 @@ public final class Constants {
 	 */
 	public static final int RESOURCE_ID = 21347;
 	/**
-	 * The AntiLaby chat prefix
-	 */
-	public static final String PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&e&lAntiLaby&8]&r ");
-	/**
 	 * The SpigotMC.org resource link
 	 */
 	public static final String RESOURCE_LINK = "https://www.spigotmc.org/resources/" + RESOURCE_ID + '/';
@@ -26,6 +22,10 @@ public final class Constants {
 	 * The SpigotMC.org legacy version link
 	 */
 	public static final String UPDATE_URL = "https://api.spigotmc.org/legacy/update.php?resource=" + RESOURCE_ID;
+	/**
+	 * The AntiLaby chat prefix
+	 */
+	public static final String PREFIX = ChatColor.translateAlternateColorCodes('&', "&8[&e&lAntiLaby&8]&r ");
 	/**
 	 * The permission for bypassing the {@link AntiLabyPackager}
 	 */

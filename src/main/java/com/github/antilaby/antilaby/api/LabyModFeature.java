@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.api;
 
 /**
- * Provides every configurable LabyMod feature
+ * Provides every configurable LabyMod feature.
  *
  * @author NathanNr
  */
