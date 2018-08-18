@@ -58,7 +58,7 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement LabyModPlayerBan
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
-		// TODO: Rework the config reader and block clients which open these plug-in channels.
+		// TODO: implement AdditionalPluginChannels
 		if(cfg.getStringList("AntiLaby.AdditionalPluginChannels") == null) {
 			ArrayList<String> additionalPluginChannels = new ArrayList<>();
 			additionalPluginChannels.add("#Here you can add additional plug-in channels which will be blocked.");
@@ -121,19 +121,28 @@ public class ConfigInit {
 			if(cfg.getString("AntiLaby.ConfigVersion") != null) oldVersion = cfg.getInt("AntiLaby.ConfigVersion");
 			else oldVersion = 0;
 			if(oldVersion == 1) {
-				final boolean bypassPermissionEnabled = cfg.getBoolean("AntiLaby.EnableBypassWithPermission");
+				cfg.getBoolean("AntiLaby.EnableBypassWithPermission");
 				final boolean labyKick = cfg.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
-				final boolean food = cfg.getBoolean("AntiLaby.disable.FOOD");
+				ArrayList<LabyModFeature> disabledFeatures = new ArrayList<>();
+				ArrayList<LabyModFeature> enabledFeatures = new ArrayList<>();
+				for(LabyModFeature lmf : LabyModFeature.values()) {
+					if(cfg.get("AntiLaby.disable." + lmf.toString()).equals("true")) {
+						disabledFeatures.add(lmf);
+					} else if(cfg.get("AntiLaby.disable." + lmf.toString()).equals("false")) {
+						enabledFeatures.add(lmf);
+					}
+				}
+			/*	final boolean food = cfg.getBoolean("AntiLaby.disable.FOOD");
 				final boolean gui = cfg.getBoolean("AntiLaby.disable.GUI");
 				final boolean nick = cfg.getBoolean("AntiLaby.disable.NICK");
 				final boolean chat = cfg.getBoolean("AntiLaby.disable.CHAT");
-				final boolean extras = cfg.getBoolean("AntiLaby.disable.EXTRAS");
+				final boolean extras = cfg.getBoolean("AntiLaby.disable.EXTRAS")
 				final boolean animations = cfg.getBoolean("AntiLaby.disable.ANIMATIONS");
 				final boolean potions = cfg.getBoolean("AntiLaby.disable.POTIONS");
 				final boolean armor = cfg.getBoolean("AntiLaby.disable.ARMOR");
 				final boolean damageIndicator = cfg.getBoolean("AntiLaby.disable.DAMAGEINDICATOR");
 				final boolean minimapRadar = cfg.getBoolean("AntiLaby.disable.MINIMAP_RADAR");
-				final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
+				final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands"); */
 				delete();
 				addDefaults();
 				// TODO Delete the old file and create the new one with the stored values.
