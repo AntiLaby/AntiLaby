@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.api.config;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
+import com.github.antilaby.antilaby.config.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,26 +32,31 @@ public class ConfigReader {
 	}
 
 	public boolean getEnableBypassWithPermission() {
-		// TODO
-		return false;
+		return ConfigFile.getCfg().getBoolean("AntiLaby.EnableBypassWithPermission");
 	}
 
 	public ConfigReaderLabyModPlayerAction getLabyModPlayerAction() {
 		return new ConfigReaderLabyModPlayerAction();
 	}
 
-	public ArrayList<String> getAdditionalPluginChannels() {
-		// TODO
-		return null;
+	public List<String> getAdditionalPluginChannels() {
+		return ConfigFile.getCfg().getStringList("AntiLaby.AdditionalPluginChannels");
 	}
 
 	public ConfigReaderAutoUpdate getAutoUpdate() {
 		return new ConfigReaderAutoUpdate();
 	}
 
-	public ArrayList<String> getLabyModPlayerCommands() {
-	    // TODO
-        return null;
+	public List<String> getLabyModPlayerCommands() {
+	    return ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
+    }
+
+    public boolean getDebugMode() {
+        return ConfigFile.getCfg().getBoolean("AntiLaby.DebugMode");
+    }
+
+    public boolean getConfigVersion() {
+        return ConfigFile.getCfg().getBoolean("AntiLaby.ConfigVersion");
     }
 
 }

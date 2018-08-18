@@ -24,13 +24,27 @@ public class ConfigInit {
 	private FileConfiguration cfg;
 	private static final String CONFIG_VERSION_PATH = "AntiLaby.ConfigVersion";
 
+	/**
+	 * Initialize the configuration file and update it from older versions.
+	 *
+	 * @param file the configuration file
+	 * @param cfg the file configuration instance of the configuration file
+	 * @throws IOException
+	 */
 	public ConfigInit(File file, FileConfiguration cfg) throws IOException {
 		this.file = file;
 		this.cfg = cfg;
-		if(cfg.getInt(CONFIG_VERSION_PATH) == Constants.CURRENT_CONFIG_VERSION) {
+
+		// Check if the configuration file have to be updated
+		if(cfg.get(CONFIG_VERSION_PATH) == null) {
 			addDefaults();
 			save();
-		} else update();
+		} else if(cfg.getInt(CONFIG_VERSION_PATH) == Constants.CURRENT_CONFIG_VERSION) {
+			addDefaults();
+			save();
+		} else {
+			update();
+		}
 	}
 
 	/**
@@ -95,6 +109,8 @@ public class ConfigInit {
 	 */
 	@SuppressWarnings("unused")
 	private void update() {
+		// The old file will be overwritten currently.
+		// TODO: Update the configuration updater.
 		if(file.exists()) {
 			file.delete();
 			cfg = YamlConfiguration.loadConfiguration(file);
