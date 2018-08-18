@@ -1,24 +1,56 @@
 package com.github.antilaby.antilaby.api.config;
 
+import com.github.antilaby.antilaby.api.LabyModFeature;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Get the values of a configuration section.
+ * Get the values of the configuration file.
  * 
  * @author NathanNr
  */
-public interface ConfigReader {
+public class ConfigReader {
 
 	/**
-	 * Get the name of the configuration section.
+	 * Get all LabyMod features which have been allowed in the configuration file.
 	 * 
-	 * @return name
+	 * @return enabled LabyMod features
 	 */
-	public String getName();
+	public List<String> getEnabledFeatures() {
+	    return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Enable");
+	}
 
 	/**
-	 * Get the path of the configuration section in the configuration file.
+	 * Get all LabyMod features which have been blocked in the configuration file.
 	 * 
-	 * @return path
+	 * @return disabled LabyMod features
 	 */
-	public String getPath();
+	public List<String> getDisabledFeatures() {
+        return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Disable");
+	}
+
+	public boolean getEnableBypassWithPermission() {
+		// TODO
+		return false;
+	}
+
+	public ConfigReaderLabyModPlayerAction getLabyModPlayerAction() {
+		return new ConfigReaderLabyModPlayerAction();
+	}
+
+	public ArrayList<String> getAdditionalPluginChannels() {
+		// TODO
+		return null;
+	}
+
+	public ConfigReaderAutoUpdate getAutoUpdate() {
+		return new ConfigReaderAutoUpdate();
+	}
+
+	public ArrayList<String> getLabyModPlayerCommands() {
+	    // TODO
+        return null;
+    }
 
 }

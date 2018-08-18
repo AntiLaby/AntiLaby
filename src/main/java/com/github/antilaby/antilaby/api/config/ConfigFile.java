@@ -15,27 +15,31 @@ import com.github.antilaby.antilaby.log.Logger;
  *
  * @author NathanNr
  */
-public abstract class ConfigFile {
+public class ConfigFile {
+
+	private ConfigFile() {
+		throw new UnsupportedOperationException();
+	}
 
 	/**
 	 * The logger for configuration operations.
 	 */
-	protected final Logger logger = new Logger("ConfigManager");
+	protected static final Logger logger = new Logger("ConfigManager");
 
 	/**
 	 * The path to the configuration file
 	 */
 	public static final String CONFIG_PATH = AntiLaby.getInstance().getDataFolder() + "config.yml";
 
-	private File file = new File(CONFIG_PATH);
-	private FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+	private static File file = new File(CONFIG_PATH);
+	private static FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
 
 	/**
 	 * Get the file object of the configuration file.
 	 *
 	 * @return configuration as File
 	 */
-	public File getFile() {
+	public static File getFile() {
 		return file;
 	}
 
@@ -44,14 +48,14 @@ public abstract class ConfigFile {
 	 *
 	 * @return configuration as FileConfiguration
 	 */
-	public FileConfiguration getCfg() {
+	public static FileConfiguration getCfg() {
 		return cfg;
 	}
 
 	/**
 	 * Save the configuration file.
 	 */
-	public void save() {
+	public static void save() {
 		try {
 			cfg.save(file);
 		} catch(IOException e) {
@@ -63,7 +67,7 @@ public abstract class ConfigFile {
 	/**
 	 * (Re-)load the configuration file.
 	 */
-	public void load() {
+	public static void load() {
 		try {
 			cfg.load(file);
 		} catch(IOException | InvalidConfigurationException e) {

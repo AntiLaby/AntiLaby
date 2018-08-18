@@ -39,8 +39,6 @@ public class ConfigInit {
 	private void addDefaults() {
 		cfg.options().header(
 				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
-		cfg.options().header(
-				"AntiLaby plugin by NathanNr, https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/");
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement LabyModPlayerBan
