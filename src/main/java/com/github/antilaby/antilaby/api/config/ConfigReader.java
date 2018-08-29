@@ -1,36 +1,37 @@
 package com.github.antilaby.antilaby.api.config;
 
-import com.github.antilaby.antilaby.api.LabyModFeature;
-import com.github.antilaby.antilaby.config.Config;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Get the values of the configuration file.
- * 
+ *
  * @author NathanNr
  */
 public class ConfigReader {
 
 	/**
-	 * Get all LabyMod features which have been allowed in the configuration file.
-	 * 
-	 * @return enabled LabyMod features
+	 * Read 'AntiLaby.LabyModFeatures.Enable' from the configuration file
+	 *
+	 * @return a list of all enabled LabyMod features
 	 */
 	public List<String> getEnabledFeatures() {
-	    return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Enable");
+		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Enable");
 	}
 
 	/**
-	 * Get all LabyMod features which have been blocked in the configuration file.
-	 * 
-	 * @return disabled LabyMod features
+	 * Read 'AntiLaby.LabyModFeatures.Disable' from the configuration file
+	 *
+	 * @return a list of all disabled LabyMod features
 	 */
 	public List<String> getDisabledFeatures() {
-        return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Disable");
+		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Disable");
 	}
 
+	/**
+	 * Read 'AntiLaby.EnableBypassWithPermission' from the configuration file
+	 *
+	 * @return true if the bypass for players with the bypass permission is enabled
+	 */
 	public boolean getEnableBypassWithPermission() {
 		return ConfigFile.getCfg().getBoolean("AntiLaby.EnableBypassWithPermission");
 	}
@@ -48,15 +49,15 @@ public class ConfigReader {
 	}
 
 	public List<String> getLabyModPlayerCommands() {
-	    return ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
-    }
+		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
+	}
 
-    public boolean getDebugMode() {
-        return ConfigFile.getCfg().getBoolean("AntiLaby.DebugMode");
-    }
+	public boolean getDebugMode() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.DebugMode");
+	}
 
-    public boolean getConfigVersion() {
-        return ConfigFile.getCfg().getBoolean("AntiLaby.ConfigVersion");
-    }
+	public boolean getConfigVersion() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.ConfigVersion");
+	}
 
 }

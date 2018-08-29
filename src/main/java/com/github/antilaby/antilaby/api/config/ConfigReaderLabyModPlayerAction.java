@@ -7,12 +7,22 @@ package com.github.antilaby.antilaby.api.config;
  */
 public class ConfigReaderLabyModPlayerAction {
 
-    public boolean getLabyModPlayerKickEnabled() {
-        return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
-    }
+	/**
+	 * Read 'AntiLaby.LabyModPlayerAction.Kick.Enabled' from the configuration file
+	 *
+	 * @return true if the LabyModPlayerAction Kick is enabled
+	 */
+	public boolean getLabyModPlayerKickEnabled() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
+	}
 
-    public boolean getLabyModPlayerBanEnabled() {
-        return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enabled");
-    }
+	/**
+	 * Read 'AntiLaby.LabyModPlayerAction.Ban.Enabled' from the configuration file
+	 *
+	 * @return true if the LabyModPlayerAction Ban is enabled
+	 */
+	public boolean getLabyModPlayerBanEnabled() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enabled");
+	}
 
 }
