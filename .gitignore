@@ -1,15 +1,15 @@
-#Gitignore file of AntiLaby
-#Eclipse
+# Gitignore file of AntiLaby
+# Eclipse
 /.settings/
 /bin/
 .classpath
 .project
 
-#Intellij
+# IntelliJ
 /.idea/
 /out/
 *.iml
 
-#Gradle
+# Gradle
 /.gradle/
 /build/
