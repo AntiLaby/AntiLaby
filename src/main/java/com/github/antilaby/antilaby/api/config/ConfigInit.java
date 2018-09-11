@@ -57,7 +57,12 @@ public class ConfigInit {
 				"AntiLaby plugin by NathanNr and heisluft, " + Constants.RESOURCE_LINK);
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info", "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO: implement LabyModPlayerBan
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement LabyModPlayerBan
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Info", "# Choose a ban system: vanilla, built-in, custom"); // TODO: implement LabyModPlayerBan
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Method", "vanilla"); // TODO: implement LabyModPlayerBan
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Info", "# You can use a custom ban command (from you ban plug-in) to ban players who are using LabyMod. If "); // TODO
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Command", "/ban %player% %reason%"); // TODO
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: implement AdditionalPluginChannels

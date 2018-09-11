@@ -60,6 +60,16 @@ public final class Constants {
 	public static final String BUG_REPORT_URL = "https://github.com/AntiLaby/AntiLaby/issues";
 
 	/**
+	 * Url to the wiki of AntiLaby
+	 */
+	public static final String WIKI_URL = "https://github.com/AntiLaby/AntiLaby/wiki";
+
+	/**
+	 * Url to the wiki of AntiLaby: LabyModPlayerBan
+	 */
+	public static final String WIKI_LABYMODPLAYERBAN_URL = "https://github.com/AntiLaby/AntiLaby/wiki/LabyMod-Player-Ban";
+
+	/**
 	 * Private constructor, no need to instantiate this class
 	 */
 	private Constants() {
