@@ -21,8 +21,8 @@ public class ConfigReaderLabyModPlayerAction {
 	 *
 	 * @return true if the LabyModPlayerAction Ban is enabled
 	 */
-	public boolean getLabyModPlayerBanEnabled() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enabled");
+	public ConfigReaderLabyModPlayerAction getLabyModPlayerBan() {
+		return new ConfigReaderLabyModPlayerAction();
 	}
 
 }
