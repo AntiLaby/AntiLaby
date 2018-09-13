@@ -1,8 +1,13 @@
 package com.github.antilaby.antilaby.pluginchannel;
 
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
+import com.github.antilaby.antilaby.api.command.ExecutableCommand;
+import com.github.antilaby.antilaby.api.config.ConfigReader;
+import com.github.antilaby.antilaby.api.config.LabyModPlayerBanMethod;
+import com.github.antilaby.antilaby.api.exceptions.InternalException;
 import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.lang.LanguageManager;
+import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;
@@ -18,9 +23,16 @@ import java.util.regex.Pattern;
 
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
+	// TODO: Use the new configuration API
+
+	public static final String LOCATION = "IncomingPackageHandler";
+
 	private static final Pattern UUID_PATTERN = Pattern.compile("%UUID%");
 	private static final Pattern PLAYER_PATTERN = Pattern.compile("%PLAYER%");
 	private static HashMap<String, String> labyModPlayers = new HashMap<>();
+
+	private ConfigReader configReader = new ConfigReader();
+	private Logger logger = new Logger(LOCATION);
 
 	public static HashMap<String, String> getLabyModPlayers() {
 		return labyModPlayers;
@@ -46,9 +58,38 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 					}
 				}
 			}
-			if(Config.getLabyModPlayerKickEnable())
-				if(AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission").equals("true")) {
-					if(!player.hasPermission(Constants.PERMISSION_BYPASS)) {
+			// Already the new config API:
+			if(configReader.getLabyModPlayerAction().getBan().isEnabled()) {
+				LabyModPlayerBanMethod labyModPlayerBanMethod = configReader.getLabyModPlayerAction().getBan().getMethod();
+				switch (labyModPlayerBanMethod) {
+					case DISABLED:
+						throw new InternalException(LOCATION, "Two opposing settings for LabyMod Player Ban have been detected.", null);
+					case BUILT_IN:
+						// TODO: Implement built-in ban system
+						break;
+					case CUSTOM:
+						String banMessage = "LabyMod is not allowed!" /*TODO: Get message from language file*/;
+						String commandLine = configReader.getLabyModPlayerAction().getBan().getCustomCommand();
+						try {
+							commandLine = commandLine.replaceAll("%PLAYER%", player.getName());
+							commandLine = commandLine.replaceAll("%UUID%", player.getUniqueId().toString());
+							commandLine = commandLine.replaceAll("%MESSAGE%", banMessage);
+						} catch (Exception e) {
+							// Ignore
+						}
+						new ExecutableCommand(commandLine, Bukkit.getConsoleSender()).execute();
+						break;
+					case UNKNOWN:
+						logger.warn("LabyMod Player Ban method is unknown! The vanilla ban system will be used.");
+					case VANILLA:
+						new ExecutableCommand("ban " + player.getName() + " LabyMod is not allowed!" /*TODO: Get message from language file*/, Bukkit.getConsoleSender()).execute();
+						break;
+				}
+			}
+			// TODO: new API!!
+			if(Config.getLabyModPlayerKickEnable()) {
+				if (AntiLaby.getInstance().getConfig().getString("AntiLaby.EnableBypassWithPermission").equals("true")) {
+					if (!player.hasPermission(Constants.PERMISSION_BYPASS)) {
 						kickPlayer(player);
 						return;
 					}
@@ -56,6 +97,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 					kickPlayer(player);
 					return;
 				}
+			}
 			if(!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
 				LabyModJoinCommands labyModJoinCommands = new LabyModJoinCommands();
 				for(final String command : labyModJoinCommands.getLabyModJoinCommands(false)) {

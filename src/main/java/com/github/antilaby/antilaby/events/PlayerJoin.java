@@ -14,7 +14,7 @@ import com.github.antilaby.antilaby.lang.LanguageManager;
 public class PlayerJoin implements Listener {
 
 	@EventHandler
-	public void onLeave(PlayerQuitEvent event) {
+	public void onPlayerQuit(PlayerQuitEvent event) {
 		LanguageManager.INSTANCE.unmapPlayerLanguage(event.getPlayer());
 	}
 
@@ -23,4 +23,5 @@ public class PlayerJoin implements Listener {
 		// Disable LabyMod functions for the new player
 		new AntiLabyPackager(event.getPlayer()).sendPackages();
 	}
+
 }

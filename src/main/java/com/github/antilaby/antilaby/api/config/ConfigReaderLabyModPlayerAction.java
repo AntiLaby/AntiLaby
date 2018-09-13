@@ -12,17 +12,12 @@ public class ConfigReaderLabyModPlayerAction {
 	 *
 	 * @return true if the LabyModPlayerAction Kick is enabled
 	 */
-	public boolean getLabyModPlayerKickEnabled() {
+	public boolean kickIsEnabled() {
 		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
 	}
 
-	/**
-	 * Read 'AntiLaby.LabyModPlayerAction.Ban.Enabled' from the configuration file
-	 *
-	 * @return true if the LabyModPlayerAction Ban is enabled
-	 */
-	public ConfigReaderLabyModPlayerAction getLabyModPlayerBan() {
-		return new ConfigReaderLabyModPlayerAction();
+	public ConfigReaderLabyModPlayerActionBan getBan() {
+		return new ConfigReaderLabyModPlayerActionBan();
 	}
 
 }

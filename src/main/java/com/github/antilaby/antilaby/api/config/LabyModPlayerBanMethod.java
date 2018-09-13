@@ -7,6 +7,6 @@ package com.github.antilaby.antilaby.api.config;
  */
 public enum LabyModPlayerBanMethod {
 
-	VANILLA, BUILT_IN, CUSTOM, DISABLED;
+	VANILLA, BUILT_IN, CUSTOM, DISABLED, UNKNOWN
 
 }

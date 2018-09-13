@@ -7,11 +7,30 @@ package com.github.antilaby.antilaby.api.config;
  */
 public class ConfigReaderLabyModPlayerActionBan {
 
-	public LabyModPlayerBanMethod getMethod() {
-		// TODO
-		return LabyModPlayerBanMethod.DISABLED;
+	public boolean isEnabled() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enable");
 	}
 
-	//TODO: Implement the configuration reader for LabyMod Player Ban
+	/**
+	 * Get the LabyMod Player Ban ban method
+	 *
+	 * @return ban method
+	 */
+	public LabyModPlayerBanMethod getMethod() {
+		switch (ConfigFile.getCfg().getString("AntiLaby.LabyModPlayerAction.Ban.Method.Method")) {
+			case "built-in":
+				return LabyModPlayerBanMethod.BUILT_IN;
+			case "vanilla":
+				return LabyModPlayerBanMethod.VANILLA;
+			case "custom":
+				return LabyModPlayerBanMethod.CUSTOM;
+			default:
+				return LabyModPlayerBanMethod.UNKNOWN;
+		}
+	}
+
+	public String getCustomCommand() {
+		return ConfigFile.getCfg().getString("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Command");
+	}
 
 }
