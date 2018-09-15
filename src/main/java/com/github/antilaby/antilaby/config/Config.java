@@ -9,6 +9,7 @@ import java.util.List;
  *
  * @author NathanNr
  */
+@Deprecated
 public class Config {
 
 	public static boolean getANIMATIONS() {

@@ -17,7 +17,7 @@ public class ConfigReaderLabyModPlayerActionBan {
 	 * @return ban method
 	 */
 	public LabyModPlayerBanMethod getMethod() {
-		switch (ConfigFile.getCfg().getString("AntiLaby.LabyModPlayerAction.Ban.Method.Method")) {
+	/*	switch (ConfigFile.getCfg().getString("AntiLaby.LabyModPlayerAction.Ban.Method.Method")) {
 			case "built-in":
 				return LabyModPlayerBanMethod.BUILT_IN;
 			case "vanilla":
@@ -26,7 +26,8 @@ public class ConfigReaderLabyModPlayerActionBan {
 				return LabyModPlayerBanMethod.CUSTOM;
 			default:
 				return LabyModPlayerBanMethod.UNKNOWN;
-		}
+		} */
+		return LabyModPlayerBanMethod.CUSTOM;
 	}
 
 	public String getCustomCommand() {

@@ -61,10 +61,11 @@ public class ConfigInit {
 		// TODO: Add LabyMod Player Ban options to the configuration file, implement LabyMod Player Ban
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info", "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Info", "# Choose a ban system: vanilla, built-in, custom"); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Method", "vanilla"); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Info", "# You can use a custom ban command (from you ban plug-in) to ban players who are using LabyMod. If "); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Command", "/ban %player% %reason%"); // TODO
+	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Info", "# Choose a ban system: vanilla, built-in, custom"); // TODO
+	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Method", "vanilla"); // TODO
+	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Info", "# You can use a custom ban command (from you ban plug-in) to ban players who are using LabyMod. If "); // TODO
+	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Command", "/ban %player% %reason%"); // TODO
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%"); // TODO
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: implement Additional Plug-in Channels
