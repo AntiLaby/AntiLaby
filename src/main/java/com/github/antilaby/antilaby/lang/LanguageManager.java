@@ -56,29 +56,31 @@ public class LanguageManager {
 					converted.createNewFile();
 					FileOutputStream stream = new FileOutputStream(converted);
 					Map<String, String> mp = YamlConverter.convertYmlToProperties(f);
+					Map<String, String> toAdd = new HashMap<>(5);
 					for(Map.Entry<String, String> entry : mp.entrySet()) {
 						switch(entry.getKey()) {
 							case "NoPermission":
-								mp.put("antilaby.command.noPermission", entry.getValue());
+								toAdd.put("antilaby.command.noPermission", entry.getValue());
 								break;
 							case "LabyModPlayerKick":
-								mp.put("antilaby.playerKickMessage", entry.getValue());
+								toAdd.put("antilaby.playerKickMessage", entry.getValue());
 								break;
 							case "LabyInfo.LabyMod":
-								mp.put("antilaby.command.labyInfo.labyMod",
+								toAdd.put("antilaby.command.labyInfo.labyMod",
 										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.NoLabyMod":
-								mp.put("antilaby.command.labyInfo.noLabyMod",
+								toAdd.put("antilaby.command.labyInfo.noLabyMod",
 										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 							case "LabyInfo.PlayerOffline":
-								mp.put("antilaby.command.labyInfo.playerOffline",
+								toAdd.put("antilaby.command.labyInfo.playerOffline",
 										entry.getValue().replaceAll("%PLAYER%", "%1"));
 								break;
 						}
 						mp.remove(entry.getKey());
 					}
+					mp.putAll(toAdd);
 					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(mp).getBytes("UTF-8"));
 					stream.close();
 				} catch(IOException e) {
