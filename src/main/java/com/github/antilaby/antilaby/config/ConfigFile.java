@@ -14,6 +14,7 @@ import java.io.IOException;
  *
  * @author NathanNr
  */
+@Deprecated
 public class ConfigFile {
 
 	private static final AntiLaby plugin = AntiLaby.getInstance();

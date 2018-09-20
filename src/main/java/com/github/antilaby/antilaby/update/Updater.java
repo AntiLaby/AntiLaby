@@ -21,6 +21,7 @@ import java.net.URL;
  *
  * @author NathanNr
  */
+@Deprecated
 public class Updater extends Thread {
 
 	/**

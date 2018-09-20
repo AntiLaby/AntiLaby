@@ -3,4 +3,5 @@
  * 
  * @author NathanNr
  */
+@Deprecated
 package com.github.antilaby.antilaby.config;

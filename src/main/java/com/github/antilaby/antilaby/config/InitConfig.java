@@ -13,6 +13,7 @@ import java.util.List;
  *
  * @author NathanNr
  */
+@Deprecated
 public class InitConfig {
 
 	private static final Logger LOG = new Logger("Config");
