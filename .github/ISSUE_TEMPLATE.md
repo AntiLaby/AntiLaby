@@ -14,14 +14,14 @@ Example:
 Example:
 java.io.IOException: Could not find file bar.yml
 at com.github.antilaby.antilaby.main.AntiLaby.getBarConfig(line: 1782)...
-### AntiLaby version, MC server type (Bukkit or Spigot are supported), MC server version, CraftBukkit and Minecraft version
+### AntiLaby version, MC server type (CraftBukkit, Spigot & PaperSpigot are supported), CraftBukkit and Minecraft version
 Example:
 AntiLaby v.pre-2.0, Spigot version git-Spigot-549c1fa-8c37e2e, MC 1.12.2, CraftBukkit 1.12.2-R0.1-SNAPSHOT
 ## A Feature/API Request should always contain:
 ### A brief description of the feature request in the issue title
 Example:
 Add Support for plugin Bar
-### What you want to archieve and why is this necessary 
+### A detailed description of what you want to achieve and why this is necessary 
 Example:
 I want my plugin to hook in your ... system. This currently is not possible without reflection...
 ### Your AntiLaby version
