@@ -1,5 +1,6 @@
 package com.github.antilaby.antilaby.events;
 
+import com.github.antilaby.antilaby.updater.UpdateChecker;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
