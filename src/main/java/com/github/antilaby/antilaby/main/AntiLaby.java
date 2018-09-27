@@ -1,7 +1,6 @@
 package com.github.antilaby.antilaby.main;
 
 import com.github.antilaby.antilaby.compat.HLSCompat;
-import com.github.antilaby.antilaby.updater.UpdateChecker;
 import com.github.antilaby.antilaby.util.Miscellaneous;
 import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
@@ -31,6 +30,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -97,6 +98,14 @@ public class AntiLaby extends JavaPlugin {
 		return super.getFile();
 	}
 
+	public Path getPath() {
+		return getFile().toPath();
+	}
+	
+	public Path getDataPath() {
+		return getDataFolder().toPath();
+	}
+
 	/**
 	 * Gets the {@link VersionType} of the plugin
 	 *
@@ -136,7 +145,12 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if(version >= 8) {
 			// Ensure the DataFolder exists
-			getDataFolder().mkdir();
+			Path dFP = getDataFolder().toPath();
+			if(!Files.isDirectory(dFP)) try {
+				Files.createDirectory(dFP);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 			compatible = true;
 			LOG.debug("Your server (NMS version " + nmsver + ") is compatible with AntiLaby!");
 		} else {
