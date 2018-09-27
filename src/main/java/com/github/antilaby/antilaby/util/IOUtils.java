@@ -1,5 +1,8 @@
 package com.github.antilaby.antilaby.util;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.BufferedReader;
@@ -9,8 +12,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectStreamException;
-import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * This class defines utility methods for I/O handling
@@ -20,20 +24,23 @@ import java.net.URL;
 public final class IOUtils {
 
 	/**
-	 * Passes all read bytes from the given {@link InputStream} to the given {@link OutputStream}
+	 * Passes all read bytes from the given {@link InputStream} to the given {@link Path}
 	 *
 	 * @param readFrom
 	 * 		The InputStream to read from
 	 * @param writeTo
-	 * 		The OutputStream to write to
+	 * 		The Path to write to
 	 *
 	 * @throws IOException
 	 * 		If an IO error occurs during reading or writing
 	 */
-	public static void copyStream(InputStream readFrom, OutputStream writeTo) throws IOException {
+	public static void copyStream(InputStream readFrom, Path writeTo) throws IOException {
+		ByteBuf bb = Unpooled.buffer();
 		int nextByte;
-		while((nextByte = readFrom.read()) != -1) writeTo.write(nextByte);
+		while((nextByte = readFrom.read()) != -1) bb.writeByte(nextByte);
+		Files.write(writeTo, bb.array());
 	}
+
 
 	/**
 	 * Closes the given {@link Closeable}, ignoring thrown Exception

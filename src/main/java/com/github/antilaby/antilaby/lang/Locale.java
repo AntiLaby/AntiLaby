@@ -5,10 +5,10 @@ import com.github.antilaby.antilaby.util.IOUtils;
 import com.github.antilaby.antilaby.util.LangFileParser;
 import org.bukkit.ChatColor;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.jar.JarFile;
@@ -25,7 +25,7 @@ public enum Locale {
 
 	private boolean isNoOp() {
 		if(this == UNDEFINED) return true;
-		if(new File(AntiLaby.getInstance().getDataFolder() + "/lang/" + this + ".lang").exists()) return false;
+		if(Files.isRegularFile(AntiLaby.getInstance().getDataPath().resolve("lang/" + this + ".lang"))) return false;
 		try {
 			return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") == null;
 		} catch(IOException e) {
@@ -65,21 +65,18 @@ public enum Locale {
 
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
-	public void init() {
+	public void init() throws IOException {
 		AntiLaby plugin = AntiLaby.getInstance();
 		if(isNoOp()) return;
-		final File f = new File(plugin.getDataFolder() + "/lang/" + this + ".lang");
-		if(!f.exists()) {
-			try {
-				f.createNewFile();
-				final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
-				final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
-				IOUtils.copyStream(is, new FileOutputStream(f));
-				file.close();
-			} catch(final IOException e) {
-				e.printStackTrace();
-			}
+		final Path path = plugin.getDataPath().resolve("lang/" + this + ".lang");
+		if(!Files.isRegularFile(path)) {
+			if(Files.exists(path)) Files.delete(path);
+			Files.createFile(path);
+			final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
+			final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
+			IOUtils.copyStream(is, path);
+			file.close();
 		}
-		if(f.exists()) translation.putAll(LangFileParser.parse(f));
+		if(Files.isRegularFile(path)) translation.putAll(LangFileParser.parse(path.toFile()));
 	}
 }

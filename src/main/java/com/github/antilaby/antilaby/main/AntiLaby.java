@@ -101,7 +101,7 @@ public class AntiLaby extends JavaPlugin {
 	public Path getPath() {
 		return getFile().toPath();
 	}
-	
+
 	public Path getDataPath() {
 		return getDataFolder().toPath();
 	}
@@ -145,7 +145,7 @@ public class AntiLaby extends JavaPlugin {
 		}
 		if(version >= 8) {
 			// Ensure the DataFolder exists
-			Path dFP = getDataFolder().toPath();
+			Path dFP = getDataPath();
 			if(!Files.isDirectory(dFP)) try {
 				Files.createDirectory(dFP);
 			} catch(IOException e) {
