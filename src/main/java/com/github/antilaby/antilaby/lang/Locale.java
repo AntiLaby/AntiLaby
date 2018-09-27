@@ -2,14 +2,15 @@ package com.github.antilaby.antilaby.lang;
 
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.IOUtils;
-import com.github.antilaby.antilaby.util.LangFileParser;
 import org.bukkit.ChatColor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 
@@ -62,9 +63,7 @@ public enum Locale {
 		return translation.getOrDefault("translation.error",
 				EN_US.translation.getOrDefault("translation.error", toTranslate));
 	}
-
-
-	@SuppressWarnings("ResultOfMethodCallIgnored")
+	
 	public void init() throws IOException {
 		AntiLaby plugin = AntiLaby.getInstance();
 		if(isNoOp()) return;
@@ -77,6 +76,23 @@ public enum Locale {
 			IOUtils.copyStream(is, path);
 			file.close();
 		}
-		if(Files.isRegularFile(path)) translation.putAll(LangFileParser.parse(path.toFile()));
+		if(Files.isRegularFile(path)) translation.putAll(parse(path));
+	}
+
+	private static Map<String, String> parse(Path path) throws IOException {
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		String ln;
+		final Map<String, String> result = new HashMap<>(10);
+		for(int line = 0; line < lines.size(); line++) {
+			ln = lines.get(line).trim();
+			if(!ln.startsWith("#")) if(!ln.contains("=")) LanguageManager.LOG.warn(
+					"Could not parse line " + (1 + line) + " in resource " + path.getFileName() + ": " + ln);
+			else {
+				final String[] s = ln.split("=", 2);
+				String value = s[1].replaceFirst("#.*", "").trim();
+				result.put(s[0].trim().replace(" ", ""), value);
+			}
+		}
+		return result;
 	}
 }

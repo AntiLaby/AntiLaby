@@ -24,7 +24,7 @@ public class LanguageManager {
 	public static final LanguageManager INSTANCE = new LanguageManager();
 	private static final Pattern YAML_ENDING = Pattern.compile("\\.ya?ml$");
 
-	private static final Logger LOG = new Logger("Localization");
+	static final Logger LOG = new Logger("Localization");
 	private final Map<Player, Locale> mappedLanguages = new HashMap<>();
 
 	private LanguageManager() {}
