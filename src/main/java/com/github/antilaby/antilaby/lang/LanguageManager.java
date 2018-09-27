@@ -46,9 +46,14 @@ public class LanguageManager {
 					Files.delete(path);
 					continue;
 				}
+				Path rel = oldDataPath.relativize(path);
+				if(Files.size(path) == 0) {
+					LOG.warn("Ignoring empty File " + rel);
+					Files.delete(path);
+					continue;
+				}
 				String name = path.getFileName().toString().toLowerCase();
 				Matcher m = YAML_ENDING.matcher(name);
-				Path rel = oldDataPath.relativize(path);
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
 					LOG.info(
 							"you have an invalid file in your language directory (" + rel + "). It wont be converted" + ".");
@@ -56,6 +61,7 @@ public class LanguageManager {
 					continue;
 				}
 				Path converted = newDataPath.resolve(m.replaceAll(".lang"));
+				//TODO: Handle wrongly formatted yml files
 				Map<String, String> mp = YamlConverter.convertYmlToProperties(path);
 				Map<String, String> newKeys = new HashMap<>(5);
 				for(Map.Entry<String, String> entry : mp.entrySet()) {
