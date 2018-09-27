@@ -4,9 +4,9 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -26,7 +26,7 @@ public final class YamlConverter {
 	 *
 	 * @return the flattened Map
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Nonnull
 	public static SortedMap<String, Object> flatten(Map<String, Object> source) {
 		SortedMap<String, Object> result = new TreeMap<>();
@@ -56,19 +56,19 @@ public final class YamlConverter {
 	 * e.getValue());</code></p><i>Warning: Non-String entries (like Collections) will be lost</i>
 	 *
 	 * @param yaml
-	 * 		the YamlFile to convert
+	 * 		the YAML file path to convert
 	 *
 	 * @return the resulting Map
 	 */
 	@Nonnull
-	public static SortedMap<String, String> convertYmlToProperties(File yaml) {
+	public static SortedMap<String, String> convertYmlToProperties(Path yaml) {
 		SortedMap<String, String> result = new TreeMap<>();
-		try(FileInputStream fileInputStream = new FileInputStream(yaml)) {
-			for(Map.Entry<String, Object> entry : flatten(new Yaml().load(fileInputStream)).entrySet())
+		try {
+			byte[] bytes = Files.readAllBytes(yaml);
+			for(Map.Entry<String, Object> entry : flatten(new Yaml().load(new String(bytes))).entrySet())
 				if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
-			fileInputStream.close();
 		} catch(IOException e) {
-			AntiLaby.LOG.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return result;
 	}

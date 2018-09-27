@@ -6,18 +6,17 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
-import org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class LanguageManager {
 
@@ -29,69 +28,63 @@ public class LanguageManager {
 
 	private LanguageManager() {}
 
-	public void initAL() {
-		JavaPlugin plugin = AntiLaby.getInstance();
-		File newDataPath = new File(plugin.getDataFolder(), "lang");
-		newDataPath.mkdirs();
-		File oldDataPath = new File(plugin.getDataFolder(), "language");
-		if(oldDataPath.exists()) {
-			for(File f : Objects.requireNonNull(oldDataPath.listFiles())) {
-				if(f.isDirectory() || f.length() == 0) {
-					LOG.info(
-							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
-									"be converted.");
-
+	public void initAL() throws IOException {
+		Path dataFolder = AntiLaby.getInstance().getDataFolder().toPath();
+		Path newDataPath = dataFolder.resolve("lang");
+		if(!Files.exists(newDataPath)) {
+			LOG.info("lang dir does not exist yet, creating...");
+			Files.createDirectories(newDataPath);
+		} else if(!Files.isDirectory(newDataPath)) {
+			LOG.warn("There is a file called \"lang\", its not a dir, deleting!");
+			Files.delete(newDataPath);
+			Files.createDirectories(newDataPath);
+		}
+		Path oldDataPath = dataFolder.resolve("language");
+		if(Files.isDirectory(oldDataPath)) {
+			for(Path path : Files.walk(oldDataPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+				if(Files.isDirectory(path)) {
+					Files.delete(path);
 					continue;
 				}
-				String name = f.getName().toLowerCase();
+				String name = path.getFileName().toString().toLowerCase();
 				Matcher m = YAML_ENDING.matcher(name);
+				Path rel = oldDataPath.relativize(path);
 				if(!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
 					LOG.info(
-							"you have an invalid file in your language directory (" + f.getName() + "). It wont " +
-									"be converted.");
+							"you have an invalid file in your language directory (" + rel + "). It wont be converted" + ".");
+					Files.delete(path);
 					continue;
 				}
-				File converted = new File(newDataPath, m.replaceAll(".lang"));
-				try {
-					converted.createNewFile();
-					FileOutputStream stream = new FileOutputStream(converted);
-					Map<String, String> mp = YamlConverter.convertYmlToProperties(f);
-					Map<String, String> newKeys= new HashMap<>(5);
-					for(Map.Entry<String, String> entry : mp.entrySet()) {
-						switch(entry.getKey()) {
-							case "NoPermission":
-								newKeys.put("antilaby.command.noPermission", entry.getValue());
-								break;
-							case "LabyModPlayerKick":
-								newKeys.put("antilaby.playerKickMessage", entry.getValue());
-								break;
-							case "LabyInfo.LabyMod":
-								newKeys.put("antilaby.command.labyInfo.labyMod",
-										entry.getValue().replaceAll("%PLAYER%", "%1"));
-								break;
-							case "LabyInfo.NoLabyMod":
-								newKeys.put("antilaby.command.labyInfo.noLabyMod",
-										entry.getValue().replaceAll("%PLAYER%", "%1"));
-								break;
-							case "LabyInfo.PlayerOffline":
-								newKeys.put("antilaby.command.labyInfo.playerOffline",
-										entry.getValue().replaceAll("%PLAYER%", "%1"));
-								break;
-						}
+				Path converted = newDataPath.resolve(m.replaceAll(".lang"));
+				Map<String, String> mp = YamlConverter.convertYmlToProperties(path);
+				Map<String, String> newKeys = new HashMap<>(5);
+				for(Map.Entry<String, String> entry : mp.entrySet()) {
+					switch(entry.getKey()) {
+						case "NoPermission":
+							newKeys.put("antilaby.command.noPermission", entry.getValue());
+							break;
+						case "LabyModPlayerKick":
+							newKeys.put("antilaby.playerKickMessage", entry.getValue());
+							break;
+						case "LabyInfo.LabyMod":
+							newKeys.put("antilaby.command.labyInfo.labyMod",
+									entry.getValue().replaceAll("%PLAYER%", "%1"));
+							break;
+						case "LabyInfo.NoLabyMod":
+							newKeys.put("antilaby.command.labyInfo.noLabyMod",
+									entry.getValue().replaceAll("%PLAYER%", "%1"));
+							break;
+						case "LabyInfo.PlayerOffline":
+							newKeys.put("antilaby.command.labyInfo.playerOffline",
+									entry.getValue().replaceAll("%PLAYER%", "%1"));
+							break;
 					}
-					stream.write(Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
-					stream.close();
-				} catch(IOException e) {
-					LOG.error(e.getMessage());
 				}
+				Files.write(converted, Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
+				Files.delete(path);
 			}
-			try {
-				FileUtils.deleteDirectory(oldDataPath);
-			} catch(IOException e) {
-				LOG.error(e.getMessage());
-			}
+			for(Locale locale : Locale.values()) locale.init();
 		}
-		for(Locale locale : Locale.values()) locale.init();
 	}
 
 	public void setLanguageForPlayer(Player player, String locale) {
