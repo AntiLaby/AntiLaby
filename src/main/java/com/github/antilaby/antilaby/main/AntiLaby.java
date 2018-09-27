@@ -210,8 +210,7 @@ public class AntiLaby extends JavaPlugin {
 				ud.start();
 			} else LOG.info(
 					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby " +
-							"manually" + " from here: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID +
-							"/!");
+							"manually from here: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/!");
 		} else {
 			LOG.info(
 					"You are running a " + versionType.toString() + " version! Auto-update is not available. You can " + "update manually: " + Constants.RESOURCE_LINK);
