@@ -17,7 +17,7 @@ import static java.lang.Math.toIntExact;
  */
 public class UpdateChecker {
 
-	private final Logger logger = new Logger("UpdateChecker");
+	private static final Logger logger = new Logger("UpdateChecker");
 
 	/**
 	 * The location of the online update information provider

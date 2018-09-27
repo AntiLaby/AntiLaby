@@ -8,9 +8,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Read JSON from a HTTP server
+ *
+ * @author NathanNr
+ */
 public class ReadJsonUrl {
 
-	private final Logger logger = new Logger("ReadJsonUrl");
+	private static final Logger LOGGER = new Logger("ReadJsonUrl");
 
 	private final String uri;
 
@@ -23,16 +28,19 @@ public class ReadJsonUrl {
 		HttpURLConnection httpURLConnection;
 		String raw = "";
 		url = new URL(uri);
+		LOGGER.debug("Connecting to '" + url.toString() + "'...");
 		httpURLConnection = (HttpURLConnection) url.openConnection();
 		httpURLConnection.setRequestMethod("GET");
 		httpURLConnection.setRequestProperty("Accept", "application/json");
 		if (httpURLConnection.getResponseCode() != 200)
 			throw new IOException("Failed read data, got HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
+		LOGGER.debug("Reading input stream...");
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
 		String output;
 		while ((output = bufferedReader.readLine()) != null)
 			raw += output;
 		httpURLConnection.disconnect();
+		LOGGER.debug("Done!");
 		return raw;
 	}
 

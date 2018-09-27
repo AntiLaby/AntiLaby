@@ -2,7 +2,6 @@ package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.api.config.ConfigReader;
 import com.github.antilaby.antilaby.api.exceptions.InternalException;
-import com.github.antilaby.antilaby.api.updater.Update;
 import com.github.antilaby.antilaby.log.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
@@ -16,7 +15,7 @@ import java.io.IOException;
  */
 public class UpdateManager {
 
-	private Logger logger = new Logger("AutoUpdateManager");
+	private static final Logger logger = new Logger("AutoUpdateManager");
 
 	private JavaPlugin javaPlugin;
 
@@ -70,6 +69,8 @@ public class UpdateManager {
 				return updateChecker.getUpdateInformation();
 			case BETA:
 				return updateChecker.getUpdateInformation("beta");
+			case TEST:
+				return updateChecker.getUpdateInformation("test");
 			default:
 				throw new InternalException("UpdateManager", "Unknown UpdateInformationType", null);
 		}
@@ -79,6 +80,6 @@ public class UpdateManager {
 
 enum UpdateInformationType {
 
-	RELEASE, BETA
+	RELEASE, BETA, TEST
 
 }
