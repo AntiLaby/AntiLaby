@@ -21,7 +21,6 @@ import com.github.antilaby.antilaby.metrics.BStats;
 import com.github.antilaby.antilaby.metrics.Metrics;
 import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
-import com.github.antilaby.antilaby.update.Updater;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -70,8 +69,6 @@ public class AntiLaby extends JavaPlugin {
 	private VersionType versionType;
 	// The cleanup Thread deletes the saved LabyPlayer data
 	private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
-	// The Updater (The old one)
-	private Updater ud;
 	// is this pre 1.9?
 	private boolean before19 = false;
 
@@ -118,8 +115,6 @@ public class AntiLaby extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) return;
-		// Kill update task if it's running
-		if(ud != null) ud.interrupt();
 		// Save Data if compatible
 		if(compatible) DataManager.saveData();
 			// If not, we need to remove the cleanup thread
@@ -214,21 +209,6 @@ public class AntiLaby extends JavaPlugin {
 	 */
 	public void disableIfNotCompatible() {
 		if(!compatible) getPluginLoader().disablePlugin(this);
-	}
-
-	private void update() {
-		if(versionType.equals(VersionType.RELEASE)) {
-			if(getConfig().getBoolean("AntiLaby.Update.AutoUpdate")) {
-				// Check and install updates async
-				ud = new Updater();
-				ud.start();
-			} else LOG.info(
-					"You have disabled auto-update in the config file. You can get newer versions of AntiLaby " +
-							"manually from here: https://www.spigotmc.org/resources/" + Constants.RESOURCE_ID + "/!");
-		} else {
-			LOG.info(
-					"You are running a " + versionType.toString() + " version! Auto-update is not available. You can " + "update manually: " + Constants.RESOURCE_LINK);
-		}
 	}
 
 	private void initConfig() {
