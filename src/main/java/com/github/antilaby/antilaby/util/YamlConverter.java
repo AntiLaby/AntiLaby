@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.util;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public final class YamlConverter {
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Nonnull
-	public static SortedMap<String, Object> flatten(Map<String, Object> source) {
+	private static SortedMap<String, Object> flatten(Map<String, Object> source) {
 		SortedMap<String, Object> result = new TreeMap<>();
 		for(String key : source.keySet()) {
 			Object value = source.get(key);
@@ -60,11 +61,14 @@ public final class YamlConverter {
 	 * @return the resulting Map
 	 */
 	@Nonnull
+	@SuppressWarnings("unchecked")
 	public static SortedMap<String, String> convertYmlToProperties(Path yaml) {
 		SortedMap<String, String> result = new TreeMap<>();
 		try {
 			byte[] bytes = Files.readAllBytes(yaml);
-			for(Map.Entry<String, Object> entry : flatten(new Yaml().load(new String(bytes))).entrySet())
+			Object parsed = new Yaml().load(new String(bytes));
+			if(!(parsed instanceof Map)) throw new YAMLException("Invalid YAML File: " + yaml.getFileName());
+			for(Map.Entry<String, Object> entry : flatten((Map<String, Object>) parsed).entrySet())
 				if(entry.getValue() instanceof String) result.put(entry.getKey(), (String) entry.getValue());
 		} catch(IOException e) {
 			e.printStackTrace();

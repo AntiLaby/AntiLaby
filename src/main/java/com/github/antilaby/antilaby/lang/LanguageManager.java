@@ -7,6 +7,7 @@ import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -61,32 +62,35 @@ public class LanguageManager {
 					continue;
 				}
 				Path converted = newDataPath.resolve(m.replaceAll(".lang"));
-				//TODO: Handle wrongly formatted yml files
-				Map<String, String> mp = YamlConverter.convertYmlToProperties(path);
-				Map<String, String> newKeys = new HashMap<>(5);
-				for(Map.Entry<String, String> entry : mp.entrySet()) {
-					switch(entry.getKey()) {
-						case "NoPermission":
-							newKeys.put("antilaby.command.noPermission", entry.getValue());
-							break;
-						case "LabyModPlayerKick":
-							newKeys.put("antilaby.playerKickMessage", entry.getValue());
-							break;
-						case "LabyInfo.LabyMod":
-							newKeys.put("antilaby.command.labyInfo.labyMod",
-									entry.getValue().replaceAll("%PLAYER%", "%1"));
-							break;
-						case "LabyInfo.NoLabyMod":
-							newKeys.put("antilaby.command.labyInfo.noLabyMod",
-									entry.getValue().replaceAll("%PLAYER%", "%1"));
-							break;
-						case "LabyInfo.PlayerOffline":
-							newKeys.put("antilaby.command.labyInfo.playerOffline",
-									entry.getValue().replaceAll("%PLAYER%", "%1"));
-							break;
+				try {
+					Map<String, String> mp = YamlConverter.convertYmlToProperties(path);
+					Map<String, String> newKeys = new HashMap<>(5);
+					for(Map.Entry<String, String> entry : mp.entrySet()) {
+						switch(entry.getKey()) {
+							case "NoPermission":
+								newKeys.put("antilaby.command.noPermission", entry.getValue());
+								break;
+							case "LabyModPlayerKick":
+								newKeys.put("antilaby.playerKickMessage", entry.getValue());
+								break;
+							case "LabyInfo.LabyMod":
+								newKeys.put("antilaby.command.labyInfo.labyMod",
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
+								break;
+							case "LabyInfo.NoLabyMod":
+								newKeys.put("antilaby.command.labyInfo.noLabyMod",
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
+								break;
+							case "LabyInfo.PlayerOffline":
+								newKeys.put("antilaby.command.labyInfo.playerOffline",
+										entry.getValue().replaceAll("%PLAYER%", "%1"));
+								break;
+						}
 					}
+					Files.write(converted, Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
+				} catch(YAMLException e) {
+					LOG.warn("Could not convert '" + rel + "', " + e.getMessage());
 				}
-				Files.write(converted, Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
 				Files.delete(path);
 			}
 			for(Locale locale : Locale.values()) locale.init();
