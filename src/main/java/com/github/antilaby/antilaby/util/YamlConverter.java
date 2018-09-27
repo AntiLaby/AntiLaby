@@ -1,6 +1,5 @@
 package com.github.antilaby.antilaby.util;
 
-import com.github.antilaby.antilaby.main.AntiLaby;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nonnull;
