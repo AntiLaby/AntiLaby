@@ -10,8 +10,6 @@ import org.bukkit.command.CommandSender;
  */
 public class ExecutableCommand {
 
-	// TODO: Implement color code translation [and maybe variables]
-
 	private String commandLine;
 	private CommandSender sender;
 

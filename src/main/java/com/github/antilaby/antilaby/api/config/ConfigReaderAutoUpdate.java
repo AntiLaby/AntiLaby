@@ -12,7 +12,7 @@ public class ConfigReaderAutoUpdate {
 	 *
 	 * @return true if auto update for release versions is enabled
 	 */
-	public boolean autoUpdateReleaseEnabled() {
+	public boolean release() {
 		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Release");
 	}
 
@@ -21,8 +21,19 @@ public class ConfigReaderAutoUpdate {
 	 *
 	 * @return true if auto update for beta versions is enabled
 	 */
-	public boolean autoUpdateBetaEnabled() {
+	public boolean beta() {
 		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Beta");
+	}
+
+	/**
+	 * Read 'AntiLaby.Update.AutoUpdate.Test' from the configuration file
+	 * Only for testing the update system
+	 * The default value will only be generated, if the {@link com.github.antilaby.antilaby.api.updater.VersionType} equals dev
+	 *
+	 * @return true if auto update for test versions is enabled
+	 */
+	public boolean test() {
+		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Test");
 	}
 
 }

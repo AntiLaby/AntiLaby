@@ -12,7 +12,7 @@ public class ConfigReaderLabyModPlayerAction {
 	 *
 	 * @return true if the LabyModPlayerAction Kick is enabled
 	 */
-	public boolean kickIsEnabled() {
+	public boolean kickEnabled() {
 		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
 	}
 

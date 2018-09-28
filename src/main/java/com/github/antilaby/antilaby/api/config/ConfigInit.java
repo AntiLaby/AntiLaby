@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.log.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,12 +61,8 @@ public class ConfigInit {
 
 		// TODO: Add LabyMod Player Ban options to the configuration file, implement LabyMod Player Ban
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info", "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO
-	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Info", "# Choose a ban system: vanilla, built-in, custom"); // TODO
-	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Method.Method", "vanilla"); // TODO
-	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Info", "# You can use a custom ban command (from you ban plug-in) to ban players who are using LabyMod. If "); // TODO
-	//	cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.MethodCustom.Command", "/ban %player% %reason%"); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%"); // TODO
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement the feature
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%"); // TODO: implement the feature
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: implement Additional Plug-in Channels
@@ -78,6 +75,10 @@ public class ConfigInit {
 		// Add default values for auto-updates
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
+		if (AntiLaby.getInstance().getVersionType() == VersionType.DEV) {
+			cfg.addDefault("AntiLaby.Update.AutoUpdate.Test", false);
+		}
+
 
 		// Add default values for the feature handling of LabyMod
 		final List<String> disabledFeatures = cfg.getStringList("AntiLaby.LabyModFeatures.Disable");
