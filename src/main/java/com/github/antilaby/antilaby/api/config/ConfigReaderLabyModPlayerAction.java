@@ -1,5 +1,8 @@
 package com.github.antilaby.antilaby.api.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Get the values of the configuration file from the LabyModPlayerAction section.
  *
@@ -18,6 +21,34 @@ public class ConfigReaderLabyModPlayerAction {
 
 	public ConfigReaderLabyModPlayerActionBan getBan() {
 		return new ConfigReaderLabyModPlayerActionBan();
+	}
+
+	/**
+	 * Get the LabyModPlayerJoinCommands from the configuration file
+	 *
+	 * @return list of commands without comments
+	 */
+	public List<String> getJoinCommands() {
+		return getJoinCommands(false);
+	}
+
+	/**
+	 * Get the LabyModPlayerJoinCommands from the configuration file
+	 *
+	 * @param includeComments true if comments should be included
+	 * @return list of commands
+	 */
+	public List<String> getJoinCommands(boolean includeComments) {
+		List<String> commandsComments = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
+		if (!includeComments) {
+			List<String> commands = new ArrayList<>();
+			for (final String command : commandsComments)
+				if (!command.startsWith("#"))
+					commands.add(command);
+			return commands;
+		} else {
+			return commandsComments;
+		}
 	}
 
 }

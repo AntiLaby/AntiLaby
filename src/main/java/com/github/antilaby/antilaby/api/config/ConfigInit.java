@@ -59,10 +59,9 @@ public class ConfigInit {
 		cfg.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
 
-		// TODO: Add LabyMod Player Ban options to the configuration file, implement LabyMod Player Ban
 		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info", "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false); // TODO: implement the feature
-		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%"); // TODO: implement the feature
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false);
+		cfg.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%");
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: implement Additional Plug-in Channels
@@ -73,7 +72,7 @@ public class ConfigInit {
 		}
 
 		// Add default values for auto-updates
-		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true); // TODO: New auto-updater
+		cfg.addDefault("AntiLaby.Update.AutoUpdate.Release", true);
 		cfg.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
 		if (AntiLaby.getInstance().getVersionType() == VersionType.DEV) {
 			cfg.addDefault("AntiLaby.Update.AutoUpdate.Test", false);
@@ -101,14 +100,13 @@ public class ConfigInit {
 			cfg.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
 		if (cfg.getList("AntiLaby.LabyModFeatures.Enable") == null)
 			cfg.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
-		if (cfg.getList("AntiLaby.LabyModPlayerCommands") == null) {
-			final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerCommands");
+		if (cfg.getList("AntiLaby.LabyModPlayerAction.ExecuteCommands") == null) {
+			final List<String> commands = cfg.getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
 			commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
-			commands.add(
-					"#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
+			commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
 			commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
 			commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
-			cfg.set("AntiLaby.LabyModPlayerCommands", commands);
+			cfg.set("AntiLaby.LabyModPlayerAction.ExecuteCommands", commands);
 		}
 		cfg.addDefault("AntiLaby.DebugMode", false);
 		cfg.addDefault("AntiLaby.ConfigVersion", Constants.CURRENT_CONFIG_VERSION);

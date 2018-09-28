@@ -48,8 +48,8 @@ public class ConfigReader {
 		return new ConfigReaderAutoUpdate();
 	}
 
-	public List<String> getLabyModPlayerCommands() {
-		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerCommands");
+	public ConfigReaderLabyModPlayerAction getLabyModPlayerCommands() {
+		return new ConfigReaderLabyModPlayerAction();
 	}
 
 	public boolean getDebugMode() {
