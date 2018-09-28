@@ -1,6 +1,5 @@
 package com.github.antilaby.antilaby.pluginchannel;
 
-import com.github.antilaby.antilaby.api.LabyModJoinCommands;
 import com.github.antilaby.antilaby.api.command.ExecutableCommand;
 import com.github.antilaby.antilaby.api.config.ConfigReader;
 import com.github.antilaby.antilaby.config.Config;
@@ -16,6 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -91,12 +91,10 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 			// Join commands
 			if (!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
-				LabyModJoinCommands labyModJoinCommands = new LabyModJoinCommands();
-				for (final String command : labyModJoinCommands.getLabyModJoinCommands(false)) {
-					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(
-							PLAYER_PATTERN.matcher(command).replaceAll(
-									Matcher.quoteReplacement(player.getName()))).replaceAll(
-							Matcher.quoteReplacement(player.getUniqueId().toString())));
+				List<String> labyModJoinCommands = configReader.getLabyModPlayerAction().getJoinCommands(false);
+				for (final String command : labyModJoinCommands) {
+					Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(PLAYER_PATTERN.matcher(command).replaceAll(
+							Matcher.quoteReplacement(player.getName()))).replaceAll(Matcher.quoteReplacement(player.getUniqueId().toString())));
 				}
 			}
 		}
