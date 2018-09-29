@@ -11,7 +11,6 @@ import static java.lang.Math.toIntExact;
 
 /**
  * Checks for AntiLaby updates. This class loads, caches and parses the update information.
- * *
  *
  * @author NathanNr
  */

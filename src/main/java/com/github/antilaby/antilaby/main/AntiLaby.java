@@ -2,6 +2,7 @@ package com.github.antilaby.antilaby.main;
 
 import com.github.antilaby.antilaby.api.config.ConfigReader;
 import com.github.antilaby.antilaby.compat.HLSCompat;
+import com.github.antilaby.antilaby.updater.UpdateManager;
 import com.github.antilaby.antilaby.util.Miscellaneous;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.util.ServerHelper;
@@ -39,6 +40,7 @@ import java.util.*;
  * @author NathanNr
  */
 public class AntiLaby extends JavaPlugin {
+
 	/**
 	 * The main logger
 	 */
@@ -153,7 +155,7 @@ public class AntiLaby extends JavaPlugin {
 			disableIfNotCompatible();
 		}
 		// Try to update AntiLaby
-		// TODO: Use the new auto-updater
+		new UpdateManager(this).run();
 		// Init files, commands and events
 		initConfig();
 		// Register plug-in channels

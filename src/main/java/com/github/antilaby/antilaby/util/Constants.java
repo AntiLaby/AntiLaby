@@ -11,6 +11,11 @@ import org.bukkit.ChatColor;
 public final class Constants {
 
 	/**
+	 * The build id of the current version
+	 * TODO
+	 */
+	public static final int VERSION_ID = 2;
+	/**
 	 * The SpigotMC.org resource id
 	 */
 	public static final int RESOURCE_ID = 21347;
