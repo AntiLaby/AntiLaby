@@ -1,7 +1,6 @@
 package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.api.config.ConfigReader;
-import com.github.antilaby.antilaby.api.exceptions.InternalException;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,18 +17,15 @@ public class UpdateManager extends Thread {
 
 	private static final Logger logger = new Logger("UpdateManager");
 
-	private JavaPlugin javaPlugin;
-
 	private ConfigReader configReader;
 
 	private boolean autoUpdate;
 	private boolean includeBeta;
 	private boolean includeTest;
 
-	private final String tempFilePath = "plugins/AntiLaby/tmp/AntiLaby.tmp";
+	private final String temporaryFileLocation = "plugins/AntiLaby/tmp/AntiLaby.tmp";
 
-	public UpdateManager(JavaPlugin javaPlugin) {
-		this.javaPlugin = javaPlugin;
+	public UpdateManager() {
 		// Get update information from the configuration file
 		this.configReader = new ConfigReader();
 		this.autoUpdate = configReader.getAutoUpdate().release();
@@ -47,7 +43,7 @@ public class UpdateManager extends Thread {
 		logger.debug("Checking for new updates...");
 		UpdateInformation updateInformation;
 		try {
-			if(!includeTest) {
+			if (!includeTest) {
 				if (!includeBeta) {
 					updateInformation = check(UpdateInformationType.RELEASE);
 				} else {
@@ -57,37 +53,38 @@ public class UpdateManager extends Thread {
 				updateInformation = check(UpdateInformationType.TEST);
 			}
 		} catch (IOException e) {
-			logger.info("Failed to check for updates: Network error");
+			logger.warn("Failed to check for updates: Network error");
 			return;
 		} catch (ParseException e) {
-			logger.info("Failed to check for updates: Parsing error");
+			logger.warn("Failed to check for updates: Parsing error");
 			return;
 		}
 		if (updateInformation == null) {
-			logger.info("Failed to check for updates.");
+			logger.warn("Failed to check for updates.");
 			return;
 		}
 		// Check if a newer version is available; cancel the update process, if the most recent version is already installed
-		if(updateInformation.getVersionId() <= Constants.VERSION_ID) {
+		if (updateInformation.getVersionId() <= Constants.VERSION_ID) {
 			logger.info("The most recent version is already installed.");
 			return;
 		}
-		// Download
-		UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation);
+		// Download the new file
+		UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation, temporaryFileLocation);
 		try {
 			updateDownloader.download();
 		} catch (IOException e) {
-			logger.warn("Failed to download update.");
+			logger.warn("Failed to download update file.");
 		}
 		// Install
-		UpdateInstaller updateInstaller = new UpdateInstaller(updateDownloader.getFileLocation());
+		UpdateInstaller updateInstaller = new UpdateInstaller(updateDownloader.getTemporaryFileLocation());
 		try {
 			updateInstaller.install();
 		} catch (IOException e) {
 			logger.warn("Failed to overwrite the old plug-in file with the new one!");
 		}
-		// Remove tmp files
-		final File tmp = new File(updateDownloader.getFileLocation());
+		// Remove temporary files
+		logger.debug("Deleting temporary file...");
+		final File tmp = new File(updateDownloader.getTemporaryFileLocation());
 		if (tmp.exists()) {
 			tmp.delete();
 		}
@@ -104,7 +101,7 @@ public class UpdateManager extends Thread {
 			case TEST:
 				return updateChecker.getUpdateInformation("test");
 			default:
-				throw new InternalException("UpdateManager", "Unknown UpdateInformationType", null);
+				throw new EnumConstantNotPresentException(UpdateInformationType.class, null);
 		}
 	}
 

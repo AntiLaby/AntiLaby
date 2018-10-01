@@ -155,13 +155,12 @@ public class AntiLaby extends JavaPlugin {
 			disableIfNotCompatible();
 		}
 		// Try to update AntiLaby
-		new UpdateManager(this).run();
+		new UpdateManager().run();
 		// Init files, commands and events
 		initConfig();
 		// Register plug-in channels
 		Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
-		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
-				new IncomingPluginChannel());
+		Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL, new IncomingPluginChannel());
 		// If HLS is installed, use HLS
 		if (Bukkit.getPluginManager().isPluginEnabled("HeisluftsLanguageSystem")) {
 			HLSCompat.init();
