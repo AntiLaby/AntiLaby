@@ -3,10 +3,11 @@ package com.github.antilaby.antilaby.updater;
 import com.github.antilaby.antilaby.api.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.util.Constants;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manage the auto-update process
@@ -24,6 +25,7 @@ public class UpdateManager extends Thread {
 	private boolean includeTest;
 
 	private final String temporaryFileLocation = "plugins/AntiLaby/tmp/AntiLaby.tmp";
+	private List<String> uris = new ArrayList<>();
 
 	public UpdateManager() {
 		// Get update information from the configuration file
@@ -31,6 +33,9 @@ public class UpdateManager extends Thread {
 		this.autoUpdate = configReader.getAutoUpdate().release();
 		this.includeBeta = configReader.getAutoUpdate().beta();
 		this.includeTest = configReader.getAutoUpdate().test();
+
+		uris.add("http://localhost:8080/api/v1/com/github/antilaby/antilaby/update");
+		uris.add("");
 	}
 
 	@Override
@@ -82,8 +87,8 @@ public class UpdateManager extends Thread {
 		} catch (IOException e) {
 			logger.warn("Failed to overwrite the old plug-in file with the new one!");
 		}
-		// Remove temporary files
-		logger.debug("Deleting temporary file...");
+		// Remove temporary file
+		logger.debug("Removing temporary file...");
 		final File tmp = new File(updateDownloader.getTemporaryFileLocation());
 		if (tmp.exists()) {
 			tmp.delete();
@@ -92,16 +97,20 @@ public class UpdateManager extends Thread {
 	}
 
 	private UpdateInformation check(UpdateInformationType updateInformationType) throws IOException, ParseException {
-		UpdateChecker updateChecker = new UpdateChecker();
-		switch (updateInformationType) {
-			case RELEASE:
-				return updateChecker.getUpdateInformation();
-			case BETA:
-				return updateChecker.getUpdateInformation("beta");
-			case TEST:
-				return updateChecker.getUpdateInformation("test");
-			default:
-				throw new EnumConstantNotPresentException(UpdateInformationType.class, null);
+		try {
+			UpdateChecker updateChecker = new UpdateChecker(uris.get(0)); // TODO
+			switch (updateInformationType) {
+				case RELEASE:
+					return updateChecker.getUpdateInformation();
+				case BETA:
+					return updateChecker.getUpdateInformation("beta");
+				case TEST:
+					return updateChecker.getUpdateInformation("test");
+				default:
+					throw new EnumConstantNotPresentException(UpdateInformationType.class, null);
+			}
+		} catch (IOException e) {
+			throw e; // TODO
 		}
 	}
 

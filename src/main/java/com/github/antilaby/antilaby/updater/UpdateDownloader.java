@@ -2,7 +2,6 @@ package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.IOUtils;
 
 import java.net.URL;
 
@@ -34,14 +33,14 @@ public class UpdateDownloader {
 		LOGGER.debug("Downloading update from download server...");
 		final InputStream inputStream = new BufferedInputStream(new URL(updateInformation.getDownloadUrl()).openConnection().getInputStream());
 		final OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(temporaryFileLocation));
-		IOUtils.copyStream(inputStream, outputStream);
+		//	IOUtils.copyStream(inputStream, outputStream);
 		outputStream.close();
 		final File tempFile = new File(temporaryFileLocation);
 		final long newlength = tempFile.length();
 		LOGGER.debug("Installing update...");
 		final FileInputStream fileInputStream = new FileInputStream(tempFile);
 		final OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(AntiLaby.getInstance().getFile()));
-		IOUtils.copyStream(fileInputStream, outputStream1);
+		//	IOUtils.copyStream(fileInputStream, outputStream1);
 		fileInputStream.close();
 		outputStream1.close();
 		tempFile.delete();

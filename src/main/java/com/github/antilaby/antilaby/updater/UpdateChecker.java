@@ -22,9 +22,13 @@ public class UpdateChecker {
 	 * The location of the online update information provider
 	 * TODO: Add the final URL, add alternate URL
 	 */
-	private final String uri = "http://localhost:8080/api/v1/com/github/antilaby/antilaby/update";
+	private String uri;
 
 	private UpdateInformation updateInformation;
+
+	public UpdateChecker(String uri) {
+		this.uri = uri;
+	}
 
 	public UpdateInformation getUpdateInformation() throws IOException, ParseException {
 		return getUpdateInformation("release");
