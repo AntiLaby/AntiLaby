@@ -60,6 +60,10 @@ public final class Constants {
 	 */
 	public static final int CURRENT_CONFIG_VERSION = 3;
 	/**
+	 * Link to the git repository
+	 */
+	public static final String GITHUB_URL = "https://github.com/AntiLaby/AntiLaby/";
+	/**
 	 * Link to the bugtracker
 	 */
 	public static final String BUG_REPORT_URL = "https://github.com/AntiLaby/AntiLaby/issues";
