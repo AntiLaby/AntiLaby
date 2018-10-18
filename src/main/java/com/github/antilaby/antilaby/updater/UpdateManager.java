@@ -96,6 +96,14 @@ public class UpdateManager extends Thread {
 		logger.info("Done! Please restart your server to finish the update process.");
 	}
 
+	/**
+	 * Check for a new version of AntiLaby
+	 *
+	 * @param updateInformationType
+	 * @return
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	private UpdateInformation check(UpdateInformationType updateInformationType) throws IOException, ParseException {
 		try {
 			UpdateChecker updateChecker = new UpdateChecker(uris.get(0)); // TODO

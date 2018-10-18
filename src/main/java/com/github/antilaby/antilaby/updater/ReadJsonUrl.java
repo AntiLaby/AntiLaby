@@ -23,6 +23,11 @@ public class ReadJsonUrl {
 		this.uri = uri;
 	}
 
+	/**
+	 * Read JSON from a HTTP server
+	 * @return JSON as String
+	 * @throws IOException Error while reading JSON
+	 */
 	public String read() throws IOException {
 		URL url;
 		HttpURLConnection httpURLConnection;
