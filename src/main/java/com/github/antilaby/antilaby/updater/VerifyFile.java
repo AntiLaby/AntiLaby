@@ -1,9 +1,10 @@
 package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.log.Logger;
-import sun.misc.BASE64Encoder;
 
-import java.io.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -14,13 +15,13 @@ import java.security.NoSuchAlgorithmException;
  */
 public class VerifyFile {
 
-	private Logger logger = new Logger("VerifyFile");
+	private static final Logger logger = new Logger("VerifyFile");
 
-	private final File file;
+	private final Path path;
 	private final String sha256;
 
-	public VerifyFile(File file, String sha256) {
-		this.file = file;
+	public VerifyFile(Path path, String sha256) {
+		this.path = path;
 		this.sha256 = sha256;
 	}
 
@@ -29,10 +30,10 @@ public class VerifyFile {
 	 *
 	 * @return true if the hash values are equal
 	 */
-	public boolean verify() throws IOException, NoSuchAlgorithmException {
+	public boolean validate() throws IOException, NoSuchAlgorithmException {
 		// Compare hash
-		String fileHash = getSha256(file);
-		if (!fileHash.equals(sha256)) {
+		String fileHash = getSha256(path);
+		if(!fileHash.equals(sha256)) {
 			logger.debug("Hash values are not equal: " + fileHash + " !equals " + sha256);
 			return false;
 		}
@@ -42,20 +43,14 @@ public class VerifyFile {
 	/**
 	 * Get the SHA-256 value of a file
 	 *
-	 * @param file File
+	 * @param path
+	 * 		File
+	 *
 	 * @return SHA-256
 	 */
-	private String getSha256(File file) throws IOException, NoSuchAlgorithmException {
-		byte[] buffer = new byte[8192];
+	private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-		int i;
-		while ((i = bis.read(buffer)) > 0) {
-			digest.update(buffer, 0, i);
-		}
-		bis.close();
-		byte[] hash = digest.digest();
-		return new BASE64Encoder().encode(hash);
+		digest.update(Files.readAllBytes(path));
+		return new String(digest.digest());
 	}
-
 }
