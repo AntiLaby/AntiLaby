@@ -9,6 +9,7 @@ apply plugin: 'eclipse'
 
 // For Heisluft
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 
@@ -41,14 +42,18 @@ processResources {
     }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
+signing {
+    sign publishing.publications.maven
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
     classifier = 'javadoc'
-    from javadoc.destinationDir
 }
 
 dependencies {
@@ -58,24 +63,54 @@ dependencies {
         transitive = false
     }
     compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 }
 
 publishing {
-    def server = System.getProperty("maven")
-    if (server == null) return
     repositories {
         maven {
-            url server
+            url = mavenRepo
+            credentials {
+                username = mavenUsername
+                password = mavenPassword
+            }
+            authentication {
+                digest(DigestAuthentication)
+            }
+
         }
     }
     publications {
-        testing(MavenPublication) {
+        maven(MavenPublication) {
+            pom {
+                description = project.description
+                url = 'https://www.spigotmc.org/resources/antilaby-1-8-1-12-1-disable-labymod-functions-api.21347'
+                licenses {
+                    license {
+                        name = 'GNU GPL, Version 3'
+                        url = 'https://www.gnu.org/licenses/gpl.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'NathanNr'
+                        name = 'NathanNr'
+                        email = '[n/a]'
+                        roles = ['developer']
+                    }
+                    developer {
+                        id = 'heisluft'
+                        name = 'heisluft'
+                        email = 'heisluftlp@gmail.com'
+                        roles = ['developer']
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/AntiLaby/AntiLaby'
+                    developerConnection = 'scm:git:https://github.com/AntiLaby/AntiLaby'
+                    url = 'https://github.com/AntiLaby/AntiLaby'
+                }
+            }
             from components.java
             artifact sourcesJar
             artifact javadocJar
@@ -84,7 +119,7 @@ publishing {
 
 }
 
-publish.dependsOn jar, sourcesJar, javadocJar
+publish.dependsOn test
 
 task copyToServer(type: Copy, dependsOn: jar) {
     def ts = System.getProperty("serverDir")
