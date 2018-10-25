@@ -92,6 +92,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
     /**
+	 * {@inheritDoc}
 	 * @return JavaPlugin#getFile
 	 */
 	@Override
@@ -100,7 +101,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	/**
-	 * @return The path of getFile
+	 * @return getFile as Path
 	 */
 	public Path getPath() {
 		return getFile().toPath();
@@ -133,7 +134,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
     /**
-	 * This method is called when the plugin is enabling.
+	 * This method is called by PluginManager when the plugin is enabling.
 	 */
 	@Override
 	public void onEnable() {
@@ -305,7 +306,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
     /**
-	 * This method is called when the plugin is loading.
+	 * This method is called by PluginManager when the plugin is loading.
 	 */
 	@Override
 	public void onLoad() {
