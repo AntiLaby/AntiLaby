@@ -91,15 +91,25 @@ public class AntiLaby extends JavaPlugin {
 		return before19;
 	}
 
+    /**
+	 * {@inheritDoc}
+	 * @return JavaPlugin#getFile
+	 */
 	@Override
 	public File getFile() {
 		return super.getFile();
 	}
 
+	/**
+	 * @return getFile as Path
+	 */
 	public Path getPath() {
 		return getFile().toPath();
 	}
 
+	/**
+	 * @return getDataFolder as Path
+	 */
 	public Path getDataPath() {
 		return getDataFolder().toPath();
 	}
@@ -123,6 +133,9 @@ public class AntiLaby extends JavaPlugin {
 		LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
 	}
 
+    /**
+	 * This method is called by PluginManager when the plugin is enabling.
+	 */
 	@Override
 	public void onEnable() {
 		// Glowstone is not supported yet
@@ -202,6 +215,7 @@ public class AntiLaby extends JavaPlugin {
 			new AntiLabyPackager(all).sendPackages();
 		}
 		LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
+		LOG.info("If you want to support us visit " + Constants.GITHUB_URL);
 	}
 
 	/**
@@ -291,6 +305,9 @@ public class AntiLaby extends JavaPlugin {
 				new BStats.SingleLineChart("lmjoincmd_count", () -> labyModJoinCommands.size()));
 	}
 
+    /**
+	 * This method is called by PluginManager when the plugin is loading.
+	 */
 	@Override
 	public void onLoad() {
 		if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {

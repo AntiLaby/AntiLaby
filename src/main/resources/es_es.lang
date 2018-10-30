@@ -1,0 +1,12 @@
+translation.error=Error con la traducción
+info.specialDef=&aEste servidor utiliza la versión AntiLaby &b%1 &con la versión NMS &b%2&a.  #1: AL-Version, 2: NMS-Version
+antilaby.playerKickMessage=No está permitido utilizar &aLabyMod &con este servidor!
+antilaby.notifyKickMessage=&7El jugador %1 no puede usar LabyMod y ha sido pateado.           #1: El jugador
+antilaby.command.noPermission=&cNo tiene permiso para usar este comando
+antilaby.command.antiLaby.usage=&cAprovechamiento: /antilaby <info|reload>
+antilaby.command.antiLaby.reload.start=&Recargar AntiLaby...
+antilaby.command.antiLaby.reload.complete=&aDe recarga íntegro!
+antilaby.command.labyInfo.usage=&cAprovechamiento: /labyinfo <player>
+antilaby.command.labyInfo.labyMod=El reproductor utiliza LabyMod.                             #1: El jugador
+antilaby.command.labyInfo.noLabyMod=El reproductor no utiliza                                 #1: El jugador
+antilaby.command.labyInfo.playerOffline=&cEl jugador &o%1&c es offline.                       #1: El jugador
