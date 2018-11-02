@@ -42,10 +42,6 @@ processResources {
     }
 }
 
-signing {
-    sign publishing.publications.maven
-}
-
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
@@ -81,7 +77,7 @@ publishing {
         }
     }
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             pom {
                 description = project.description
                 url = 'https://www.spigotmc.org/resources/antilaby-1-8-1-12-1-disable-labymod-functions-api.21347'
@@ -117,6 +113,10 @@ publishing {
         }
     }
 
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }
 
 publish.dependsOn test
