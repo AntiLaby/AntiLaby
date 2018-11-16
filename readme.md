@@ -16,7 +16,7 @@ Useful links:
   ...
   <repository>
     <id>heisluft-repo</id>
-    <url>http://heisluft.bplaced.net/maven/</url>
+    <url>https://heisluft.tk/maven/</url>
   </repository>
   ...
 </repositories>
@@ -39,7 +39,7 @@ Useful links:
 repositories {
   ...
   maven {
-    url 'http://heisluft.bplaced.net/maven/'
+    url 'https://heisluft.tk/maven/'
   }
   ...
 }
