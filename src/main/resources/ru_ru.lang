@@ -1,12 +1,12 @@
 translation.error=Ошибки в переводе
 info.specialDef=&aЭтот сервер использует AntiLaby версия &b%1 &aи NMS версия &b%2&a.                            #1: AL-версия, 2: NMS-версия
 antilaby.playerKickMessage=Вы используете &aLabyMod&c, который вам запрещен на этом сервере!
-antilaby.notifyKickMessage=&7У игрока %1 нет разрешения играть с LabyMod и его пнули.                           #1: Der Spieler
+antilaby.notifyKickMessage=&7У игрока %1 нет разрешения играть с LabyMod и его пнули.                           #1: игрок
 antilaby.command.noPermission=&cУ вас нет необходимого разрешения для выполнения этой команды.
 antilaby.command.antiLaby.usage=&cсинтаксис: /antilaby <info|reload>
 antilaby.command.antiLaby.reload.start=&aперезагрузить AntiLaby...
 antilaby.command.antiLaby.reload.complete=&aПерезагрузка завершена!
 antilaby.command.labyInfo.usage=&cсинтаксис: /labyinfo <игрок>
-antilaby.command.labyInfo.labyMod=Игрок &o%1&r играет с LabyMod.                                                 #1: Der Spieler
-antilaby.command.labyInfo.noLabyMod=Игрок &o%1&r &lне&r играет с LabyMod.                                        #1: Der Spieler
-antilaby.command.labyInfo.playerOffline=&cИгрок &o%1&c отсутствует                                               #1: Der Spieler
+antilaby.command.labyInfo.labyMod=Игрок &o%1&r играет с LabyMod.                                                 #1: игрок
+antilaby.command.labyInfo.noLabyMod=Игрок &o%1&r &lне&r играет с LabyMod.                                        #1: игрок
+antilaby.command.labyInfo.playerOffline=&cИгрок &o%1&c отсутствует                                               #1: игрок
