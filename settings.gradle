@@ -1,2 +1,1 @@
 rootProject.name = 'AntiLaby'
-enableFeaturePreview("STABLE_PUBLISHING")
