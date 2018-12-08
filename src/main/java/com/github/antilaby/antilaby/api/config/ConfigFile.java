@@ -32,7 +32,7 @@ public class ConfigFile {
 	public static final String CONFIG_PATH = AntiLaby.getInstance().getDataFolder() + "config.yml";
 
 	private static File file = new File(CONFIG_PATH);
-	private static FileConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+	private static FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
 
 	/**
 	 * Get the file object of the configuration file.
@@ -48,8 +48,8 @@ public class ConfigFile {
 	 *
 	 * @return configuration as FileConfiguration
 	 */
-	static FileConfiguration getCfg() {
-		return cfg;
+	static FileConfiguration getFileConfiguration() {
+		return fileConfiguration;
 	}
 
 	/**
@@ -57,8 +57,8 @@ public class ConfigFile {
 	 */
 	public static void save() {
 		try {
-			cfg.save(file);
-		} catch(IOException e) {
+			fileConfiguration.save(file);
+		} catch (IOException e) {
 			logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}
@@ -69,14 +69,14 @@ public class ConfigFile {
 	 */
 	public static void load() {
 		try {
-			cfg.load(file);
-		} catch(IOException | InvalidConfigurationException e) {
+			fileConfiguration.load(file);
+		} catch (IOException | InvalidConfigurationException e) {
 			logger.error("Failed to load the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}
 		try {
-			new ConfigInit(file, cfg);
-		} catch(IOException e) {
+			new ConfigInit(file, fileConfiguration);
+		} catch (IOException e) {
 			logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}

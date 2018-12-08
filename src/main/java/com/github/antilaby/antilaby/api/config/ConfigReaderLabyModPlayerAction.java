@@ -16,7 +16,7 @@ public class ConfigReaderLabyModPlayerAction {
 	 * @return true if the LabyModPlayerAction Kick is enabled
 	 */
 	public boolean kickEnabled() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.LabyModPlayerAction.Kick.Enabled");
 	}
 
 	public ConfigReaderLabyModPlayerActionBan getBan() {
@@ -39,7 +39,7 @@ public class ConfigReaderLabyModPlayerAction {
 	 * @return list of commands
 	 */
 	public List<String> getJoinCommands(boolean includeComments) {
-		List<String> commandsComments = ConfigFile.getCfg().getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
+		List<String> commandsComments = ConfigFile.getFileConfiguration().getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
 		if (!includeComments) {
 			List<String> commands = new ArrayList<>();
 			for (final String command : commandsComments)

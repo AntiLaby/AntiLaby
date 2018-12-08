@@ -2,7 +2,6 @@ package com.github.antilaby.antilaby.pluginchannel;
 
 import com.github.antilaby.antilaby.api.command.ExecutableCommand;
 import com.github.antilaby.antilaby.api.config.ConfigReader;
-import com.github.antilaby.antilaby.config.Config;
 import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.util.Constants;
@@ -19,6 +18,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles incoming packages from clients
+ */
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
 	// TODO: Use the new configuration API
@@ -56,7 +58,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 								data) + '!');
 				labyModPlayers.put(player.getUniqueId().toString(), player.getName());
 				// Send notification
-				if (!Config.getLabyModPlayerKickEnable()) for (Player all : Bukkit.getOnlinePlayers()) {
+				if (!configReader.getLabyModPlayerAction().kickEnabled()) for (Player all : Bukkit.getOnlinePlayers()) {
 					if (all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
 						all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.labyMod", all, player.getName()));
 					}

@@ -13,7 +13,7 @@ public class ConfigReaderAutoUpdate {
 	 * @return true if auto update for release versions is enabled
 	 */
 	public boolean release() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Release");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.Update.AutoUpdate.Release");
 	}
 
 	/**
@@ -22,7 +22,7 @@ public class ConfigReaderAutoUpdate {
 	 * @return true if auto update for beta versions is enabled
 	 */
 	public boolean beta() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Beta");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.Update.AutoUpdate.Beta");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ConfigReaderAutoUpdate {
 	 * @return true if auto update for test versions is enabled
 	 */
 	public boolean test() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.Update.AutoUpdate.Test");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.Update.AutoUpdate.Test");
 	}
 
 }

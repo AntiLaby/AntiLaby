@@ -8,11 +8,11 @@ package com.github.antilaby.antilaby.api.config;
 public class ConfigReaderLabyModPlayerActionBan {
 
 	public boolean isEnabled() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enable");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enable");
 	}
 
 	public String getCommand() {
-		return ConfigFile.getCfg().getString("AntiLaby.LabyModPlayerAction.Ban.Command");
+		return ConfigFile.getFileConfiguration().getString("AntiLaby.LabyModPlayerAction.Ban.Command");
 	}
 
 }

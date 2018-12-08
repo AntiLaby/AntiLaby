@@ -16,7 +16,7 @@ import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 
 /**
- * Initialize the configuration file and update it from older versions.
+ * Initialize the configuration file and update it from older versions. This file will be reworked.
  *
  * @author NathanNr
  */

@@ -1,10 +1,9 @@
 package com.github.antilaby.antilaby.log;
 
+import com.github.antilaby.antilaby.api.config.ConfigReader;
 import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
-
-import com.github.antilaby.antilaby.config.Config;
 
 /**
  * A helper class used for logging purposes to enhance logging a bit
@@ -13,7 +12,8 @@ import com.github.antilaby.antilaby.config.Config;
  */
 public class Logger {
 
-	private static final ConsoleCommandSender c = Bukkit.getConsoleSender();
+	private static final ConsoleCommandSender CONSOLE_COMMAND_SENDER = Bukkit.getConsoleSender();
+	private static final ConfigReader configReader = new ConfigReader();
 	private final String name;
 
 	/**
@@ -43,9 +43,9 @@ public class Logger {
 	public void log(Level level, String message) {
 		final String color = level == Level.ERROR || level == Level.FATAL ? "\u00A74"
 				: level == Level.WARN ? "\u00A7e" : level == Level.DEBUG ? "\u00A71" : "";
-		if (level == Level.DEBUG && !Config.isDebugModeEnabled())
+		if (level == Level.DEBUG && !configReader.getDebugMode())
 			return;
-		c.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "\u00A7r");
+		CONSOLE_COMMAND_SENDER.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "\u00A7r");
 	}
 
 	/**
