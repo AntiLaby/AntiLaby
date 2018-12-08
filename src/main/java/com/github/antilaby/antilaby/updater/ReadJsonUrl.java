@@ -25,6 +25,7 @@ public class ReadJsonUrl {
 
 	/**
 	 * Read JSON from a HTTP server
+	 *
 	 * @return JSON as String
 	 * @throws IOException Error while reading JSON
 	 */
@@ -37,8 +38,9 @@ public class ReadJsonUrl {
 		httpURLConnection = (HttpURLConnection) url.openConnection();
 		httpURLConnection.setRequestMethod("GET");
 		httpURLConnection.setRequestProperty("Accept", "application/json");
+		// TODO: Other status codes may also be allowed
 		if (httpURLConnection.getResponseCode() != 200)
-			throw new IOException("Failed read data, got HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
+			throw new IOException("Failed read data, received HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
 		LOGGER.debug("Reading input stream...");
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
 		String output;
