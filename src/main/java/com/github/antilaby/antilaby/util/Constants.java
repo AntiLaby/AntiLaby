@@ -16,6 +16,11 @@ public final class Constants {
 	 */
 	public static final int VERSION_ID = 2;
 	/**
+	 * The source of the plug-in file
+	 * Allowed values: github.com spigotmc.org dev.bukkit.org direct other
+	 */
+	public static final String DOWNLOAD_SOURCE = "github.com";
+	/**
 	 * The SpigotMC.org resource id
 	 */
 	public static final int RESOURCE_ID = 21347;
