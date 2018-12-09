@@ -15,6 +15,9 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author NathanNr
+ */
 public class AntiLabyPackagerTest {
 
   private static AntiLabyPackager antiLabyPackager;
@@ -43,10 +46,9 @@ public class AntiLabyPackagerTest {
     enabledFeatures.add("REFILL_FIX");
     enabledFeatures.add("BLOCKBUILD");
 
-    //when
     antiLabyPackager.mapLabyModSettings(disabledFeatures, enabledFeatures);
 
-    //then
+    //when
     Map<LabyModFeature, Boolean> labyModFeatureSettings = new EnumMap<>(LabyModFeature.class);
     labyModFeatureSettings.put(LabyModFeature.TAGS, false);
     labyModFeatureSettings.put(LabyModFeature.IMPROVED_LAVA, false);
@@ -55,6 +57,7 @@ public class AntiLabyPackagerTest {
     labyModFeatureSettings.put(LabyModFeature.REFILL_FIX, true);
     labyModFeatureSettings.put(LabyModFeature.BLOCKBUILD, true);
 
+    //then
     assertEquals(labyModFeatureSettings, antiLabyPackager.getLabyModFeatureSettings());
   }
 
