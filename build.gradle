@@ -121,6 +121,16 @@ signing {
 
 publish.dependsOn test
 
+test {
+    useJUnit()
+}
+
+build {
+    doLast {
+        test
+    }
+}
+
 task copyToServer(type: Copy, dependsOn: jar) {
     def ts = System.getProperty("serverDir")
     if (ts == null) return
