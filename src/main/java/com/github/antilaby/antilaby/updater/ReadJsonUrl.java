@@ -39,13 +39,15 @@ public class ReadJsonUrl {
     httpURLConnection.setRequestMethod("GET");
     httpURLConnection.setRequestProperty("Accept", "application/json");
     // TODO: Other status codes may also be allowed
-    if (httpURLConnection.getResponseCode() != 200)
+    if (httpURLConnection.getResponseCode() != 200) {
       throw new IOException("Failed read data, received HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
+    }
     LOGGER.debug("Reading input stream...");
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
     String output;
-    while ((output = bufferedReader.readLine()) != null)
+    while ((output = bufferedReader.readLine()) != null) {
       raw += output;
+    }
     httpURLConnection.disconnect();
     LOGGER.debug("Done!");
     return raw;

@@ -9,35 +9,28 @@ import org.bukkit.entity.Player;
 import java.util.EnumMap;
 
 /**
- * This class gives a few examples on how to use the AntiLaby API<br> WARNING: It's highly recommended to use only
- * methods from the package 'com.github.antilaby.antilaby.api', or, if you really know what you are doing, use {@link
- * NmsUtils} directly and handle the exceptions properly! Other solutions may or may not work or be compatible for
- * multiple Minecraft versions!
+ * This class gives a few examples on how to use the AntiLaby API<br> WARNING: It's highly recommended to use only methods from the package 'com.github.antilaby.antilaby.api', or, if you really know
+ * what you are doing, use {@link NmsUtils} directly and handle the exceptions properly! Other solutions may or may not work or be compatible for multiple Minecraft versions!
  */
 public class Example {
 
   /**
    * same as {@link #antiLabyPackageExample(Player)}, but uses chaining
    *
-   * @param player
-   *     the Player to send to
-   *
+   * @param player the Player to send to
    * @return same as {@link #antiLabyPackageExample(Player)}
    */
   public static boolean antiLabyChainedPackagerExample(Player player) {
     final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
     myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
     myPackageSettings.put(LabyModFeature.POTIONS, true);
-    return new AntiLabyPackager(player).setLabyModFeatureSettings(
-        myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
+    return new AntiLabyPackager(player).setLabyModFeatureSettings(myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
   }
 
   /**
    * Example AntiLaby API method
    *
-   * @param player
-   *     the Player to send to
-   *
+   * @param player the Player to send to
    * @return if the {@link AntiLabyPackager} completed successfully
    */
   public static boolean antiLabyPackageExample(Player player) {
@@ -61,9 +54,7 @@ public class Example {
   /**
    * Test if a player uses LabyMod
    *
-   * @param player
-   *     The Player to test
-   *
+   * @param player The Player to test
    * @return true the player uses LabyMod, false otherwise
    */
   public static boolean labyPlayer(Player player) {
@@ -73,9 +64,7 @@ public class Example {
   /**
    * Example simple AntiLaby API method
    *
-   * @param player
-   *     the Player to send to
-   *
+   * @param player the Player to send to
    * @return same as {@link #antiLabyPackageExample(Player)}
    */
   public static boolean simpleAntiLabyPackageExample(Player player) {

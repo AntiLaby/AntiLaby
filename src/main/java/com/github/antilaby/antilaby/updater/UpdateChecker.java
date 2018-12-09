@@ -19,8 +19,7 @@ public class UpdateChecker {
   private static final Logger logger = new Logger("UpdateChecker");
 
   /**
-   * The location of the online update information provider
-   * TODO: Add the final URL, add alternate URL
+   * The location of the online update information provider TODO: Add the final URL, add alternate URL
    */
   private String uri;
 
@@ -42,15 +41,17 @@ public class UpdateChecker {
       String url = uri;
       url += "?type=" + type;
       raw = new ReadJsonUrl(url).read();
-      if (raw == null)
+      if (raw == null) {
         return null;
+      }
       // JSON -> UpdateInformation
       logger.debug("Parsing raw data...");
       JSONObject jsonObject;
       JSONParser parser = new JSONParser();
       Object obj = parser.parse(raw);
       jsonObject = (JSONObject) obj;
-      updateInformation = new UpdateInformation((String) jsonObject.get("version"), toIntExact((long) jsonObject.get("versionId")), (String) jsonObject.get("downloadUrl"), (String) jsonObject.get("versionType"), toIntExact((long) jsonObject.get("updatePriority")), (String) jsonObject.get("sha256"), (String) jsonObject.get("updateNote"));
+      updateInformation = new UpdateInformation((String) jsonObject.get("version"), toIntExact((long) jsonObject.get("versionId")), (String) jsonObject.get("downloadUrl"),
+          (String) jsonObject.get("versionType"), toIntExact((long) jsonObject.get("updatePriority")), (String) jsonObject.get("sha256"), (String) jsonObject.get("updateNote"));
       logger.debug("Done!");
     }
     return updateInformation;

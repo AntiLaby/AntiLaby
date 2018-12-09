@@ -58,8 +58,11 @@ public class BStatsHandler {
     bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () -> IncomingPluginChannel.getLabyModPlayers().size()));
     final List<String> labyModJoinCommands = configReader.getLabyModPlayerAction().getJoinCommands(false);
     bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
-      if(labyModJoinCommands.isEmpty()) return "false";
-      else return "true";
+      if (labyModJoinCommands.isEmpty()) {
+        return "false";
+      } else {
+        return "true";
+      }
     }));
     bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> labyModJoinCommands.size()));
   }

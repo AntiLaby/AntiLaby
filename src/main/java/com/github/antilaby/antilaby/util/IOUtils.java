@@ -5,13 +5,7 @@ import io.netty.buffer.Unpooled;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectStreamException;
+import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,35 +18,40 @@ import java.nio.file.Path;
 public final class IOUtils {
 
   /**
+   * Private constructor, no need to instantiate this class
+   */
+  private IOUtils() {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
    * Passes all read bytes from the given {@link InputStream} to the given {@link Path}
    *
-   * @param readFrom
-   *     The InputStream to read from
-   * @param writeTo
-   *     The Path to write to
-   *
-   * @throws IOException
-   *     If an IO error occurs during reading or writing
+   * @param readFrom The InputStream to read from
+   * @param writeTo  The Path to write to
+   * @throws IOException If an IO error occurs during reading or writing
    */
   public static void copyStream(InputStream readFrom, Path writeTo) throws IOException {
     ByteBuf bb = Unpooled.buffer();
     int nextByte;
-    while((nextByte = readFrom.read()) != -1) bb.writeByte(nextByte);
+    while ((nextByte = readFrom.read()) != -1) {
+      bb.writeByte(nextByte);
+    }
     Files.write(writeTo, bb.array());
   }
-
 
   /**
    * Closes the given {@link Closeable}, ignoring thrown Exception
    *
-   * @param toClose
-   *     the Closable to close
+   * @param toClose the Closable to close
    */
   public static void closeSilently(@Nullable Closeable toClose) {
-    if(toClose == null) return;
+    if (toClose == null) {
+      return;
+    }
     try {
       toClose.close();
-    } catch(IOException e) {
+    } catch (IOException e) {
       // ignore
     }
   }
@@ -60,19 +59,12 @@ public final class IOUtils {
   /**
    * Reads the next object from the given {@link ObjectStreamException} and casts it to T
    *
-   * @param <T>
-   *     The class to cast the read object to
-   * @param inputStream
-   *     The stream to read from
-   *
+   * @param <T>         The class to cast the read object to
+   * @param inputStream The stream to read from
    * @return The read object, casted to T
-   *
-   * @throws ClassNotFoundException
-   *     Class of a serialized object cannot be found
-   * @throws IOException
-   *     Any of the usual Input/Output related exceptions
-   * @throws ClassCastException
-   *     The read object is not an instance of T
+   * @throws ClassNotFoundException Class of a serialized object cannot be found
+   * @throws IOException            Any of the usual Input/Output related exceptions
+   * @throws ClassCastException     The read object is not an instance of T
    */
   @SuppressWarnings("unchecked")
   @Nonnull
@@ -83,13 +75,9 @@ public final class IOUtils {
   /**
    * Gets the text from a web page
    *
-   * @param urlString
-   *     The URL to be read
-   *
+   * @param urlString The URL to be read
    * @return The text
-   *
-   * @throws IOException
-   *     If an IO Error occurred
+   * @throws IOException If an IO Error occurred
    */
   @Nonnull
   public static String readUrl(String urlString) throws IOException {
@@ -100,16 +88,15 @@ public final class IOUtils {
       final StringBuilder builder = new StringBuilder();
       int read;
       final char[] chars = new char[1024];
-      while((read = reader.read(chars)) != -1) builder.append(chars, 0, read);
+      while ((read = reader.read(chars)) != -1) {
+        builder.append(chars, 0, read);
+      }
       return builder.toString();
     } finally {
-      if(reader != null) reader.close();
+      if (reader != null) {
+        reader.close();
+      }
     }
   }
-
-  /**
-   * Private constructor, no need to instantiate this class
-   */
-  private IOUtils() {throw new UnsupportedOperationException();}
 
 }

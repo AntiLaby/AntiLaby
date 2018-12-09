@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.api.updater;
 
 /**
  * Exception while installing an update
- * 
+ *
  * @author NathanNr
  */
 

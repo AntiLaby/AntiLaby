@@ -26,6 +26,18 @@ public class VerifyFile {
   }
 
   /**
+   * Get the SHA-256 value of a file
+   *
+   * @param path File
+   * @return SHA-256
+   */
+  private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    digest.update(Files.readAllBytes(path));
+    return new String(digest.digest());
+  }
+
+  /**
    * Compare the hash values
    *
    * @return true if the hash values are equal
@@ -37,17 +49,5 @@ public class VerifyFile {
       return false;
     }
     return true;
-  }
-
-  /**
-   * Get the SHA-256 value of a file
-   *
-   * @param path File
-   * @return SHA-256
-   */
-  private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {
-    MessageDigest digest = MessageDigest.getInstance("SHA-256");
-    digest.update(Files.readAllBytes(path));
-    return new String(digest.digest());
   }
 }

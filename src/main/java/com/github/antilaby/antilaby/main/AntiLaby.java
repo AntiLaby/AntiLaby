@@ -1,26 +1,26 @@
 package com.github.antilaby.antilaby.main;
 
-import com.github.antilaby.antilaby.config.ConfigFile;
-import com.github.antilaby.antilaby.config.ConfigReader;
-import com.github.antilaby.antilaby.compat.HLSCompat;
-import com.github.antilaby.antilaby.metrics.BStatsHandler;
-import com.github.antilaby.antilaby.updater.UpdateManager;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.antilaby.antilaby.util.ServerHelper;
 import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
+import com.github.antilaby.antilaby.command.LabyInfoCommand;
+import com.github.antilaby.antilaby.compat.HLSCompat;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
+import com.github.antilaby.antilaby.config.ConfigFile;
+import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
-import com.github.antilaby.antilaby.util.DataManager;
-import com.github.antilaby.antilaby.command.LabyInfoCommand;
 import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
+import com.github.antilaby.antilaby.metrics.BStatsHandler;
 import com.github.antilaby.antilaby.metrics.Metrics;
-import com.github.antilaby.antilaby.util.NmsUtils;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
+import com.github.antilaby.antilaby.updater.UpdateManager;
 import com.github.antilaby.antilaby.util.Constants;
+import com.github.antilaby.antilaby.util.DataManager;
+import com.github.antilaby.antilaby.util.NmsUtils;
+import com.github.antilaby.antilaby.util.ServerHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Main class of AntiLaby Spigot plugin
@@ -45,6 +47,20 @@ public class AntiLaby extends JavaPlugin {
   public static final Logger LOG = new Logger("Main");
   // The singleton instance
   private static AntiLaby instance;
+  /**
+   * All loaded Features
+   */
+  private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
+  // The cleanup Thread deletes the saved LabyPlayer data
+  private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
+  // Read from the configuration file
+  private ConfigReader configReader = new ConfigReader();
+  // Compatible?
+  private boolean compatible;
+  // Is this a beta version?
+  private VersionType versionType;
+  // is this pre 1.9?
+  private boolean before19 = false;
 
   /**
    * Gets the singleton instance
@@ -54,22 +70,6 @@ public class AntiLaby extends JavaPlugin {
   public static AntiLaby getInstance() {
     return instance;
   }
-
-  // Read from the configuration file
-  private ConfigReader configReader = new ConfigReader();
-
-  /**
-   * All loaded Features
-   */
-  private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
-  // Compatible?
-  private boolean compatible;
-  // Is this a beta version?
-  private VersionType versionType;
-  // The cleanup Thread deletes the saved LabyPlayer data
-  private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
-  // is this pre 1.9?
-  private boolean before19 = false;
 
   /**
    * This should be used instead of accessing {@link #loadedFeatures} directly
@@ -124,11 +124,17 @@ public class AntiLaby extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) return;
+    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
+      return;
+    }
     // Save Data if compatible
-    if(compatible) DataManager.saveData();
-      // If not, we need to remove the cleanup thread
-    else Runtime.getRuntime().removeShutdownHook(cleanup);
+    if (compatible) {
+      DataManager.saveData();
+    }
+    // If not, we need to remove the cleanup thread
+    else {
+      Runtime.getRuntime().removeShutdownHook(cleanup);
+    }
     LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
   }
 
@@ -138,7 +144,9 @@ public class AntiLaby extends JavaPlugin {
   @Override
   public void onEnable() {
     // Glowstone is not supported yet
-    if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) return;
+    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
+      return;
+    }
     // Delete datamanager file on exit
     Runtime.getRuntime().addShutdownHook(cleanup);
     // Check if the server is compatible with AntiLaby
@@ -146,18 +154,20 @@ public class AntiLaby extends JavaPlugin {
     int version = 0;
     try {
       version = Integer.parseInt(nmsver.split("_")[1]);
-    } catch(final NumberFormatException e) {
+    } catch (final NumberFormatException e) {
       LOG.fatal("Unknown NMS version (" + nmsver + ')');
       compatible = false;
       disableIfNotCompatible();
     }
-    if(version >= 8) {
+    if (version >= 8) {
       // Ensure the DataFolder exists
       Path dFP = getDataPath();
-      if(!Files.isDirectory(dFP)) try {
-        Files.createDirectory(dFP);
-      } catch(IOException e) {
-        e.printStackTrace();
+      if (!Files.isDirectory(dFP)) {
+        try {
+          Files.createDirectory(dFP);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
       compatible = true;
       LOG.debug("Your server (NMS version " + nmsver + ") is compatible with AntiLaby!");
@@ -174,16 +184,17 @@ public class AntiLaby extends JavaPlugin {
     Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
     Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL, new IncomingPluginChannel());
     // If HLS is installed, use HLS
-    if(Bukkit.getPluginManager().isPluginEnabled("HeisluftsLanguageSystem")) {
+    if (Bukkit.getPluginManager().isPluginEnabled("HeisluftsLanguageSystem")) {
       HLSCompat.init();
       loadedFeatures.add(PluginFeature.HEISLUFTS_LANGUAGE_SYSTEM);
     } else {
       // Init ProtocolLib support
-      if(Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+      if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
         ProtocolLibSupport.init();
         loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
-      } else if(version > 8) LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
-      else {
+      } else if (version > 8) {
+        LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+      } else {
         LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
         before19 = true;
       }
@@ -196,20 +207,20 @@ public class AntiLaby extends JavaPlugin {
     try {
       Metrics metrics = new Metrics(this);
       metrics.start();
-    } catch(final IOException e) {
+    } catch (final IOException e) {
       LOG.error(e.getMessage());
     }
     // Init LanguageManager
     try {
       LanguageManager.INSTANCE.initAL();
-    } catch(IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
       LOG.error("Could not convert language folder! ");
     }
     // Start plug-in metrics for bStats.org
     initBMetrics();
     // Resend AntiLaby packages (on reload)
-    for(final Player all : Bukkit.getOnlinePlayers()) {
+    for (final Player all : Bukkit.getOnlinePlayers()) {
       new AntiLabyPackager(all).sendPackages();
     }
     LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
@@ -220,7 +231,9 @@ public class AntiLaby extends JavaPlugin {
    * Disables the plug-in if not compatible
    */
   public void disableIfNotCompatible() {
-    if(!compatible) getPluginLoader().disablePlugin(this);
+    if (!compatible) {
+      getPluginLoader().disablePlugin(this);
+    }
   }
 
   private void initConfig() {
@@ -240,7 +253,9 @@ public class AntiLaby extends JavaPlugin {
    */
   private void initEvents() {
     final PluginManager pm = Bukkit.getPluginManager();
-    if(!before19) pm.registerEvents(new EventsPost18(), this);
+    if (!before19) {
+      pm.registerEvents(new EventsPost18(), this);
+    }
     pm.registerEvents(new PlayerJoin(), this);
     pm.registerEvents(new IncomingPluginChannel(), this);
   }
@@ -258,7 +273,7 @@ public class AntiLaby extends JavaPlugin {
    */
   @Override
   public void onLoad() {
-    if(ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
+    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
       LOG.error("Glowstone is not yet supported");
       Bukkit.getPluginManager().disablePlugin(this);
     }

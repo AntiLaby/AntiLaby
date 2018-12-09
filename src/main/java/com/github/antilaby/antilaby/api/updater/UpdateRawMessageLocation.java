@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.api.updater;
 
 /**
  * Contains the locations for update raw messages.
- * 
+ *
  * @author NathanNr
  */
 public enum UpdateRawMessageLocation {

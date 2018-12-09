@@ -3,9 +3,8 @@ package com.github.antilaby.antilaby.updater;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 
-import java.net.URL;
-
 import java.io.*;
+import java.net.URL;
 
 /**
  * Downloads the updated file

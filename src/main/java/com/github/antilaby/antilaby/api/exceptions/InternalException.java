@@ -13,10 +13,8 @@ public class InternalException extends RuntimeException {
 
   public InternalException(String location, String message, String id) {
     super(id == null
-        ? "[AntiLaby/" + location + "] An internal error occured: \"" + message + "\" Please report "
-            + "the bug with the full stack trace here: " + Constants.BUG_REPORT_URL
-        : "[AntiLaby/" + location + "] An internal error occured" + ". " + "\"" + message
-            + "\" Please report the bug with the id '" + id + "' and the full stack trace here: "
+        ? "[AntiLaby/" + location + "] An internal error occured: \"" + message + "\" Please report " + "the bug with the full stack trace here: " + Constants.BUG_REPORT_URL :
+        "[AntiLaby/" + location + "] An internal error occured" + ". " + "\"" + message + "\" Please report the bug with the id '" + id + "' and the full stack trace here: "
             + Constants.BUG_REPORT_URL);
   }
 

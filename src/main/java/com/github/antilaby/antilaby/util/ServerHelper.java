@@ -9,100 +9,118 @@ import java.lang.reflect.Field;
  */
 public final class ServerHelper {
 
-	/**
-	 * The servers Bukkit implementation
-	 */
-	public enum ImplementationType {
-		/** Server is CraftBukkit based */
-		CRAFT_BUKKIT,
-		/** Server is Glowstone based */
-		GLOWSTONE
-	}
+  private static boolean isBungeeCord;
+  private static ApiType type;
+  private static ImplementationType implementation;
 
-	/**
-	 * The servers Bukkit API type
-	 */
-	public enum ApiType {
-		/** Server only implements Bukkit */
-		BUKKIT,
-		/** Server implements Spigot */
-		SPIGOT,
-		/** Server implements PaperSpigot */
-		PAPER_SPIGOT
-	}
+  /**
+   * Private constructor, no need to instantiate this class
+   */
+  private ServerHelper() {
+    throw new UnsupportedOperationException();
+  }
 
-	private static boolean isBungeeCord;
-	private static ApiType type;
-	private static ImplementationType implementation;
+  /**
+   * Gets this servers Bukkit Api type
+   *
+   * @return the APIType
+   */
+  public static ApiType getServerType() {
+    if (type == null) {
+      init();
+    }
+    return type;
+  }
 
-	/**
-	 * Gets this servers Bukkit Api type
-	 *
-	 * @return the APIType
-	 */
-	public static ApiType getServerType() {
-		if(type == null) init();
-		return type;
-	}
+  /**
+   * Gets this servers Bukkit implementation
+   *
+   * @return the ImplementationType
+   */
+  public static ImplementationType getImplementation() {
+    if (implementation == null) {
+      init();
+    }
+    return implementation;
+  }
 
-	/**
-	 * Gets this servers Bukkit implementation
-	 *
-	 * @return the ImplementationType
-	 */
-	public static ImplementationType getImplementation() {
-		if(implementation == null) init();
-		return implementation;
-	}
+  private static void init() {
+    try {
+      Class.forName("net.glowstone.GlowServer");
+      type = ApiType.PAPER_SPIGOT;
+      implementation = ImplementationType.GLOWSTONE;
+    } catch (ClassNotFoundException e) {
+      implementation = ImplementationType.CRAFT_BUKKIT;
+    }
+    Class<?> spigotClass;
+    try {
+      spigotClass = Class.forName("org.spigotmc.SpigotConfig");
+    } catch (ClassNotFoundException e) {
+      type = ApiType.BUKKIT;
+      isBungeeCord = false;
+      return;
+    }
+    ApiType spigotType;
+    try {
+      Class.forName("com.destroystokyo.paper.PaperCommand");
+      spigotType = ApiType.PAPER_SPIGOT;
+    } catch (Exception e) {
+      spigotType = ApiType.SPIGOT;
+    }
+    type = spigotType;
+    boolean bungeeCord;
+    try {
+      Field field = spigotClass.getDeclaredField("bungee");
+      field.setAccessible(true);
+      bungeeCord = field.getBoolean(null);
+    } catch (Exception e) {
+      bungeeCord = false;
+    }
+    isBungeeCord = bungeeCord;
+  }
 
-	/**
-	 * Private constructor, no need to instantiate this class
-	 */
-	private ServerHelper() {throw new UnsupportedOperationException();}
+  /**
+   * Gets whether this Server is part of a BungeeCord network
+   *
+   * @return true if User enabled the bungeeCord option in the servers spigot.yml
+   */
+  public static boolean isBungeeCord() {
+    if (type == null) {
+      init();
+    }
+    return isBungeeCord;
+  }
 
-	private static void init() {
-		try {
-			Class.forName("net.glowstone.GlowServer");
-			type = ApiType.PAPER_SPIGOT;
-			implementation = ImplementationType.GLOWSTONE;
-		} catch(ClassNotFoundException e) {
-			implementation = ImplementationType.CRAFT_BUKKIT;
-		}
-		Class<?> spigotClass;
-		try {
-			spigotClass = Class.forName("org.spigotmc.SpigotConfig");
-		} catch(ClassNotFoundException e) {
-			type = ApiType.BUKKIT;
-			isBungeeCord = false;
-			return;
-		}
-		ApiType spigotType;
-		try {
-			Class.forName("com.destroystokyo.paper.PaperCommand");
-			spigotType = ApiType.PAPER_SPIGOT;
-		} catch(Exception e) {
-			spigotType = ApiType.SPIGOT;
-		}
-		type = spigotType;
-		boolean bungeeCord;
-		try {
-			Field field = spigotClass.getDeclaredField("bungee");
-			field.setAccessible(true);
-			bungeeCord = field.getBoolean(null);
-		} catch(Exception e) {
-			bungeeCord = false;
-		}
-		isBungeeCord = bungeeCord;
-	}
+  /**
+   * The servers Bukkit implementation
+   */
+  public enum ImplementationType {
+    /**
+     * Server is CraftBukkit based
+     */
+    CRAFT_BUKKIT,
+    /**
+     * Server is Glowstone based
+     */
+    GLOWSTONE
+  }
 
-	/**
-	 * Gets whether this Server is part of a BungeeCord network
-	 *
-	 * @return true if User enabled the bungeeCord option in the servers spigot.yml
-	 */
-	public static boolean isBungeeCord() {
-		if(type == null) init();
-		return isBungeeCord;
-	}
+  /**
+   * The servers Bukkit API type
+   */
+  public enum ApiType {
+    /**
+     * Server only implements Bukkit
+     */
+    BUKKIT,
+    /**
+     * Server implements Spigot
+     */
+    SPIGOT,
+    /**
+     * Server implements PaperSpigot
+     */
+    PAPER_SPIGOT
+  }
 
 }

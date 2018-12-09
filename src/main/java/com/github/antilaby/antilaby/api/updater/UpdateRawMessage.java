@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.api.updater;
 
 /**
  * Provides information about a raw update message.
- * 
+ *
  * @author NathanNr
  */
 
@@ -12,10 +12,8 @@ public class UpdateRawMessage {
   private UpdateRawMessageLocation loc;
 
   /**
-   * @param message
-   *            The update message
-   * @param loc
-   *            The location of the update message
+   * @param message The update message
+   * @param loc     The location of the update message
    */
   public UpdateRawMessage(String message, UpdateRawMessageLocation loc) {
     this.message = message;

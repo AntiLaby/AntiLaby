@@ -38,8 +38,9 @@ public class ExecutableCommand {
   }
 
   public boolean execute() {
-    if(sender == null)
+    if (sender == null) {
       sender = Bukkit.getConsoleSender();
+    }
     return Bukkit.dispatchCommand(sender, commandLine);
   }
 

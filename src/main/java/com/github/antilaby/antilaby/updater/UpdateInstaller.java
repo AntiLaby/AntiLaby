@@ -34,8 +34,9 @@ public class UpdateInstaller {
     final OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(AntiLaby.getInstance().getFile()));
     final byte[] chunk = new byte[1024];
     int chunkSize;
-    while ((chunkSize = fileInputStream.read(chunk)) != -1)
+    while ((chunkSize = fileInputStream.read(chunk)) != -1) {
       outputStream.write(chunk, 0, chunkSize);
+    }
     fileInputStream.close();
     outputStream.close();
     LOGGER.debug("Done!");
