@@ -2,15 +2,26 @@ package com.github.antilaby.antilaby.api.antilabypackages;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.github.antilaby.DummyServer;
 import com.github.antilaby.antilaby.api.LabyModFeature;
+import org.bukkit.Bukkit;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class AntiLabyPackagerTest {
+
+  @BeforeAll
+  public static void setup() throws ReflectiveOperationException {
+    Field f = Bukkit.class.getDeclaredField("server");
+    f.setAccessible(true);
+    f.set(null, new DummyServer());
+  }
 
   @Test
   public void assertThatMapLabyModSettingsMapsCorrectly() {
