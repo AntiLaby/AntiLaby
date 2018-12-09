@@ -53,12 +53,12 @@ task javadocJar(type: Jar) {
 }
 
 dependencies {
-    compileOnly 'net.glowstone:glowstone:2018.8.0-SNAPSHOT'
-    compileOnly 'de.heisluft:HeisluftsLanguageSystem:1.0.0'
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
+    compile 'net.glowstone:glowstone:2018.8.0-SNAPSHOT'
+    compile 'de.heisluft:HeisluftsLanguageSystem:1.0.0'
+    compile('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
         transitive = false
     }
-    compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
+    compile 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompile 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 }
 
