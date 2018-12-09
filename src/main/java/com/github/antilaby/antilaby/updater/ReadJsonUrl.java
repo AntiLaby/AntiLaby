@@ -15,40 +15,40 @@ import java.net.URL;
  */
 public class ReadJsonUrl {
 
-	private static final Logger LOGGER = new Logger("ReadJsonUrl");
+  private static final Logger LOGGER = new Logger("ReadJsonUrl");
 
-	private final String uri;
+  private final String uri;
 
-	public ReadJsonUrl(String uri) {
-		this.uri = uri;
-	}
+  public ReadJsonUrl(String uri) {
+    this.uri = uri;
+  }
 
-	/**
-	 * Read JSON from a HTTP server
-	 *
-	 * @return JSON as String
-	 * @throws IOException Error while reading JSON
-	 */
-	public String read() throws IOException {
-		URL url;
-		HttpURLConnection httpURLConnection;
-		String raw = "";
-		url = new URL(uri);
-		LOGGER.debug("Connecting to '" + url.toString() + "'...");
-		httpURLConnection = (HttpURLConnection) url.openConnection();
-		httpURLConnection.setRequestMethod("GET");
-		httpURLConnection.setRequestProperty("Accept", "application/json");
-		// TODO: Other status codes may also be allowed
-		if (httpURLConnection.getResponseCode() != 200)
-			throw new IOException("Failed read data, received HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
-		LOGGER.debug("Reading input stream...");
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
-		String output;
-		while ((output = bufferedReader.readLine()) != null)
-			raw += output;
-		httpURLConnection.disconnect();
-		LOGGER.debug("Done!");
-		return raw;
-	}
+  /**
+   * Read JSON from a HTTP server
+   *
+   * @return JSON as String
+   * @throws IOException Error while reading JSON
+   */
+  public String read() throws IOException {
+    URL url;
+    HttpURLConnection httpURLConnection;
+    String raw = "";
+    url = new URL(uri);
+    LOGGER.debug("Connecting to '" + url.toString() + "'...");
+    httpURLConnection = (HttpURLConnection) url.openConnection();
+    httpURLConnection.setRequestMethod("GET");
+    httpURLConnection.setRequestProperty("Accept", "application/json");
+    // TODO: Other status codes may also be allowed
+    if (httpURLConnection.getResponseCode() != 200)
+      throw new IOException("Failed read data, received HTTP status code '" + httpURLConnection.getResponseCode() + "' from the web server.");
+    LOGGER.debug("Reading input stream...");
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader((httpURLConnection.getInputStream())));
+    String output;
+    while ((output = bufferedReader.readLine()) != null)
+      raw += output;
+    httpURLConnection.disconnect();
+    LOGGER.debug("Done!");
+    return raw;
+  }
 
 }

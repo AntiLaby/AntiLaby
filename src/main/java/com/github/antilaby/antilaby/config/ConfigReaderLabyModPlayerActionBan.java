@@ -7,12 +7,12 @@ package com.github.antilaby.antilaby.config;
  */
 public class ConfigReaderLabyModPlayerActionBan {
 
-	public boolean isEnabled() {
-		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enable");
-	}
+  public boolean isEnabled() {
+    return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.LabyModPlayerAction.Ban.Enable");
+  }
 
-	public String getCommand() {
-		return ConfigFile.getFileConfiguration().getString("AntiLaby.LabyModPlayerAction.Ban.Command");
-	}
+  public String getCommand() {
+    return ConfigFile.getFileConfiguration().getString("AntiLaby.LabyModPlayerAction.Ban.Command");
+  }
 
 }

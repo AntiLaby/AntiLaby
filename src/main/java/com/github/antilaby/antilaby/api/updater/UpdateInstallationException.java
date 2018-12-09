@@ -8,10 +8,10 @@ package com.github.antilaby.antilaby.api.updater;
 
 public class UpdateInstallationException extends Exception {
 
-	private static final long serialVersionUID = -8663702121048060809L;
+  private static final long serialVersionUID = -8663702121048060809L;
 
-	public UpdateInstallationException(String location, String message) {
-		super("[AntiLaby/Updater/" + location + "] " + message);
-	}
+  public UpdateInstallationException(String location, String message) {
+    super("[AntiLaby/Updater/" + location + "] " + message);
+  }
 
 }

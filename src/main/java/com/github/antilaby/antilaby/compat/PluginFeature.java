@@ -7,10 +7,10 @@ import com.github.antilaby.antilaby.log.Logger;
  */
 public enum PluginFeature {
 
-	/** The ProtocolLib specific features */
-	PROTOCOL_LIB, /** HeisluftsLanguageSystem specific features */
-	HEISLUFTS_LANGUAGE_SYSTEM;
+  /** The ProtocolLib specific features */
+  PROTOCOL_LIB, /** HeisluftsLanguageSystem specific features */
+  HEISLUFTS_LANGUAGE_SYSTEM;
 
-	static final Logger LOG = new Logger("Compat");
+  static final Logger LOG = new Logger("Compat");
 
 }

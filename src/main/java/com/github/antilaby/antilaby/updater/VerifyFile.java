@@ -15,39 +15,39 @@ import java.security.NoSuchAlgorithmException;
  */
 public class VerifyFile {
 
-	private static final Logger logger = new Logger("VerifyFile");
+  private static final Logger logger = new Logger("VerifyFile");
 
-	private final Path path;
-	private final String sha256;
+  private final Path path;
+  private final String sha256;
 
-	public VerifyFile(Path path, String sha256) {
-		this.path = path;
-		this.sha256 = sha256;
-	}
+  public VerifyFile(Path path, String sha256) {
+    this.path = path;
+    this.sha256 = sha256;
+  }
 
-	/**
-	 * Compare the hash values
-	 *
-	 * @return true if the hash values are equal
-	 */
-	public boolean validate() throws IOException, NoSuchAlgorithmException {
-		String fileHash = getSha256(path);
-		if (!fileHash.equals(sha256)) {
-			logger.debug("Hash values are not equal: calculated '" + fileHash + "' but expected '" + sha256 + "'");
-			return false;
-		}
-		return true;
-	}
+  /**
+   * Compare the hash values
+   *
+   * @return true if the hash values are equal
+   */
+  public boolean validate() throws IOException, NoSuchAlgorithmException {
+    String fileHash = getSha256(path);
+    if (!fileHash.equals(sha256)) {
+      logger.debug("Hash values are not equal: calculated '" + fileHash + "' but expected '" + sha256 + "'");
+      return false;
+    }
+    return true;
+  }
 
-	/**
-	 * Get the SHA-256 value of a file
-	 *
-	 * @param path File
-	 * @return SHA-256
-	 */
-	private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		digest.update(Files.readAllBytes(path));
-		return new String(digest.digest());
-	}
+  /**
+   * Get the SHA-256 value of a file
+   *
+   * @param path File
+   * @return SHA-256
+   */
+  private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {
+    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+    digest.update(Files.readAllBytes(path));
+    return new String(digest.digest());
+  }
 }

@@ -14,15 +14,15 @@ import com.github.antilaby.antilaby.lang.LanguageManager;
  */
 public class PlayerJoin implements Listener {
 
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		LanguageManager.INSTANCE.unmapPlayerLanguage(event.getPlayer());
-	}
+  @EventHandler
+  public void onPlayerQuit(PlayerQuitEvent event) {
+    LanguageManager.INSTANCE.unmapPlayerLanguage(event.getPlayer());
+  }
 
-	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
-		// Disable LabyMod functions for the new player
-		new AntiLabyPackager(event.getPlayer()).sendPackages();
-	}
+  @EventHandler
+  public void onPlayerJoin(PlayerJoinEvent event) {
+    // Disable LabyMod functions for the new player
+    new AntiLabyPackager(event.getPlayer()).sendPackages();
+  }
 
 }
