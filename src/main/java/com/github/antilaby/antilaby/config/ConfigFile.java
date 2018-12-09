@@ -58,7 +58,7 @@ public class ConfigFile {
 	public static void save() {
 		try {
 			fileConfiguration.save(file);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}
@@ -70,13 +70,13 @@ public class ConfigFile {
 	public static void load() {
 		try {
 			fileConfiguration.load(file);
-		} catch (IOException | InvalidConfigurationException e) {
+		} catch(IOException | InvalidConfigurationException e) {
 			logger.error("Failed to load the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}
 		try {
 			new ConfigInit(file, fileConfiguration);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
 			e.printStackTrace();
 		}

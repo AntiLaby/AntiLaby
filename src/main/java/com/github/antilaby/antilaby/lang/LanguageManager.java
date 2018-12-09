@@ -30,7 +30,7 @@ public class LanguageManager {
 	private LanguageManager() {}
 
 	public void initAL() throws IOException {
-		Path dataFolder = AntiLaby.getInstance().getDataFolder().toPath();
+		Path dataFolder = AntiLaby.getInstance().getDataPath();
 		Path newDataPath = dataFolder.resolve("lang");
 		if(!Files.exists(newDataPath)) {
 			LOG.info("lang dir does not exist yet, creating...");

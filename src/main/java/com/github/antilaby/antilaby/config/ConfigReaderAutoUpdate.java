@@ -26,9 +26,8 @@ public class ConfigReaderAutoUpdate {
 	}
 
 	/**
-	 * Read 'AntiLaby.Update.AutoUpdate.Test' from the configuration file
-	 * Only for testing the update system
-	 * The default value will only be generated, if the {@link com.github.antilaby.antilaby.api.updater.VersionType} equals dev
+	 * Read 'AntiLaby.Update.AutoUpdate.Test' from the configuration file Only for testing the update system The default value will only be generated, if the {@link
+	 * com.github.antilaby.antilaby.api.updater.VersionType} equals dev
 	 *
 	 * @return true if auto update for test versions is enabled
 	 */

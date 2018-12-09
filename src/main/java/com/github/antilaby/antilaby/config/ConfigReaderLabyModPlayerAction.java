@@ -35,16 +35,17 @@ public class ConfigReaderLabyModPlayerAction {
 	/**
 	 * Get the LabyModPlayerJoinCommands from the configuration file
 	 *
-	 * @param includeComments true if comments should be included
+	 * @param includeComments
+	 * 		true if comments should be included
+	 *
 	 * @return list of commands
 	 */
 	public List<String> getJoinCommands(boolean includeComments) {
 		List<String> commandsComments = ConfigFile.getFileConfiguration().getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
-		if (!includeComments) {
+		if(!includeComments) {
 			List<String> commands = new ArrayList<>();
-			for (final String command : commandsComments)
-				if (!command.startsWith("#"))
-					commands.add(command);
+			for(final String command : commandsComments)
+				if(!command.startsWith("#")) commands.add(command);
 			return commands;
 		} else {
 			return commandsComments;

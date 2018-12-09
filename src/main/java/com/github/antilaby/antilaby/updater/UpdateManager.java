@@ -1,6 +1,6 @@
 package com.github.antilaby.antilaby.updater;
 
-import com.github.antilaby.antilaby.api.config.ConfigReader;
+import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.util.Constants;
 import org.json.simple.parser.ParseException;
@@ -41,15 +41,15 @@ public class UpdateManager extends Thread {
 	@Override
 	public void run() {
 		// Checking for updates
-		if (autoUpdate == false) {
+		if(autoUpdate == false) {
 			logger.info("Auto-update has been disabled in the configuration file.");
 			return;
 		}
 		logger.debug("Checking for new updates...");
 		UpdateInformation updateInformation;
 		try {
-			if (!includeTest) {
-				if (!includeBeta) {
+			if(!includeTest) {
+				if(!includeBeta) {
 					updateInformation = check(UpdateInformationType.RELEASE);
 				} else {
 					updateInformation = check(UpdateInformationType.BETA);
@@ -57,19 +57,19 @@ public class UpdateManager extends Thread {
 			} else {
 				updateInformation = check(UpdateInformationType.TEST);
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			logger.warn("Failed to check for updates: Network error");
 			return;
-		} catch (ParseException e) {
+		} catch(ParseException e) {
 			logger.warn("Failed to check for updates: Parsing error");
 			return;
 		}
-		if (updateInformation == null) {
+		if(updateInformation == null) {
 			logger.warn("Failed to check for updates.");
 			return;
 		}
 		// Check if a newer version is available; cancel the update process, if the most recent version is already installed
-		if (updateInformation.getVersionId() <= Constants.VERSION_ID) {
+		if(updateInformation.getVersionId() <= Constants.VERSION_ID) {
 			logger.info("The most recent version is already installed.");
 			return;
 		}
@@ -77,20 +77,20 @@ public class UpdateManager extends Thread {
 		UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation, temporaryFileLocation);
 		try {
 			updateDownloader.download();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			logger.warn("Failed to download update file.");
 		}
 		// Install
 		UpdateInstaller updateInstaller = new UpdateInstaller(updateDownloader.getTemporaryFileLocation());
 		try {
 			updateInstaller.install();
-		} catch (IOException e) {
+		} catch(IOException e) {
 			logger.warn("Failed to overwrite the old plug-in file with the new one!");
 		}
 		// Remove temporary file
 		logger.debug("Removing temporary file...");
 		final File tmp = new File(updateDownloader.getTemporaryFileLocation());
-		if (tmp.exists()) {
+		if(tmp.exists()) {
 			tmp.delete();
 		}
 		logger.info("Done! Please restart your server to finish the update process.");
@@ -100,14 +100,16 @@ public class UpdateManager extends Thread {
 	 * Check for a new version of AntiLaby
 	 *
 	 * @param updateInformationType
+	 *
 	 * @return
+	 *
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	private UpdateInformation check(UpdateInformationType updateInformationType) throws IOException, ParseException {
 		try {
 			UpdateChecker updateChecker = new UpdateChecker(uris.get(0)); // TODO
-			switch (updateInformationType) {
+			switch(updateInformationType) {
 				case RELEASE:
 					return updateChecker.getUpdateInformation();
 				case BETA:
@@ -117,7 +119,7 @@ public class UpdateManager extends Thread {
 				default:
 					throw new EnumConstantNotPresentException(UpdateInformationType.class, null);
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			throw e; // TODO
 		}
 	}

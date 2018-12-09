@@ -30,8 +30,11 @@ public class ConfigInit {
 	/**
 	 * Initialize the configuration file and update it from older versions.
 	 *
-	 * @param file              the configuration file
-	 * @param fileConfiguration the file configuration instance of the configuration file
+	 * @param file
+	 * 		the configuration file
+	 * @param fileConfiguration
+	 * 		the file configuration instance of the configuration file
+	 *
 	 * @throws IOException
 	 */
 	public ConfigInit(File file, FileConfiguration fileConfiguration) throws IOException {
@@ -39,10 +42,10 @@ public class ConfigInit {
 		this.fileConfiguration = fileConfiguration;
 
 		// Check if the configuration file has to be updated
-		if (fileConfiguration.get(CONFIG_VERSION_PATH) == null) {
+		if(fileConfiguration.get(CONFIG_VERSION_PATH) == null) {
 			addDefaults();
 			save();
-		} else if (fileConfiguration.getInt(CONFIG_VERSION_PATH) == Constants.CURRENT_CONFIG_VERSION) {
+		} else if(fileConfiguration.getInt(CONFIG_VERSION_PATH) == Constants.CURRENT_CONFIG_VERSION) {
 			addDefaults();
 			save();
 		} else {
@@ -59,13 +62,14 @@ public class ConfigInit {
 		fileConfiguration.addDefault("AntiLaby.EnableBypassWithPermission", true);
 		fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
 
-		fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info", "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
+		fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info",
+				"# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
 		fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false);
 		fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%");
 
 		// Additional plug-in channels. Clients who use them, will be blocked.
 		// TODO: implement Additional Plug-in Channels
-		if (fileConfiguration.getStringList("AntiLaby.AdditionalPluginChannels") == null) {
+		if(fileConfiguration.getStringList("AntiLaby.AdditionalPluginChannels") == null) {
 			ArrayList<String> additionalPluginChannels = new ArrayList<>();
 			additionalPluginChannels.add("#Here you can add additional plug-in channels which will be blocked.");
 			fileConfiguration.set("AntiLaby.AdditionalPluginChannels", additionalPluginChannels);
@@ -74,7 +78,7 @@ public class ConfigInit {
 		// Add default values for auto-updates
 		fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Release", true);
 		fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
-		if (AntiLaby.getInstance().getVersionType() == VersionType.DEV) {
+		if(AntiLaby.getInstance().getVersionType() == VersionType.DEV) {
 			fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Test", false);
 		}
 
@@ -82,8 +86,8 @@ public class ConfigInit {
 		// Add default values for the feature handling of LabyMod
 		final List<String> disabledFeatures = fileConfiguration.getStringList("AntiLaby.LabyModFeatures.Disable");
 		final List<String> enabledFeatures = fileConfiguration.getStringList("AntiLaby.LabyModFeatures.Enable");
-		for (LabyModFeature labyModFeature : LabyModFeature.values()) {
-			switch (labyModFeature.getDefaultValue()) {
+		for(LabyModFeature labyModFeature : LabyModFeature.values()) {
+			switch(labyModFeature.getDefaultValue()) {
 				case "enabled":
 					disabledFeatures.add(labyModFeature.toString());
 					break;
@@ -96,11 +100,9 @@ public class ConfigInit {
 		}
 
 		// Set the string lists to the configuration file, if they do not exist yet
-		if (fileConfiguration.getList("AntiLaby.LabyModFeatures.Disable") == null)
-			fileConfiguration.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
-		if (fileConfiguration.getList("AntiLaby.LabyModFeatures.Enable") == null)
-			fileConfiguration.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
-		if (fileConfiguration.getList("AntiLaby.LabyModPlayerAction.ExecuteCommands") == null) {
+		if(fileConfiguration.getList("AntiLaby.LabyModFeatures.Disable") == null) fileConfiguration.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
+		if(fileConfiguration.getList("AntiLaby.LabyModFeatures.Enable") == null) fileConfiguration.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
+		if(fileConfiguration.getList("AntiLaby.LabyModPlayerAction.ExecuteCommands") == null) {
 			final List<String> commands = fileConfiguration.getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
 			commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
 			commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
@@ -120,27 +122,26 @@ public class ConfigInit {
 	private void update() {
 		// The old file will be overwritten currently.
 		// TODO: Update the configuration updater from the old config version 2.
-		if (file.exists()) {
+		if(file.exists()) {
 			file.delete();
 			fileConfiguration = YamlConfiguration.loadConfiguration(file);
 			addDefaults();
 		}
 		// TODO: Enable the config updater
-		if (false) { // Currently not in use
+		if(false) { // Currently not in use
 			int oldVersion;
-			if (fileConfiguration.getString("AntiLaby.ConfigVersion") != null)
-				oldVersion = fileConfiguration.getInt("AntiLaby.ConfigVersion");
+			if(fileConfiguration.getString("AntiLaby.ConfigVersion") != null) oldVersion = fileConfiguration.getInt("AntiLaby.ConfigVersion");
 			else oldVersion = 0;
-			if (oldVersion == 1) {
+			if(oldVersion == 1) {
 				logger.info("Updating the configuration file '" + file.getAbsolutePath() + "' from version '" + oldVersion + "' to the current version '" + Constants.CURRENT_CONFIG_VERSION + "'...");
 				fileConfiguration.getBoolean("AntiLaby.EnableBypassWithPermission");
 				final boolean labyKick = fileConfiguration.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
 				ArrayList<String> disabledFeatures = new ArrayList<>();
 				ArrayList<String> enabledFeatures = new ArrayList<>();
-				for (LabyModFeature lmf : LabyModFeature.values()) {
-					if (fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("true")) {
+				for(LabyModFeature lmf : LabyModFeature.values()) {
+					if(fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("true")) {
 						disabledFeatures.add(lmf.toString());
-					} else if (fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("false")) {
+					} else if(fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("false")) {
 						enabledFeatures.add(lmf.toString());
 					}
 				}
@@ -165,11 +166,11 @@ public class ConfigInit {
 				// Save the updated file
 				try {
 					save();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
 				logger.info("The configuration file has been updated successfully!");
-			} else if (oldVersion == 2) {
+			} else if(oldVersion == 2) {
 				// TODO: Create the updater
 				logger.info("Updating the configuration file '" + file.getAbsolutePath() + "' from version '" + oldVersion + "' to the current version '" + Constants.CURRENT_CONFIG_VERSION + "'.");
 				boolean bypassWithPermission = fileConfiguration.getBoolean("AntiLaby.EnableBypassWithPermission");
@@ -204,7 +205,7 @@ public class ConfigInit {
 				// TODO Delete the old file and create the new one with the stored values.
 				try {
 					save();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
 				logger.info("The configuration file has been updated successfully!");
@@ -213,7 +214,7 @@ public class ConfigInit {
 				addDefaults();
 				try {
 					save();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
 				logger.warn("Failed to update the configuration file, it has been reset to it's default values. Please check the current settings!");
@@ -224,7 +225,8 @@ public class ConfigInit {
 	/**
 	 * Save the configuration file.
 	 *
-	 * @throws IOException If the configuration somehow failed to save
+	 * @throws IOException
+	 * 		If the configuration somehow failed to save
 	 */
 	private void save() throws IOException {
 		fileConfiguration.save(file);
