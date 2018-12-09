@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.api.config;
+package com.github.antilaby.antilaby.config;
 
 /**
  * Get the values of the configuration file from the AutoUpdate section.

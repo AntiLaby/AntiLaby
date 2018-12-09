@@ -4,4 +4,4 @@
  *
  * @author NathanNr
  */
-package com.github.antilaby.antilaby.api.config;
+package com.github.antilaby.antilaby.config;

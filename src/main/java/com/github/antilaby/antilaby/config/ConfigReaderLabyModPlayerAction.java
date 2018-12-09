@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.api.config;
+package com.github.antilaby.antilaby.config;
 
 import java.util.ArrayList;
 import java.util.List;

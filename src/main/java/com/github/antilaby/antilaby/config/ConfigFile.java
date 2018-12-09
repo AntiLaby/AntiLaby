@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.api.config;
+package com.github.antilaby.antilaby.config;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.api.antilabypackages;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
-import com.github.antilaby.antilaby.api.config.ConfigReader;
+import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
