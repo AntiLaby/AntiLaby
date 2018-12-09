@@ -15,7 +15,7 @@ public class ConfigReader {
 	 * @return a list of all enabled LabyMod features
 	 */
 	public List<String> getEnabledFeatures() {
-		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Enable");
+		return ConfigFile.getFileConfiguration().getStringList("AntiLaby.LabyModFeatures.Enable");
 	}
 
 	/**
@@ -24,7 +24,7 @@ public class ConfigReader {
 	 * @return a list of all disabled LabyMod features
 	 */
 	public List<String> getDisabledFeatures() {
-		return ConfigFile.getCfg().getStringList("AntiLaby.LabyModFeatures.Disable");
+		return ConfigFile.getFileConfiguration().getStringList("AntiLaby.LabyModFeatures.Disable");
 	}
 
 	/**
@@ -33,7 +33,7 @@ public class ConfigReader {
 	 * @return true if the bypass for players with the bypass permission is enabled
 	 */
 	public boolean getEnableBypassWithPermission() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.EnableBypassWithPermission");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.EnableBypassWithPermission");
 	}
 
 	public ConfigReaderLabyModPlayerAction getLabyModPlayerAction() {
@@ -41,7 +41,7 @@ public class ConfigReader {
 	}
 
 	public List<String> getAdditionalPluginChannels() {
-		return ConfigFile.getCfg().getStringList("AntiLaby.AdditionalPluginChannels");
+		return ConfigFile.getFileConfiguration().getStringList("AntiLaby.AdditionalPluginChannels");
 	}
 
 	public ConfigReaderAutoUpdate getAutoUpdate() {
@@ -53,11 +53,11 @@ public class ConfigReader {
 	}
 
 	public boolean getDebugMode() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.DebugMode");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.DebugMode");
 	}
 
 	public boolean getConfigVersion() {
-		return ConfigFile.getCfg().getBoolean("AntiLaby.ConfigVersion");
+		return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.ConfigVersion");
 	}
 
 }

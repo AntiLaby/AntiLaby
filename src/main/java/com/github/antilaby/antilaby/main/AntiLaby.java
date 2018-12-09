@@ -1,17 +1,16 @@
 package com.github.antilaby.antilaby.main;
 
+import com.github.antilaby.antilaby.api.config.ConfigFile;
 import com.github.antilaby.antilaby.api.config.ConfigReader;
 import com.github.antilaby.antilaby.compat.HLSCompat;
+import com.github.antilaby.antilaby.metrics.BStatsHandler;
 import com.github.antilaby.antilaby.updater.UpdateManager;
-import com.github.antilaby.antilaby.util.Miscellaneous;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.util.ServerHelper;
 import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
-import com.github.antilaby.antilaby.config.Config;
-import com.github.antilaby.antilaby.config.InitConfig;
 import com.github.antilaby.antilaby.events.EventsPost18;
 import com.github.antilaby.antilaby.events.PlayerJoin;
 import com.github.antilaby.antilaby.util.DataManager;
@@ -91,8 +90,9 @@ public class AntiLaby extends JavaPlugin {
 		return before19;
 	}
 
-    /**
+	/**
 	 * {@inheritDoc}
+	 *
 	 * @return JavaPlugin#getFile
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class AntiLaby extends JavaPlugin {
 		LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
 	}
 
-    /**
+	/**
 	 * This method is called by PluginManager when the plugin is enabling.
 	 */
 	@Override
@@ -226,7 +226,7 @@ public class AntiLaby extends JavaPlugin {
 	}
 
 	private void initConfig() {
-		new InitConfig(this).init();
+		ConfigFile.load();
 	}
 
 	/**
@@ -252,60 +252,10 @@ public class AntiLaby extends JavaPlugin {
 	 */
 	private void initBMetrics() {
 		// Start plug-in metrics for bStats.org
-		final BStats bstats = new BStats(this);
-		bstats.addCustomChart(
-				new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(Config.isAutoUpdateEnabled())));
-		bstats.addCustomChart(
-				new BStats.SimplePie("is_bungee_server", () -> String.valueOf(ServerHelper.isBungeeCord())));
-		bstats.addCustomChart(
-				new BStats.SimplePie("bypass_enabled", () -> String.valueOf(Config.getEnableBypassWithPermission())));
-		bstats.addCustomChart(
-				new BStats.SimplePie("kick_enabled", () -> String.valueOf(Config.getLabyModPlayerKickEnable())));
-		bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
-			final Map<String, Integer> valueMap = new HashMap<>();
-			final int food = Miscellaneous.boolToInt(Config.getFOOD());
-			final int gui = Miscellaneous.boolToInt(Config.getGUI());
-			final int nick = Miscellaneous.boolToInt(Config.getNICK());
-			final int blockBuild = Miscellaneous.boolToInt(Config.getBLOCKBUILD());
-			final int chat = Miscellaneous.boolToInt(Config.getCHAT());
-			final int extras = Miscellaneous.boolToInt(Config.getEXTRAS());
-			final int animations = Miscellaneous.boolToInt(Config.getANIMATIONS());
-			final int potions = Miscellaneous.boolToInt(Config.getPOTIONS());
-			final int armor = Miscellaneous.boolToInt(Config.getARMOR());
-			final int damageIndicator = Miscellaneous.boolToInt(Config.getDAMAGEINDICATOR());
-			final int minimapRadar = Miscellaneous.boolToInt(Config.getMINIMAP_RADAR());
-			valueMap.put("FOOD", food);
-			valueMap.put("GUI", gui);
-			valueMap.put("NICK", nick);
-			valueMap.put("BLOCKBUILD", blockBuild);
-			valueMap.put("CHAT", chat);
-			valueMap.put("EXTRAS", extras);
-			valueMap.put("ANIMATIONS", animations);
-			valueMap.put("POTIONS", potions);
-			valueMap.put("ARMOR", armor);
-			valueMap.put("DAMAGEINDICATOR", damageIndicator);
-			valueMap.put("MINIMAP_RADAR", minimapRadar);
-			return valueMap;
-		}));
-		bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
-			final Map<String, Integer> valueMap = new HashMap<>();
-			valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
-			valueMap.put("players_no_lm",
-					Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
-			return valueMap;
-		}));
-		bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single",
-				() -> IncomingPluginChannel.getLabyModPlayers().size()));
-		final List<String> labyModJoinCommands = configReader.getLabyModPlayerAction().getJoinCommands(false);
-		bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
-			if (labyModJoinCommands.isEmpty()) return "false";
-			else return "true";
-		}));
-		bstats.addCustomChart(
-				new BStats.SingleLineChart("lmjoincmd_count", () -> labyModJoinCommands.size()));
+		BStatsHandler.initBStats(this);
 	}
 
-    /**
+	/**
 	 * This method is called by PluginManager when the plugin is loading.
 	 */
 	@Override

@@ -16,6 +16,11 @@ public final class Constants {
 	 */
 	public static final int VERSION_ID = 2;
 	/**
+	 * The source of the plug-in file
+	 * Allowed values: github.com spigotmc.org dev.bukkit.org direct other
+	 */
+	public static final String DOWNLOAD_SOURCE = "github.com";
+	/**
 	 * The SpigotMC.org resource id
 	 */
 	public static final int RESOURCE_ID = 21347;
@@ -62,21 +67,21 @@ public final class Constants {
 	/**
 	 * Link to the git repository
 	 */
-	public static final String GITHUB_URL = "https://github.com/AntiLaby/AntiLaby/";
+	public static final String GITHUB_URL = "https://github.com/AntiLaby/AntiLaby";
 	/**
 	 * Link to the bugtracker
 	 */
-	public static final String BUG_REPORT_URL = "https://github.com/AntiLaby/AntiLaby/issues";
+	public static final String BUG_REPORT_URL = GITHUB_URL + "/issues";
 
 	/**
 	 * Url to the wiki of AntiLaby
 	 */
-	public static final String WIKI_URL = "https://github.com/AntiLaby/AntiLaby/wiki";
+	public static final String WIKI_URL = GITHUB_URL + "/wiki";
 
 	/**
 	 * Url to the wiki of AntiLaby: LabyModPlayerBan
 	 */
-	public static final String WIKI_LABYMODPLAYERBAN_URL = "https://github.com/AntiLaby/AntiLaby/wiki/LabyMod-Player-Ban";
+	public static final String WIKI_LABYMODPLAYERBAN_URL = WIKI_URL + "/LabyMod-Player-Ban";
 
 	/**
 	 * Private constructor, no need to instantiate this class

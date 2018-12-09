@@ -31,10 +31,9 @@ public class VerifyFile {
 	 * @return true if the hash values are equal
 	 */
 	public boolean validate() throws IOException, NoSuchAlgorithmException {
-		// Compare hash
 		String fileHash = getSha256(path);
-		if(!fileHash.equals(sha256)) {
-			logger.debug("Hash values are not equal: " + fileHash + " !equals " + sha256);
+		if (!fileHash.equals(sha256)) {
+			logger.debug("Hash values are not equal: calculated '" + fileHash + "' but expected '" + sha256 + "'");
 			return false;
 		}
 		return true;
@@ -43,9 +42,7 @@ public class VerifyFile {
 	/**
 	 * Get the SHA-256 value of a file
 	 *
-	 * @param path
-	 * 		File
-	 *
+	 * @param path File
 	 * @return SHA-256
 	 */
 	private static String getSha256(Path path) throws IOException, NoSuchAlgorithmException {

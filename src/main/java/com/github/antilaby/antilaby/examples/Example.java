@@ -28,7 +28,7 @@ public class Example {
 		final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
 		myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
 		myPackageSettings.put(LabyModFeature.POTIONS, true);
-		return new AntiLabyPackager(player).setDisabledLabyModFeatures(
+		return new AntiLabyPackager(player).setLabyModFeatureSettings(
 				myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
 	}
 
@@ -44,15 +44,11 @@ public class Example {
 		// Create instance
 		final AntiLabyPackager antiLabyPackager = new AntiLabyPackager(player);
 
-		// Get disabled functions out of the config file
-		/* final HashMap<LabyModFeature, Boolean> configSettings = */
-		antiLabyPackager.getConfigLabyModSettings();
-
 		// Choose your own disabled functions
 		final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
 		myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
 		myPackageSettings.put(LabyModFeature.POTIONS, true);
-		antiLabyPackager.setDisabledLabyModFeatures(myPackageSettings);
+		antiLabyPackager.setLabyModFeatureSettings(myPackageSettings);
 		/*
 		 * Send the packages even if the player has the permission
 		 * 'antilaby.bypass' and bypassing is enabled in the config file

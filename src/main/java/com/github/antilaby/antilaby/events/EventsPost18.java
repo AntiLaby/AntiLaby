@@ -6,6 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 
+/**
+ * Handle if players change their local
+ *
+ * @author heisluft
+ */
 public class EventsPost18 implements Listener {
 
 	@EventHandler
