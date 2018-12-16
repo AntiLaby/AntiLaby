@@ -2,25 +2,13 @@ package com.github.antilaby.antilaby.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.github.antilaby.DummyServer;
 import com.github.antilaby.antilaby.api.command.ExecutableCommand;
-import org.bukkit.Bukkit;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Field;
 
 /**
  * @author NathanNr
  */
 public class ExecutableCommandTest {
-
-  @BeforeAll
-  public static void setup() throws ReflectiveOperationException {
-    Field f = Bukkit.class.getDeclaredField("server");
-    f.setAccessible(true);
-    f.set(null, new DummyServer());
-  }
 
   @Test
   public void assertThatTheCommandLineWontBeChangedIfItIsAlreadyFormattedProperly() {
@@ -49,7 +37,7 @@ public class ExecutableCommandTest {
   @Test
   public void assertThatTheCommandLineWillBeDiscardedIfItHasAPrecedingNumberSign() {
     //given
-    String commandLine = "# /gamemode 0 @a";
+    String commandLine = "# gamemode 0 @a";
 
     //when
     ExecutableCommand executableCommand = new ExecutableCommand(commandLine);
