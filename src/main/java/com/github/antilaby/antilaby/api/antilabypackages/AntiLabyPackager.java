@@ -56,8 +56,6 @@ public class AntiLabyPackager {
 
   /**
    * Map the AntiLaby settings from two lists
-   *
-   * @return AntiLaby packages
    */
   // TODO use String instead of LabyModFeature to allow every String as a feature
   public void mapLabyModSettings(List<String> disabledFeatures, List<String> enabledFeatures) {
