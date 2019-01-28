@@ -53,7 +53,7 @@ public class ConfigInit {
    * Add the default values to the configuration file.
    */
   private void addDefaults() {
-    fileConfiguration.options().header("AntiLaby plugin by NathanNr and heisluft, " + Constants.RESOURCE_LINK);
+    fileConfiguration.options().header("AntiLaby plug-in by NathanNr and heisluft, " + Constants.RESOURCE_LINK);
 
     fileConfiguration.addDefault("AntiLaby.EnableBypassWithPermission", true);
     fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
@@ -141,7 +141,7 @@ public class ConfigInit {
         final boolean labyKick = fileConfiguration.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
         ArrayList<String> disabledFeatures = new ArrayList<>();
         ArrayList<String> enabledFeatures = new ArrayList<>();
-        for (LabyModFeature lmf : LabyModFeature.values()) {
+    /*    for (LabyModFeature lmf : LabyModFeature.values()) {
           if (fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("true")) {
             disabledFeatures.add(lmf.toString());
           } else if (fileConfiguration.get("AntiLaby.disable." + lmf.toString()).equals("false")) {
