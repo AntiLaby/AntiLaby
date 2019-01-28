@@ -7,7 +7,7 @@ Useful links:
 * [About AntiLaby](https://github.com/AntiLaby/AntiLaby/wiki/Home)
 * [Ask questions, send suggestions and report bugs](https://github.com/AntiLaby/AntiLaby/wiki/Support)
 * [Source code](https://github.com/AntiLaby/AntiLaby)
-
+* [JavaDoc](https://heisluft.tk/javadoc/com/github/antilaby/AntiLaby/)
 ## AntiLaby in
 ### Maven:
 ````xml

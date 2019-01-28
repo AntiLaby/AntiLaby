@@ -21,15 +21,13 @@ public class AntiLabyPackager {
 
   private final Logger logger = new Logger("AntiLabyPackager");
 
-  private final Player player;
+  private Player player;
   private Map<LabyModFeature, Boolean> labyModFeatureSettings;
   private boolean forceIgnoreBypassPermission = false;
 
   private ConfigReader configReader = new ConfigReader();
 
-  AntiLabyPackager(List<String> disabledFeatures, List<String> enabledFeatures) {
-    mapLabyModSettings(disabledFeatures, enabledFeatures);
-    this.player = null;
+  AntiLabyPackager() {
   }
 
   public AntiLabyPackager(Player player) {
@@ -43,7 +41,6 @@ public class AntiLabyPackager {
     this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
 
     mapLabyModSettings(configReader.getDisabledFeatures(), configReader.getEnabledFeatures());
-
   }
 
   public AntiLabyPackager(Player player, Map<LabyModFeature, Boolean> disabledLabyModFeatures) {
@@ -59,8 +56,6 @@ public class AntiLabyPackager {
 
   /**
    * Map the AntiLaby settings from two lists
-   *
-   * @return AntiLaby packages
    */
   // TODO use String instead of LabyModFeature to allow every String as a feature
   public void mapLabyModSettings(List<String> disabledFeatures, List<String> enabledFeatures) {

@@ -38,9 +38,8 @@ public class ExecutableCommand {
   }
 
   public boolean execute() {
-    if (sender == null) {
+    if (sender == null)
       sender = Bukkit.getConsoleSender();
-    }
     return Bukkit.dispatchCommand(sender, commandLine);
   }
 
@@ -61,12 +60,10 @@ public class ExecutableCommand {
   }
 
   private String format(String commandLine) {
-    if (commandLine.startsWith("/")) {
+    if (commandLine.startsWith("/"))
       return commandLine.substring(1);
-    }
-    if (commandLine.startsWith("#")) {
+    if (commandLine.startsWith("#"))
       return null;
-    }
     return commandLine;
   }
 
