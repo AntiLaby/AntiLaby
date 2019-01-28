@@ -10,61 +10,36 @@ import org.bukkit.command.CommandSender;
  */
 public class ExecutableCommand {
 
-  private String commandLine;
-  private CommandSender sender;
+  private final String commandLine;
+  private final CommandSender sender;
 
   public ExecutableCommand(String commandLine) {
-    this.commandLine = format(commandLine);
+    this(commandLine, Bukkit.getConsoleSender());
   }
 
   public ExecutableCommand(String commandLine, CommandSender sender) {
+    this.commandLine = commandLine;
     this.sender = sender;
-  }
-
-  public CommandSender getSender() {
-    return sender;
-  }
-
-  public void setSender(CommandSender sender) {
-    this.sender = sender;
-  }
-
-  public String getCommandLine() {
-    return commandLine;
-  }
-
-  public void setCommandLine(String commandLine) {
-    this.commandLine = format(commandLine);
   }
 
   public boolean execute() {
-    if (sender == null)
-      sender = Bukkit.getConsoleSender();
-    return Bukkit.dispatchCommand(sender, commandLine);
+    return execute(commandLine, sender);
   }
 
   public boolean execute(String commandLine) {
-    this.commandLine = commandLine;
-    return execute();
+    return execute(commandLine, sender);
   }
 
   public boolean execute(CommandSender sender) {
-    this.sender = sender;
-    return execute();
+    return execute(commandLine, sender);
   }
 
   public boolean execute(String commandLine, CommandSender sender) {
-    this.commandLine = commandLine;
-    this.sender = sender;
-    return execute();
+    if (commandLine.startsWith("/")) {
+      commandLine = commandLine.substring(1);
+    } else if (commandLine.startsWith("#")) {
+      commandLine = null;
+    }
+    return Bukkit.dispatchCommand(sender, commandLine);
   }
-
-  private String format(String commandLine) {
-    if (commandLine.startsWith("/"))
-      return commandLine.substring(1);
-    if (commandLine.startsWith("#"))
-      return null;
-    return commandLine;
-  }
-
 }

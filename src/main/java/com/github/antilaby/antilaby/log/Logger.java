@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 
 /**
- * A helper class used for logging purposes to enhance logging a bit
+ * A helper class used for logging purposes to enhance logging a bit.
  *
  * @author heisluft
  */
@@ -26,7 +26,7 @@ public class Logger {
   }
 
   /**
-   * Logs the given message at {@link Level#ERROR ERROR} level
+   * Logs the given message at {@link Level#ERROR ERROR} level.
    *
    * @param message The log message
    */
@@ -35,21 +35,23 @@ public class Logger {
   }
 
   /**
-   * Logs the given message with the specified {@link Level}
+   * Logs the given message with the specified {@link Level}.
    *
    * @param level   The Level to use
    * @param message The log message
    */
   public void log(Level level, String message) {
-    final String color = level == Level.ERROR || level == Level.FATAL ? "\u00A74" : level == Level.WARN ? "\u00A7e" : level == Level.DEBUG ? "\u00A71" : "";
+    final String color = level == Level.ERROR || level == Level.FATAL ? "§4"
+        : level == Level.WARN ? "§e" : level == Level.DEBUG ? "§1" : "";
     if (level == Level.DEBUG && !configReader.getDebugMode()) {
       return;
     }
-    CONSOLE_COMMAND_SENDER.sendMessage(color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "\u00A7r");
+    CONSOLE_COMMAND_SENDER.sendMessage(
+        color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "§r");
   }
 
   /**
-   * Logs the given message at {@link Level#FATAL FATAL} level
+   * Logs the given message at {@link Level#FATAL FATAL} level.
    *
    * @param message The log message
    */
@@ -58,7 +60,7 @@ public class Logger {
   }
 
   /**
-   * Logs the given message at {@link Level#INFO INFO} level
+   * Logs the given message at {@link Level#INFO INFO} level.
    *
    * @param message The log message
    */
@@ -67,7 +69,7 @@ public class Logger {
   }
 
   /**
-   * Logs the given message at {@link Level#WARN WARN} level
+   * Logs the given message at {@link Level#WARN WARN} level.
    *
    * @param message The log message
    */
@@ -76,7 +78,7 @@ public class Logger {
   }
 
   /**
-   * Logs the given message at {@link Level#DEBUG DEBUG} level
+   * Logs the given message at {@link Level#DEBUG DEBUG} level.
    *
    * @param message The log message
    */

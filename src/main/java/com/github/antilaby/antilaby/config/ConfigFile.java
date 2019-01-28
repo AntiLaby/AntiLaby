@@ -17,28 +17,22 @@ import java.io.IOException;
 public class ConfigFile {
 
   /**
-   * The path to the configuration file
-   */
-  public static final String CONFIG_PATH = AntiLaby.getInstance().getDataFolder() + "config.yml";
-  /**
    * The logger for configuration operations.
    */
   protected static final Logger logger = new Logger("ConfigManager");
-  private static File file = new File(CONFIG_PATH);
-  private static FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(file);
+  /**
+   * The path to the configuration file.
+   */
+  private static final File FILE = new File(AntiLaby.getInstance().getDataFolder(), "config.yml");
+  private static FileConfiguration fileConfiguration = YamlConfiguration.loadConfiguration(FILE);
 
+  /**
+   * No instances can be created.
+   */
   private ConfigFile() {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * Get the file object of the configuration file.
-   *
-   * @return configuration as File
-   */
-  static File getFile() {
-    return file;
-  }
 
   /**
    * Get the FileConfiguration of the configuration file.
@@ -52,11 +46,11 @@ public class ConfigFile {
   /**
    * Save the configuration file.
    */
-  public static void save() {
+  private static void save() {
     try {
-      fileConfiguration.save(file);
+      fileConfiguration.save(FILE);
     } catch (IOException e) {
-      logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
+      logger.error("Failed to save the configuration file at '" + FILE.getAbsolutePath() + "':");
       e.printStackTrace();
     }
   }
@@ -66,15 +60,15 @@ public class ConfigFile {
    */
   public static void load() {
     try {
-      fileConfiguration.load(file);
+      fileConfiguration.load(FILE);
     } catch (IOException | InvalidConfigurationException e) {
-      logger.error("Failed to load the configuration file at path '" + CONFIG_PATH + "':");
+      logger.error("Failed to load the configuration file at '" + FILE.getAbsolutePath() + "':");
       e.printStackTrace();
     }
     try {
-      new ConfigInit(file, fileConfiguration);
+      new ConfigInit(FILE, fileConfiguration);
     } catch (IOException e) {
-      logger.error("Failed to save the configuration file at path '" + CONFIG_PATH + "':");
+      logger.error("Failed to save the configuration file at '" + FILE.getAbsolutePath() + "':");
       e.printStackTrace();
     }
     save();

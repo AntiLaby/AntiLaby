@@ -112,7 +112,6 @@ publishing {
             artifact javadocJar
         }
     }
-
 }
 
 signing {

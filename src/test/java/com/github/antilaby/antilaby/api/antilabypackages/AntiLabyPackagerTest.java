@@ -82,6 +82,4 @@ public class AntiLabyPackagerTest {
     Map<LabyModFeature, Boolean> labyModFeatureSettings = new EnumMap<>(LabyModFeature.class);
     assertEquals(labyModFeatureSettings, antiLabyPackager.getLabyModFeatureSettings());
   }
-
-
 }

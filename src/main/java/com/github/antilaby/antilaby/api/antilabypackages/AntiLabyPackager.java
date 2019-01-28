@@ -6,11 +6,10 @@ import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.NmsUtils;
-import org.bukkit.entity.Player;
-
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.entity.Player;
 
 /**
  * Create and send AntiLaby packages to the clients.
@@ -55,7 +54,8 @@ public class AntiLabyPackager {
   }
 
   /**
-   * Map the AntiLaby settings from two lists
+   * Map the AntiLaby settings from two lists.
+   * //@return AntiLaby packages
    */
   // TODO use String instead of LabyModFeature to allow every String as a feature
   public void mapLabyModSettings(List<String> disabledFeatures, List<String> enabledFeatures) {
@@ -95,17 +95,17 @@ public class AntiLabyPackager {
     this.labyModFeatureSettings = labyModFeatureSettings;
   }
 
+  Map<LabyModFeature, Boolean> getLabyModFeatureSettings() {
+    return labyModFeatureSettings;
+  }
+
   public AntiLabyPackager setLabyModFeatureSettings(Map<LabyModFeature, Boolean> labyModFeatureSettings) {
     this.labyModFeatureSettings = labyModFeatureSettings;
     return this;
   }
 
-  Map<LabyModFeature, Boolean> getLabyModFeatureSettings() {
-    return labyModFeatureSettings;
-  }
-
   /**
-   * The packages will be sent to the player even if he has the bypass permission and the bypass is enabled in the configuration file
+   * The packages will be sent to the player even if he has the bypass permission and the bypass is enabled in the configuration file.
    *
    * @param forceIgnoreBypassPermission true to enable
    */
@@ -115,14 +115,13 @@ public class AntiLabyPackager {
   }
 
   /**
-   * Send the AntiLaby packages to the player
+   * Send the AntiLaby packages to the player.
    *
    * @return success
    */
   public boolean sendPackages() {
     boolean ignorePlayer = false;
-    if (!forceIgnoreBypassPermission) // Ignore players with the bypass permission if enabled in the configuration file
-    {
+    if (!forceIgnoreBypassPermission) { // Ignore players with the bypass permission if enabled in the configuration file
       if (player.hasPermission(Constants.PERMISSION_BYPASS)) {
         if (configReader.getEnableBypassWithPermission()) {
           useLabyModDefaults();
