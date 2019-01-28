@@ -1,18 +1,18 @@
 package com.github.antilaby.antilaby.lang;
 
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.IOUtils;
 import org.bukkit.ChatColor;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarFile;
 
 public enum Locale {
   VI_VN, EN_UD, LV_LV, LA_LA, NDS_DE, HR_HR, LT_LT, GD_GB, GYA_AA, FIL_PH, NL_NL, HE_IL, JBO_EN, MN_MN, SWG_DE, FR_FR, EN_US, EN_GB, KSH_DE, FR_CA, HAW_US, GV_IM, ES_ES, GA_IE, EN_PT, IO_IDO,
@@ -21,7 +21,22 @@ public enum Locale {
   IS_IS, SV_SE, FO_FO, MI_NZ, ID_ID, PT_PT, VAL_ES, NN_NO, LB_LU, DE_DE, PT_BR, RU_RU, SO_SO, HU_HU, SR_SP, OC_FR, MK_MK, SL_SI, NO_NO, ZH_TW, BR_FR, AF_ZA, FY_NL, ET_EE, MS_MY, AZ_AZ, ES_UY,
   AST_ES, FA_IR, SK_SK, KO_KR, MT_MT, CA_ES, ES_VE, CY_GB, EN_NZ, JA_JP, RO_RO, LOL_US, ZH_CN, UK_UA, UNDEFINED;
 
+  private static FileSystem fs;
   private final Map<String, String> translation = new HashMap<>();
+
+  public static void closeInput() throws IOException {
+    fs.close();
+  }
+
+  private static FileSystem getFs() throws IOException {
+    if (fs == null) {
+      HashMap<String, Object> hm = new HashMap<>();
+      hm.put("create", true);
+      fs = FileSystems.newFileSystem(URI.create("jar:file:/"
+          + AntiLaby.getInstance().getPath().toAbsolutePath().toString().replace('\\', '/')), hm);
+    }
+    return fs;
+  }
 
   public static Locale byName(String name, Locale fallback) {
     try {
@@ -54,11 +69,11 @@ public enum Locale {
     if (this == UNDEFINED) {
       return true;
     }
-    if (Files.isRegularFile(AntiLaby.getInstance().getDataPath().resolve("lang/" + this + ".lang"))) {
-      return false;
-    }
+    AntiLaby pl = AntiLaby.getInstance();
     try {
-      return new JarFile(AntiLaby.getInstance().getFile()).getJarEntry(this + ".lang") == null;
+
+      return !(Files.isRegularFile(pl.getDataPath().resolve("lang/" + this + ".lang"))
+          || !Files.isRegularFile(getFs().getPath(this + ".lang")));
     } catch (IOException e) {
       return true;
     }
@@ -81,12 +96,14 @@ public enum Locale {
       return EN_US.translate(toTranslate, args);
     }
     if (translation.containsKey(toTranslate)) {
-      return ChatColor.translateAlternateColorCodes('&', format(translation.get(toTranslate), args));
+      return ChatColor.translateAlternateColorCodes('&',
+          format(translation.get(toTranslate), args));
     }
     if (EN_US.translation.containsKey(toTranslate)) {
       return EN_US.translate(toTranslate, args);
     }
-    return translation.getOrDefault("translation.error", EN_US.translation.getOrDefault("translation.error", toTranslate));
+    return translation.getOrDefault("translation.error",
+        EN_US.translation.getOrDefault("translation.error", toTranslate));
   }
 
   public void init() throws IOException {
@@ -100,13 +117,8 @@ public enum Locale {
         Files.delete(path);
       }
       Files.createFile(path);
-      final JarFile file = new JarFile(AntiLaby.getInstance().getFile());
-      final InputStream is = file.getInputStream(file.getJarEntry(this + ".lang"));
-      IOUtils.copyStream(is, path);
-      file.close();
+      Files.copy(getFs().getPath(this + ".lang"), path);
     }
-    if (Files.isRegularFile(path)) {
-      translation.putAll(parse(path));
-    }
+    translation.putAll(parse(path));
   }
 }
