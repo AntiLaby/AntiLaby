@@ -2,15 +2,13 @@ package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
+import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
-import org.json.simple.parser.ParseException;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-enum UpdateInformationType {
+enum UpdateChannel {
 
   RELEASE, BETA, TEST
 
@@ -24,28 +22,24 @@ enum UpdateInformationType {
 public class UpdateManager extends Thread {
 
   private static final Logger logger = new Logger("UpdateManager");
-  private final String temporaryFileLocation = "plugins/AntiLaby/tmp/AntiLaby.tmp";
-  private ConfigReader configReader;
+  private final Path tempFile = AntiLaby.getInstance().getDataPath().resolve("tmp/AntiLaby.tmp");
   private boolean autoUpdate;
   private boolean includeBeta;
   private boolean includeTest;
-  private List<String> uris = new ArrayList<>();
+  private String url = "http://localhost:8080/api/v1/com/github/antilaby/antilaby/update"; // TODO Insert final url
 
   public UpdateManager() {
     // Get update information from the configuration file
-    this.configReader = new ConfigReader();
+    ConfigReader configReader = new ConfigReader();
     this.autoUpdate = configReader.getAutoUpdate().release();
     this.includeBeta = configReader.getAutoUpdate().beta();
     this.includeTest = configReader.getAutoUpdate().test();
-
-    uris.add("http://localhost:8080/api/v1/com/github/antilaby/antilaby/update");
-    uris.add("");
   }
 
   @Override
   public void run() {
     // Checking for updates
-    if (autoUpdate == false) {
+    if (!autoUpdate) {
       logger.info("Auto-update has been disabled in the configuration file.");
       return;
     }
@@ -54,18 +48,15 @@ public class UpdateManager extends Thread {
     try {
       if (!includeTest) {
         if (!includeBeta) {
-          updateInformation = check(UpdateInformationType.RELEASE);
+          updateInformation = check(UpdateChannel.RELEASE);
         } else {
-          updateInformation = check(UpdateInformationType.BETA);
+          updateInformation = check(UpdateChannel.BETA);
         }
       } else {
-        updateInformation = check(UpdateInformationType.TEST);
+        updateInformation = check(UpdateChannel.TEST);
       }
     } catch (IOException e) {
       logger.warn("Failed to check for updates: Network error");
-      return;
-    } catch (ParseException e) {
-      logger.warn("Failed to check for updates: Parsing error");
       return;
     }
     if (updateInformation == null) {
@@ -73,57 +64,42 @@ public class UpdateManager extends Thread {
       return;
     }
     // Check if a newer version is available; cancel the update process, if the most recent version is already installed
-    if (updateInformation.getVersionId() <= Constants.VERSION_ID) {
+    if (updateInformation.versionId <= Constants.VERSION_ID) {
       logger.info("The most recent version is already installed.");
       return;
     }
     // Download the new file
-    UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation, temporaryFileLocation);
+    UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation, tempFile);
     try {
       updateDownloader.download();
     } catch (IOException e) {
       logger.warn("Failed to download update file.");
     }
     // Install
-    UpdateInstaller updateInstaller = new UpdateInstaller(updateDownloader.getTemporaryFileLocation());
     try {
-      updateInstaller.install();
+      Files.copy(tempFile, AntiLaby.getInstance().getPath());
     } catch (IOException e) {
       logger.warn("Failed to overwrite the old plug-in file with the new one!");
     }
     // Remove temporary file
     logger.debug("Removing temporary file...");
-    final File tmp = new File(updateDownloader.getTemporaryFileLocation());
-    if (tmp.exists()) {
-      tmp.delete();
+    try {
+      Files.delete(tempFile);
+    } catch (IOException e) {
+      logger.warn("Could not delete temporary file");
     }
     logger.info("Done! Please restart your server to finish the update process.");
   }
 
   /**
-   * Check for a new version of AntiLaby
+   * Check for a new version of AntiLaby.
    *
-   * @param updateInformationType
-   * @return
-   * @throws IOException
-   * @throws ParseException
+   * @param updateChannel the channel to read from
+   * @return the update information read
+   * @throws IOException if the information could  not be retrieved
    */
-  private UpdateInformation check(UpdateInformationType updateInformationType) throws IOException, ParseException {
-    try {
-      UpdateChecker updateChecker = new UpdateChecker(uris.get(0)); // TODO
-      switch (updateInformationType) {
-        case RELEASE:
-          return updateChecker.getUpdateInformation();
-        case BETA:
-          return updateChecker.getUpdateInformation("beta");
-        case TEST:
-          return updateChecker.getUpdateInformation("test");
-        default:
-          throw new EnumConstantNotPresentException(UpdateInformationType.class, null);
-      }
-    } catch (IOException e) {
-      throw e; // TODO
-    }
+  private UpdateInformation check(UpdateChannel updateChannel) throws IOException {
+    return new UpdateChecker(url).getUpdateInformation(updateChannel.name().toLowerCase());
   }
 
 }

@@ -1,13 +1,12 @@
 package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.log.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.IOException;
-
-import static java.lang.Math.toIntExact;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 /**
  * Checks for AntiLaby updates. This class loads, caches and parses the update information.
@@ -21,39 +20,43 @@ public class UpdateChecker {
   /**
    * The location of the online update information provider TODO: Add the final URL, add alternate URL
    */
-  private String uri;
+  private String url;
 
   private UpdateInformation updateInformation;
 
   public UpdateChecker(String uri) {
-    this.uri = uri;
+    this.url = uri;
   }
 
-  public UpdateInformation getUpdateInformation() throws IOException, ParseException {
+  public UpdateInformation getUpdateInformation() throws IOException {
     return getUpdateInformation("release");
   }
 
-  public UpdateInformation getUpdateInformation(String type) throws IOException, ParseException {
-    if (updateInformation == null) {
-      // Read from REST server
-      logger.debug("Reading data from the REST server...");
-      String raw = "";
-      String url = uri;
-      url += "?type=" + type;
-      raw = new ReadJsonUrl(url).read();
-      if (raw == null) {
-        return null;
-      }
-      // JSON -> UpdateInformation
-      logger.debug("Parsing raw data...");
-      JSONObject jsonObject;
-      JSONParser parser = new JSONParser();
-      Object obj = parser.parse(raw);
-      jsonObject = (JSONObject) obj;
-      updateInformation = new UpdateInformation((String) jsonObject.get("version"), toIntExact((long) jsonObject.get("versionId")), (String) jsonObject.get("downloadUrl"),
-          (String) jsonObject.get("versionType"), toIntExact((long) jsonObject.get("updatePriority")), (String) jsonObject.get("sha256"), (String) jsonObject.get("updateNote"));
-      logger.debug("Done!");
+  public UpdateInformation getUpdateInformation(String type) throws IOException {
+    if (updateInformation != null) {
+      return updateInformation;
     }
+    // Read from REST server
+    logger.debug("Reading data from the REST server...");
+    String raw;
+    try (Scanner sc = new Scanner(new URL(url).openStream(), StandardCharsets.UTF_8.toString())) {
+      sc.useDelimiter("\\A");
+      raw = sc.hasNext() ? sc.next() : "";
+    }
+    // JSON -> UpdateInformation
+    logger.debug("Parsing raw data...");
+    JSONObject jsonObject = (JSONObject) JSONValue.parse(raw);
+    updateInformation = new UpdateInformation(
+        (String) jsonObject.get("version"),
+        Math.toIntExact((long) jsonObject.get("versionId")),
+        (String) jsonObject.get("downloadUrl"),
+        (String) jsonObject.get("versionType"),
+        Math.toIntExact((long) jsonObject.get("updatePriority")),
+        (String) jsonObject.get("sha256"),
+        (String) jsonObject.get("updateNote")
+    );
+    logger.debug("Done!");
+
     return updateInformation;
   }
 
@@ -61,10 +64,4 @@ public class UpdateChecker {
     updateInformation = null;
     logger.debug("The reload of the data at the next request has been forced.");
   }
-
-  @Deprecated
-  private String getJson() throws Exception {
-    return new ReadJsonUrl(uri).read();
-  }
-
 }
