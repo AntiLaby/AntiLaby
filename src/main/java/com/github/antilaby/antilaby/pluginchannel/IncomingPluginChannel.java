@@ -5,6 +5,10 @@ import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.util.Constants;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,17 +17,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Handles incoming packages from clients
  */
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
-
-  // TODO: Use the new configuration API
 
   private static final Logger LOGGER = new Logger("IncomingPluginChannel");
 
@@ -124,7 +121,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
    * @param player The player who should be banned
    */
   private void banPlayer(Player player) {
-    String banMessage = "LabyMod is not allowed!"; // TODO: Get message from language file
+    String banMessage = LanguageManager.INSTANCE.translate("antilaby.playerKickMessage", player);
     String commandLine = configReader.getLabyModPlayerAction().getBan().getCommand();
     // Replace variables
     try {
@@ -134,10 +131,10 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
       commandLine = ChatColor.translateAlternateColorCodes('&', commandLine);
     } catch (Exception e) { /* Ignore */ }
     // Execute ban
-    ExecutableCommand executableCommand = new ExecutableCommand(commandLine, Bukkit.getConsoleSender());
-    executableCommand.execute();
-    LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString() + ") is not allowed to use LabyMod and has been banned using the following command: '" +
-        ChatColor.stripColor(commandLine) + "'");
+    new ExecutableCommand(commandLine, Bukkit.getConsoleSender()).execute();
+    LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
+        + ") is not allowed to use LabyMod and has been banned using the following command: '"
+        + ChatColor.stripColor(commandLine) + "'");
   }
 
   @EventHandler
