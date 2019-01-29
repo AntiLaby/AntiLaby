@@ -3,6 +3,7 @@ package com.github.antilaby.antilaby.config;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class ConfigUpdater {
    * Update the {@link FileConfiguration} to the next version
    */
   private FileConfiguration update(FileConfiguration oldFileConfiguration, int oldVersion) {
-    FileConfiguration newFileConfiguration = oldFileConfiguration; // TODO use empty config
+    FileConfiguration newFileConfiguration = new YamlConfiguration();
 
     if (oldVersion == 2) {
       logger.debug("Updating the configuration file from version " + oldVersion + " to version " + ++oldVersion + "...");

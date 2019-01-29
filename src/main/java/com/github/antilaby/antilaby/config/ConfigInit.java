@@ -126,7 +126,8 @@ public class ConfigInit {
    */
   private void update() {
     int oldConfigVersion = fileConfiguration.getInt(ConfigReader.getConfigVersionPath());
-    fileConfiguration = new ConfigUpdater(fileConfiguration, oldConfigVersion, Constants.CURRENT_CONFIG_VERSION).getUpdatedData();
+    FileConfiguration updatedConfiguration = new ConfigUpdater(fileConfiguration, oldConfigVersion, Constants.CURRENT_CONFIG_VERSION).getUpdatedData();
+    fileConfiguration = fileConfiguration != null ? updatedConfiguration : new YamlConfiguration();
     logger.debug("Updated the config file.");
   }
 
