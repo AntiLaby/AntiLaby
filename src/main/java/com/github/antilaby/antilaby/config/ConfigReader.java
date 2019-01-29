@@ -56,8 +56,12 @@ public class ConfigReader {
     return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.DebugMode");
   }
 
-  public boolean getConfigVersion() {
-    return ConfigFile.getFileConfiguration().getBoolean("AntiLaby.ConfigVersion");
+  public int getConfigVersion() {
+    return ConfigFile.getFileConfiguration().getInt(getConfigVersionPath());
+  }
+
+  public static String getConfigVersionPath() {
+    return "AntiLaby.ConfigVersion"; // This path should never change
   }
 
 }

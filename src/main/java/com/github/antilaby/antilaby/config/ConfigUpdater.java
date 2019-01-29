@@ -27,9 +27,9 @@ public class ConfigUpdater {
   }
 
   /**
-   * Update the FileConfiguration to the new version, provided in the constructor
+   * Update the {@link FileConfiguration} to the new version, provided in the constructor
    *
-   * @return the FileConfiguration in the new format
+   * @return the provided {@link FileConfiguration} in the provided (usually the latest) config format
    */
   public FileConfiguration getUpdatedData() {
     FileConfiguration updatedData = initialConfigData;
@@ -47,10 +47,10 @@ public class ConfigUpdater {
   }
 
   /**
-   * Update the config file to the next version
+   * Update the {@link FileConfiguration} to the next version
    */
   private FileConfiguration update(FileConfiguration oldFileConfiguration, int oldVersion) {
-    FileConfiguration newFileConfiguration = oldFileConfiguration;
+    FileConfiguration newFileConfiguration = oldFileConfiguration; // TODO use empty config
 
     if (oldVersion == 2) {
       logger.debug("Updating the configuration file from version " + oldVersion + " to version " + ++oldVersion + "...");

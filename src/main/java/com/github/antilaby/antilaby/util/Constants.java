@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
+import com.github.antilaby.antilaby.config.ConfigUpdater;
 import org.bukkit.ChatColor;
 
 /**
@@ -60,6 +61,8 @@ public final class Constants {
   public static final String LABYMOD_CHANNEL_OLD = "LABYMOD";
   /**
    * The current configuration version
+   * This value will be increased by one after every breaking config path change.
+   * Remember to updated the {@link ConfigUpdater} after increasing this value.
    */
   public static final int CURRENT_CONFIG_VERSION = 3;
   /**
