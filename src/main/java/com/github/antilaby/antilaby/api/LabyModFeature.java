@@ -36,7 +36,7 @@ public enum LabyModFeature {
    * @return default value
    */
   public String getDefaultValue() {
-    return this.defaultValue ? "enabled" : "false";
+    return this.defaultValue ? "enabled" : "disabled";
   }
 
 }

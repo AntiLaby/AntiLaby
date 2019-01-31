@@ -106,7 +106,7 @@ public enum Locale {
         EN_US.translation.getOrDefault("translation.error", toTranslate));
   }
 
-  public void init() throws IOException {
+  void init() throws IOException {
     AntiLaby plugin = AntiLaby.getInstance();
     if (isNoOp()) {
       return;
@@ -117,7 +117,7 @@ public enum Locale {
         Files.delete(path);
       }
       Files.createFile(path);
-      Files.copy(getFs().getPath(this + ".lang"), path);
+      Files.copy(getFs().getPath("assets/antilaby/lang/" + this + ".lang"), path);
     }
     translation.putAll(parse(path));
   }

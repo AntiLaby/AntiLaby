@@ -33,34 +33,38 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * Main class of AntiLaby Spigot plugin
+ * Main class of AntiLaby Bukkit plugin.
  *
- * @author NathanNr
+ * @author NathanNr, heisluft
  */
 public class AntiLaby extends JavaPlugin {
 
   /**
-   * The main logger
+   * The main logger.
    */
   public static final Logger LOG = new Logger("Main");
-  // The singleton instance
+  /**
+   * The singleton instance.
+   */
   private static AntiLaby instance;
   /**
    * The AntiLaby version as SemVer.
    */
   private static Version version;
   /**
-   * All loaded Features
+   * All loaded Features.
    */
   private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
-  // The cleanup Thread deletes the saved LabyPlayer data
+  /**
+   * The cleanup Thread deletes the saved LabyPlayer data on server stop.
+   */
   private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
   // Read from the configuration file
   private ConfigReader configReader = new ConfigReader();
   // Compatible?
   private boolean compatible;
   // is this pre 1.9?
-  private boolean before19 = false;
+  private boolean changeLangUnavailable = false;
 
   /**
    * Get the Version of AL.
@@ -72,7 +76,7 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * Gets the singleton instance
+   * Get the singleton instance.
    *
    * @return the singleton instance
    */
@@ -81,7 +85,7 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * This should be used instead of accessing {@link #loadedFeatures} directly
+   * This should be used instead of accessing {@link #loadedFeatures} directly.
    *
    * @return an unmodifiable set of all enabled plugin features
    */
@@ -90,12 +94,13 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * Gets whether the mc version is pre 1.9, used by the {@link LanguageManager} system
+   * Get whether the PlayerChangeLanguageEvent does exist,
+   * used by the {@link LanguageManager} system.
    *
-   * @return whether this is before 1.9
+   * @return whether the PlayerChangeLanguageEvent does exist
    */
-  public boolean isPrior19() {
-    return before19;
+  public boolean isChangeLangUnavailable() {
+    return changeLangUnavailable;
   }
 
   /**
@@ -124,9 +129,6 @@ public class AntiLaby extends JavaPlugin {
 
   @Override
   public void onDisable() {
-    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
-      return;
-    }
     // Save Data if compatible
     if (compatible) {
       DataManager.saveData();
@@ -141,10 +143,6 @@ public class AntiLaby extends JavaPlugin {
    */
   @Override
   public void onEnable() {
-    // Glowstone is not supported yet
-    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
-      return;
-    }
     // Delete datamanager file on exit
     Runtime.getRuntime().addShutdownHook(cleanup);
     // Check if the server is compatible with AntiLaby
@@ -153,9 +151,9 @@ public class AntiLaby extends JavaPlugin {
     try {
       version = Integer.parseInt(mcVersion.split("\\.")[1]);
     } catch (final NumberFormatException e) {
-      LOG.fatal("Unknown NMS version (" + mcVersion + ')');
+      LOG.fatal("Unknown Minecraft version (" + mcVersion + ')');
       compatible = false;
-      disableIfNotCompatible();
+      getPluginLoader().disablePlugin(this);
     }
     if (version >= 8) {
       // Ensure the DataFolder exists
@@ -168,11 +166,11 @@ public class AntiLaby extends JavaPlugin {
         }
       }
       compatible = true;
-      LOG.debug("Your server (NMS version " + mcVersion + ") is compatible with AntiLaby!");
+      LOG.debug("Your server (MC version " + mcVersion + ") is compatible with AntiLaby!");
     } else {
       compatible = false;
       LOG.error("Your server is not compatible with AntiLaby!");
-      disableIfNotCompatible();
+      getPluginLoader().disablePlugin(this);
     }
     // Try to update AntiLaby
     new UpdateManager().run();
@@ -195,8 +193,10 @@ public class AntiLaby extends JavaPlugin {
       LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
     } else {
       LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
-      before19 = true;
     }
+    // Glowstone has addressed this issue, but the build is not out yet
+    changeLangUnavailable = loadedFeatures.contains(PluginFeature.PROTOCOL_LIB) || version == 8
+        || ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE;
     initCmds();
     initEvents();
     // Load data
@@ -216,22 +216,13 @@ public class AntiLaby extends JavaPlugin {
       LOG.error("Could not convert language folder! ");
     }
     // Start plug-in metrics for bStats.org
-    initBMetrics();
+    BStatsHandler.initBStats(this);
     // Resend AntiLaby packages (on reload)
     for (final Player all : Bukkit.getOnlinePlayers()) {
       new AntiLabyPackager(all).sendPackages();
     }
-    LOG.info("Enabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " sucsessfully!");
+    LOG.info("Successfully enabled AntiLaby version " + getDescription().getVersion() + "!");
     LOG.info("If you want to support us visit " + Constants.GITHUB_URL);
-  }
-
-  /**
-   * Disables the plug-in if not compatible
-   */
-  public void disableIfNotCompatible() {
-    if (!compatible) {
-      getPluginLoader().disablePlugin(this);
-    }
   }
 
   private void initConfig() {
@@ -239,7 +230,7 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * Initializes and registers the AntiLaby commands
+   * Initializes and registers the AntiLaby commands.
    */
   private void initCmds() {
     new AntiLabyCommand();
@@ -247,11 +238,11 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * Initializes and registers the EventListeners
+   * Initializes and registers the EventListeners.
    */
   private void initEvents() {
     final PluginManager pm = Bukkit.getPluginManager();
-    if (!before19) {
+    if (!changeLangUnavailable) {
       pm.registerEvents(new EventsPost18(), this);
     }
     pm.registerEvents(new PlayerJoin(), this);
@@ -259,22 +250,10 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * Initializes the <a href="https://bstats.org/plugin/bukkit/AntiLaby">BStats</a> Metrics
-   */
-  private void initBMetrics() {
-    // Start plug-in metrics for bStats.org
-    BStatsHandler.initBStats(this);
-  }
-
-  /**
    * This method is called by PluginManager when the plugin is loading.
    */
   @Override
   public void onLoad() {
-    if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
-      LOG.error("Glowstone is not yet supported");
-      Bukkit.getPluginManager().disablePlugin(this);
-    }
     instance = this;
     version = Version.valueOf(getDescription().getVersion());
   }

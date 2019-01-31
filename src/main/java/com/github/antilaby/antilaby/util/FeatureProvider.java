@@ -1,6 +1,5 @@
 package com.github.antilaby.antilaby.util;
 
-import com.comphenix.protocol.PacketType;
 import com.github.antilaby.antilaby.lang.Locale;
 import com.github.antilaby.antilaby.log.Logger;
 import io.netty.buffer.ByteBuf;

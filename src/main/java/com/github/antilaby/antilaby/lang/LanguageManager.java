@@ -4,7 +4,6 @@ import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.FeatureProvider;
-import com.github.antilaby.antilaby.util.CraftFeatureProvider;
 import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
 import org.bukkit.Bukkit;
@@ -126,7 +125,7 @@ public class LanguageManager {
 
   public Locale getLanguageForPlayer(Player p) {
     final AntiLaby al = AntiLaby.getInstance();
-    if (al.isPrior19() && !al.getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB)) {
+    if (al.isChangeLangUnavailable() && !al.getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB)) {
       return FeatureProvider.getLanguage(p);
     }
     if (!mappedLanguages.containsKey(p)) {
