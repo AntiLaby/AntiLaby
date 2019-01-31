@@ -2,7 +2,6 @@ package com.github.antilaby.antilaby.config;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.api.exceptions.InternalException;
-import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
@@ -80,9 +79,7 @@ public class ConfigInit {
     // Add default values for auto-updates
     fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Release", true);
     fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Beta", false);
-    if (AntiLaby.getInstance().getVersionType() == VersionType.DEV) {
-      fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Test", false);
-    }
+    fileConfiguration.addDefault("AntiLaby.Update.AutoUpdate.Test", false);
 
 
     // Add default values for the feature handling of LabyMod

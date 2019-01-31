@@ -1,10 +1,8 @@
 package com.github.antilaby.antilaby.main;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
-import com.github.antilaby.antilaby.api.updater.VersionType;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
 import com.github.antilaby.antilaby.command.LabyInfoCommand;
-import com.github.antilaby.antilaby.compat.HLSCompat;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.compat.ProtocolLibSupport;
 import com.github.antilaby.antilaby.config.ConfigFile;
@@ -19,13 +17,9 @@ import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.updater.UpdateManager;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.DataManager;
-import com.github.antilaby.antilaby.util.NmsUtils;
+import com.github.antilaby.antilaby.util.FeatureProvider;
 import com.github.antilaby.antilaby.util.ServerHelper;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import com.github.zafarkhaja.semver.Version;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -33,6 +27,10 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Main class of AntiLaby Spigot plugin
@@ -48,6 +46,10 @@ public class AntiLaby extends JavaPlugin {
   // The singleton instance
   private static AntiLaby instance;
   /**
+   * The AntiLaby version as SemVer.
+   */
+  private static Version version;
+  /**
    * All loaded Features
    */
   private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
@@ -57,10 +59,17 @@ public class AntiLaby extends JavaPlugin {
   private ConfigReader configReader = new ConfigReader();
   // Compatible?
   private boolean compatible;
-  // Is this a beta version?
-  private VersionType versionType;
   // is this pre 1.9?
   private boolean before19 = false;
+
+  /**
+   * Get the Version of AL.
+   *
+   * @return the version as SemVer
+   */
+  public static Version getVersion() {
+    return version;
+  }
 
   /**
    * Gets the singleton instance
@@ -113,15 +122,6 @@ public class AntiLaby extends JavaPlugin {
     return getDataFolder().toPath();
   }
 
-  /**
-   * Gets the {@link VersionType} of the plugin
-   *
-   * @return the version type
-   */
-  public VersionType getVersionType() {
-    return versionType;
-  }
-
   @Override
   public void onDisable() {
     if (ServerHelper.getImplementation() == ServerHelper.ImplementationType.GLOWSTONE) {
@@ -130,9 +130,7 @@ public class AntiLaby extends JavaPlugin {
     // Save Data if compatible
     if (compatible) {
       DataManager.saveData();
-    }
-    // If not, we need to remove the cleanup thread
-    else {
+    } else { // If not, we need to remove the cleanup thread
       Runtime.getRuntime().removeShutdownHook(cleanup);
     }
     LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
@@ -150,27 +148,27 @@ public class AntiLaby extends JavaPlugin {
     // Delete datamanager file on exit
     Runtime.getRuntime().addShutdownHook(cleanup);
     // Check if the server is compatible with AntiLaby
-    final String nmsver = NmsUtils.getVersion();
+    final String mcVersion = FeatureProvider.getMCVersion();
     int version = 0;
     try {
-      version = Integer.parseInt(nmsver.split("_")[1]);
+      version = Integer.parseInt(mcVersion.split("\\.")[1]);
     } catch (final NumberFormatException e) {
-      LOG.fatal("Unknown NMS version (" + nmsver + ')');
+      LOG.fatal("Unknown NMS version (" + mcVersion + ')');
       compatible = false;
       disableIfNotCompatible();
     }
     if (version >= 8) {
       // Ensure the DataFolder exists
-      Path dFP = getDataPath();
-      if (!Files.isDirectory(dFP)) {
+      Path dataPath = getDataPath();
+      if (!Files.isDirectory(dataPath)) {
         try {
-          Files.createDirectory(dFP);
+          Files.createDirectory(dataPath);
         } catch (IOException e) {
           e.printStackTrace();
         }
       }
       compatible = true;
-      LOG.debug("Your server (NMS version " + nmsver + ") is compatible with AntiLaby!");
+      LOG.debug("Your server (NMS version " + mcVersion + ") is compatible with AntiLaby!");
     } else {
       compatible = false;
       LOG.error("Your server is not compatible with AntiLaby!");
@@ -181,23 +179,23 @@ public class AntiLaby extends JavaPlugin {
     // Init files, commands and events
     initConfig();
     // Register plug-in channels
+    Bukkit.getMessenger().registerOutgoingPluginChannel(this, "DAMAGEINDICATOR");
+    Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
+        new IncomingPluginChannel());
     Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL);
-    Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL, new IncomingPluginChannel());
-    // If HLS is installed, use HLS
-    if (Bukkit.getPluginManager().isPluginEnabled("HeisluftsLanguageSystem")) {
-      HLSCompat.init();
-      loadedFeatures.add(PluginFeature.HEISLUFTS_LANGUAGE_SYSTEM);
+    Bukkit.getMessenger().registerOutgoingPluginChannel(this, Constants.LABYMOD_CHANNEL_OLD);
+    Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL_OLD,
+        new IncomingPluginChannel());
+
+    // Init ProtocolLib support
+    if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+      ProtocolLibSupport.init();
+      loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
+    } else if (version > 8) {
+      LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
     } else {
-      // Init ProtocolLib support
-      if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-        ProtocolLibSupport.init();
-        loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
-      } else if (version > 8) {
-        LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
-      } else {
-        LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
-        before19 = true;
-      }
+      LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+      before19 = true;
     }
     initCmds();
     initEvents();
@@ -278,6 +276,6 @@ public class AntiLaby extends JavaPlugin {
       Bukkit.getPluginManager().disablePlugin(this);
     }
     instance = this;
-    versionType = VersionType.fromName(getDescription().getVersion().toLowerCase());
+    version = Version.valueOf(getDescription().getVersion());
   }
 }

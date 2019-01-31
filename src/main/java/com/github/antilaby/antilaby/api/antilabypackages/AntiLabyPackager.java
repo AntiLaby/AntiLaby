@@ -5,7 +5,7 @@ import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
-import com.github.antilaby.antilaby.util.NmsUtils;
+import com.github.antilaby.antilaby.util.CraftFeatureProvider;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -134,7 +134,7 @@ public class AntiLabyPackager {
       useLabyModDefaults();
     } else if (!labyModFeatureSettings.isEmpty()) {
       try {
-        NmsUtils.setLabyModFeature(player, labyModFeatureSettings);
+        CraftFeatureProvider.setLabyModFeature(player, labyModFeatureSettings);
       } catch (final Exception e) {
         e.printStackTrace();
         AntiLaby.LOG.error("Failed to send AntiLaby packages to player " + player.getName() + " (" + player.getUniqueId() + "): " + e.getMessage());

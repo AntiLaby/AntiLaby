@@ -3,16 +3,9 @@ package com.github.antilaby.antilaby.updater;
 import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.Constants;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-enum UpdateChannel {
-
-  RELEASE, BETA, TEST
-
-}
 
 /**
  * Manage the auto-update process
@@ -26,7 +19,7 @@ public class UpdateManager extends Thread {
   private boolean autoUpdate;
   private boolean includeBeta;
   private boolean includeTest;
-  private String url = "http://localhost:8080/api/v1/com/github/antilaby/antilaby/update"; // TODO Insert final url
+  private static final String URL = "http://localhost:8080/api/v1/com/github/antilaby/antilaby/update"; // TODO Insert final URL
 
   public UpdateManager() {
     // Get update information from the configuration file
@@ -44,32 +37,32 @@ public class UpdateManager extends Thread {
       return;
     }
     logger.debug("Checking for new updates...");
-    UpdateInformation updateInformation;
+    VersionInfo versionInfo;
     try {
       if (!includeTest) {
         if (!includeBeta) {
-          updateInformation = check(UpdateChannel.RELEASE);
+          versionInfo = check(UpdateChannel.RELEASE);
         } else {
-          updateInformation = check(UpdateChannel.BETA);
+          versionInfo = check(UpdateChannel.BETA);
         }
       } else {
-        updateInformation = check(UpdateChannel.TEST);
+        versionInfo = check(UpdateChannel.TEST);
       }
     } catch (IOException e) {
       logger.warn("Failed to check for updates: Network error");
       return;
     }
-    if (updateInformation == null) {
+    if (versionInfo == null) {
       logger.warn("Failed to check for updates.");
       return;
     }
     // Check if a newer version is available; cancel the update process, if the most recent version is already installed
-    if (updateInformation.versionId <= Constants.VERSION_ID) {
+    if (versionInfo.version.lessThanOrEqualTo(AntiLaby.getVersion())) {
       logger.info("The most recent version is already installed.");
       return;
     }
     // Download the new file
-    UpdateDownloader updateDownloader = new UpdateDownloader(updateInformation, tempFile);
+    UpdateDownloader updateDownloader = new UpdateDownloader(versionInfo, tempFile);
     try {
       updateDownloader.download();
     } catch (IOException e) {
@@ -98,8 +91,8 @@ public class UpdateManager extends Thread {
    * @return the update information read
    * @throws IOException if the information could  not be retrieved
    */
-  private UpdateInformation check(UpdateChannel updateChannel) throws IOException {
-    return new UpdateChecker(url).getUpdateInformation(updateChannel.name().toLowerCase());
+  private VersionInfo check(UpdateChannel updateChannel) throws IOException {
+    return new UpdateChecker(URL).getUpdateInformation(updateChannel.name().toLowerCase());
   }
 
 }

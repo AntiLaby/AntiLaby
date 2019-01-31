@@ -3,9 +3,11 @@ package com.github.antilaby.antilaby.lang;
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.main.AntiLaby;
-import com.github.antilaby.antilaby.util.NmsUtils;
+import com.github.antilaby.antilaby.util.FeatureProvider;
+import com.github.antilaby.antilaby.util.CraftFeatureProvider;
 import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.yaml.snakeyaml.error.YAMLException;
 
@@ -102,8 +104,11 @@ public class LanguageManager {
       return;
     }
     final String uuid = player.getUniqueId().toString();
-    if (uuid.equals("a4395e2f-cddd-466c-a0b2-d5c2fcf44c45") || uuid.equals("e823471a-0ca1-41d0-b7e1-4a0561de7d76")) {
-      player.sendMessage(translate("info.specialDef", player, AntiLaby.getInstance().getDescription().getVersion(), NmsUtils.getVersion()));
+    if (uuid.equals("a4395e2f-cddd-466c-a0b2-d5c2fcf44c45")
+        || uuid.equals("e823471a-0ca1-41d0-b7e1-4a0561de7d76")) {
+      player.sendMessage(translate("info.specialDef", player,
+          AntiLaby.getInstance().getDescription().getVersion(),
+          Bukkit.getServer().getVersion()));
     }
   }
 
@@ -122,10 +127,10 @@ public class LanguageManager {
   public Locale getLanguageForPlayer(Player p) {
     final AntiLaby al = AntiLaby.getInstance();
     if (al.isPrior19() && !al.getLoadedFeatures().contains(PluginFeature.PROTOCOL_LIB)) {
-      return Locale.byName(NmsUtils.getLang(p), Locale.EN_US);
+      return FeatureProvider.getLanguage(p);
     }
     if (!mappedLanguages.containsKey(p)) {
-      mappedLanguages.put(p, Locale.byName(NmsUtils.getLang(p), Locale.EN_US));
+      mappedLanguages.put(p, FeatureProvider.getLanguage(p));
     }
     return mappedLanguages.get(p);
   }

@@ -18,23 +18,24 @@ public class UpdateChecker {
   private static final Logger logger = new Logger("UpdateChecker");
 
   /**
-   * The location of the online update information provider TODO: Add the final URL, add alternate URL
+   * The location of the online update information provider.
+   * TODO: Add the final URL, add alternate URL
    */
   private String url;
 
-  private UpdateInformation updateInformation;
+  private VersionInfo versionInfo;
 
-  public UpdateChecker(String uri) {
+  UpdateChecker(String uri) {
     this.url = uri;
   }
 
-  public UpdateInformation getUpdateInformation() throws IOException {
+  public VersionInfo getVersionInfo() throws IOException {
     return getUpdateInformation("release");
   }
 
-  public UpdateInformation getUpdateInformation(String type) throws IOException {
-    if (updateInformation != null) {
-      return updateInformation;
+  VersionInfo getUpdateInformation(String type) throws IOException {
+    if (versionInfo != null) {
+      return versionInfo;
     }
     // Read from REST server
     logger.debug("Reading data from the REST server...");
@@ -45,23 +46,14 @@ public class UpdateChecker {
     }
     // JSON -> UpdateInformation
     logger.debug("Parsing raw data...");
-    JSONObject jsonObject = (JSONObject) JSONValue.parse(raw);
-    updateInformation = new UpdateInformation(
-        (String) jsonObject.get("version"),
-        Math.toIntExact((long) jsonObject.get("versionId")),
-        (String) jsonObject.get("downloadUrl"),
-        (String) jsonObject.get("versionType"),
-        Math.toIntExact((long) jsonObject.get("updatePriority")),
-        (String) jsonObject.get("sha256"),
-        (String) jsonObject.get("updateNote")
-    );
+    versionInfo = VersionInfo.of((JSONObject) JSONValue.parse(raw));
     logger.debug("Done!");
 
-    return updateInformation;
+    return versionInfo;
   }
 
   public void forceReload() {
-    updateInformation = null;
+    versionInfo = null;
     logger.debug("The reload of the data at the next request has been forced.");
   }
 }

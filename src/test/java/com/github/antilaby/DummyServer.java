@@ -224,6 +224,7 @@ public class DummyServer implements Server {
   }
 
   @Override
+  @Deprecated
   public MapView getMap(short i) {
     return null;
   }
@@ -329,6 +330,7 @@ public class DummyServer implements Server {
   }
 
   @Override
+  @Deprecated
   public OfflinePlayer getOfflinePlayer(String s) {
     return null;
   }
@@ -539,6 +541,7 @@ public class DummyServer implements Server {
   }
 
   @Override
+  @Deprecated
   public UnsafeValues getUnsafe() {
     return null;
   }

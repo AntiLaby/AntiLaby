@@ -1,15 +1,10 @@
 package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
-import com.github.antilaby.antilaby.log.Logger;
+import com.github.antilaby.antilaby.lang.Locale;
 import com.github.antilaby.antilaby.main.AntiLaby;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.json.simple.JSONObject;
-
-import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -19,18 +14,16 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 
 /**
  * The class for NMS reflection magic
  *
  * @author heisluft
  */
-public final class NmsUtils {
-  private static final Logger LOG = new Logger("Reflection");
-
-  private static final String NMS = "net.minecraft.server.";
-  private static final String OBC = "org.bukkit.craftbukkit.";
+public final class CraftFeatureProvider extends FeatureProvider {
 
   private static Class<?> packet;
   private static Constructor<?> packetDataSerializer;
@@ -40,67 +33,42 @@ public final class NmsUtils {
   private static Method sendPacket;
   private static Method getHandle;
 
+  private static CraftFeatureProvider instance;
+
   private static boolean init;
-  private static String version;
 
-  /**
-   * Private constructor, no need to instantiate this class
-   */
-  private NmsUtils() {
-    throw new UnsupportedOperationException();
+  static CraftFeatureProvider getInstance() {
+    return instance == null ? new CraftFeatureProvider() : instance;
   }
 
   /**
-   * Gets the servers NMS version, for example 1_8_8
-   *
-   * @return The NMS version
+   * Private constructor as this is a singleton.
    */
-  public static String getVersion() {
-    if (!init) {
-      try {
-        init();
-      } catch (final ReflectiveOperationException e) {
-        LOG.error(e.getMessage());
-      }
+  private CraftFeatureProvider() {
+    if (instance != null) {
+      throw new UnsupportedOperationException("NMSUtils is a singleton");
     }
-    return version;
-  }
-
-  @Nonnull
-  public static String getLang(Player p) {
     try {
-      if (!init) {
-        init();
-      }
-      return ((String) locale.get(Objects.requireNonNull(getHandle.invoke(p)))).toLowerCase();
-    } catch (ReflectiveOperationException e) {
+      String nms = "net.minecraft.server.";
+      String obc = "org.bukkit.craftbukkit.";
+      String name = Bukkit.getServer().getClass().getPackage().getName();
+      String version = name.substring(name.lastIndexOf('.') + 1);
+      packet = Class.forName(nms + version + ".Packet");
+      Class<?> packetDataSerializerC = Class.forName(nms + version + ".PacketDataSerializer");
+      packetDataSerializer = packetDataSerializerC.getConstructor(ByteBuf.class);
+      packetPlayOutCustomPayload = Class.forName(nms + version + ".PacketPlayOutCustomPayload")
+          .getConstructor(String.class, packetDataSerializerC);
+      Class<?> craftPlayer = Class.forName(obc + version + ".entity.CraftPlayer");
+      getHandle = craftPlayer.getMethod("getHandle");
+      Class<?> entityPlayer = Class.forName(nms + version + ".EntityPlayer");
+      locale = entityPlayer.getField("locale");
+      playerConnection = entityPlayer.getField("playerConnection");
+      sendPacket = Class.forName(nms + version + ".PlayerConnection")
+          .getMethod("sendPacket", packet);
+      instance = this;
+    } catch (final ReflectiveOperationException e) {
       LOG.error(e.getMessage());
-      return "en_us";
     }
-  }
-
-  /**
-   * Initializes all static fields
-   *
-   * @throws ReflectiveOperationException If something failed during reflection
-   */
-  private static void init() throws ReflectiveOperationException {
-    if (init) {
-      return;
-    }
-    final String name = Bukkit.getServer().getClass().getPackage().getName();
-    version = name.substring(name.lastIndexOf('.') + 1);
-    packet = Class.forName(NMS + version + ".Packet");
-    Class<?> packetDataSerializerC = Class.forName(NMS + version + ".PacketDataSerializer");
-    packetDataSerializer = packetDataSerializerC.getConstructor(ByteBuf.class);
-    packetPlayOutCustomPayload = Class.forName(NMS + version + ".PacketPlayOutCustomPayload").getConstructor(String.class, packetDataSerializerC);
-    Class<?> craftPlayer = Class.forName(OBC + version + ".entity.CraftPlayer");
-    getHandle = craftPlayer.getMethod("getHandle");
-    Class<?> entityPlayer = Class.forName(NMS + version + ".EntityPlayer");
-    locale = entityPlayer.getField("locale");
-    playerConnection = entityPlayer.getField("playerConnection");
-    sendPacket = Class.forName(NMS + version + ".PlayerConnection").getMethod("sendPacket", packet);
-    init = true;
   }
 
   /**
@@ -113,9 +81,6 @@ public final class NmsUtils {
    */
   @SuppressWarnings("unchecked")
   public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
-    if (!init) {
-      init();
-    }
 
     //LabyMod 3 readable JSON object
     JSONObject jsonObject = new JSONObject();
@@ -141,13 +106,13 @@ public final class NmsUtils {
     //Send LM2 stuff to Client
     Object dataSerializer = packetDataSerializer.newInstance(bb);
     Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
 
     //LabyMod 3 Damage Indicator
     if (!labymodFunctions.get(LabyModFeature.DAMAGEINDICATOR)) {
       dataSerializer = packetDataSerializer.newInstance(Unpooled.buffer().writeBoolean(false));
       packet = packetPlayOutCustomPayload.newInstance("DAMAGEINDICATOR", dataSerializer);
-      sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+      sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
     }
 
     bb = Unpooled.buffer();
@@ -159,11 +124,11 @@ public final class NmsUtils {
 
     //LabyMod 3 Features (OLD Channel)
     packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
 
     //LabyMod 3 Features
     packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), NmsUtils.packet.cast(packet));
+    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
 
 
     //logback
@@ -178,4 +143,25 @@ public final class NmsUtils {
     out.close();
   }
 
+  @Override
+  protected void sendPluginMessageImpl(Player p, String channel, ByteBuf message) throws Exception {
+    Object dataSerializer = packetDataSerializer.newInstance(message);
+    Object packet = packetPlayOutCustomPayload.newInstance(channel, dataSerializer);
+    sendPacket.invoke(playerConnection.get(getHandle.invoke(p)), CraftFeatureProvider.packet.cast(packet));
+  }
+
+  @Override
+  protected Locale getLanguageImpl(Player p) {
+    try {
+      return Locale.byName(((String) locale.get(getHandle.invoke(p))).toLowerCase(), Locale.EN_US);
+    } catch (ReflectiveOperationException e) {
+      LOG.error(e.getMessage());
+      return Locale.EN_US;
+    }
+  }
+
+  @Override
+  protected String getMCVersionImpl() {
+    return Bukkit.getVersion().split("\\(", 2)[1].replace(")", "");
+  }
 }

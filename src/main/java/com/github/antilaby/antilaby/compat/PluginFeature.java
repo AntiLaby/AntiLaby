@@ -10,11 +10,7 @@ public enum PluginFeature {
   /**
    * The ProtocolLib specific features.
    */
-  PROTOCOL_LIB,
-  /**
-   * HeisluftsLanguageSystem specific features.
-   */
-  HEISLUFTS_LANGUAGE_SYSTEM;
+  PROTOCOL_LIB;
 
   static final Logger LOG = new Logger("Compat");
 

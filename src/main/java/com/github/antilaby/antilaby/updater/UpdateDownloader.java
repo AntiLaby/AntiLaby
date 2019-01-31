@@ -20,10 +20,10 @@ public class UpdateDownloader {
 
   private static final Logger LOGGER = new Logger("UpdateDownloader");
 
-  private final UpdateInformation info;
+  private final VersionInfo info;
   private final Path temporaryFileLocation;
 
-  protected UpdateDownloader(UpdateInformation info, Path temporaryFileLocation) {
+  protected UpdateDownloader(VersionInfo info, Path temporaryFileLocation) {
     this.info = info;
     this.temporaryFileLocation = temporaryFileLocation;
   }
