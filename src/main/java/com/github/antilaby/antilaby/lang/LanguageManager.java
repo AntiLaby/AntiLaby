@@ -90,9 +90,13 @@ public class LanguageManager {
         }
         Files.delete(path);
       }
+    }
+    try {
       for (Locale locale : Locale.values()) {
         locale.init();
       }
+    } finally {
+      Locale.closeInput();
     }
   }
 

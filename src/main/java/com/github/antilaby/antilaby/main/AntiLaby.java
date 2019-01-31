@@ -212,8 +212,7 @@ public class AntiLaby extends JavaPlugin {
     try {
       LanguageManager.INSTANCE.initAL();
     } catch (IOException e) {
-      e.printStackTrace();
-      LOG.error("Could not convert language folder! ");
+      LOG.error("unable to setup languages");
     }
     // Start plug-in metrics for bStats.org
     BStatsHandler.initBStats(this);
