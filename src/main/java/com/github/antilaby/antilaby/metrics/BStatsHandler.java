@@ -28,8 +28,8 @@ public class BStatsHandler {
     bstats.addCustomChart(new Metrics.SimplePie("download_source",
         () -> Constants.DOWNLOAD_SOURCE));
     // TODO add SimpleBarChart (if available at bStats)
-  /*  bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
-    /*  final Map<String, Integer> valueMap = new HashMap<>();
+    /*bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
+      final Map<String, Integer> valueMap = new HashMap<>();
       final int food = Miscellaneous.boolToInt(Config.getFOOD());
       final int gui = Miscellaneous.boolToInt(Config.getGUI());
       final int nick = Miscellaneous.boolToInt(Config.getNICK());
@@ -53,7 +53,7 @@ public class BStatsHandler {
       valueMap.put("DAMAGEINDICATOR", damageIndicator);
       valueMap.put("MINIMAP_RADAR", minimapRadar);
       return valueMap;
-    }));    */
+    }));*/
     bstats.addCustomChart(new Metrics.MultiLineChart("players_with_labymod_count", () -> {
       final Map<String, Integer> valueMap = new HashMap<>();
       valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
