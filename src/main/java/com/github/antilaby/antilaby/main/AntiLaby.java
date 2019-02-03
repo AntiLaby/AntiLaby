@@ -146,7 +146,7 @@ public class AntiLaby extends JavaPlugin {
     // Delete datamanager file on exit
     Runtime.getRuntime().addShutdownHook(cleanup);
     // Check if the server is compatible with AntiLaby
-    final String mcVersion = FeatureProvider.getMCVersion();
+    final String mcVersion = FeatureProvider.getMinecraftVersion();
     int version = 0;
     try {
       version = Integer.parseInt(mcVersion.split("\\.")[1]);
