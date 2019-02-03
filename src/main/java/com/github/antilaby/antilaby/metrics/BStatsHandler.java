@@ -4,24 +4,29 @@ import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.ServerHelper;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class BStatsHandler {
 
   public static final ConfigReader configReader = new ConfigReader();
 
   public static void initBStats(JavaPlugin javaPlugin) {
-    final BStats bstats = new BStats(javaPlugin);
-    bstats.addCustomChart(new BStats.SimplePie("autoupdate_enabled", () -> String.valueOf(configReader.getAutoUpdate().release())));
-    bstats.addCustomChart(new BStats.SimplePie("is_bungee_server", () -> String.valueOf(ServerHelper.isBungeeCord())));
-    bstats.addCustomChart(new BStats.SimplePie("bypass_enabled", () -> String.valueOf(configReader.getEnableBypassWithPermission())));
-    bstats.addCustomChart(new BStats.SimplePie("kick_enabled", () -> String.valueOf(configReader.getLabyModPlayerAction().kickEnabled())));
-    bstats.addCustomChart(new BStats.SimplePie("download_source", () -> Constants.DOWNLOAD_SOURCE));
+    final Metrics bstats = new Metrics(javaPlugin);
+    bstats.addCustomChart(new Metrics.SimplePie("autoupdate_enabled",
+        () -> String.valueOf(configReader.getAutoUpdate().release())));
+    bstats.addCustomChart(new Metrics.SimplePie("is_bungee_server",
+        () -> String.valueOf(ServerHelper.isBungeeCord())));
+    bstats.addCustomChart(new Metrics.SimplePie("bypass_enabled",
+        () -> String.valueOf(configReader.getEnableBypassWithPermission())));
+    bstats.addCustomChart(new Metrics.SimplePie("kick_enabled",
+        () -> String.valueOf(configReader.getLabyModPlayerAction().kickEnabled())));
+    bstats.addCustomChart(new Metrics.SimplePie("download_source",
+        () -> Constants.DOWNLOAD_SOURCE));
     // TODO add SimpleBarChart (if available at bStats)
   /*  bstats.addCustomChart(new BStats.SimpleBarChart("disabled_functions", () -> {
     /*  final Map<String, Integer> valueMap = new HashMap<>();
@@ -49,22 +54,26 @@ public class BStatsHandler {
       valueMap.put("MINIMAP_RADAR", minimapRadar);
       return valueMap;
     }));    */
-    bstats.addCustomChart(new BStats.MultiLineChart("players_with_labymod_count", () -> {
+    bstats.addCustomChart(new Metrics.MultiLineChart("players_with_labymod_count", () -> {
       final Map<String, Integer> valueMap = new HashMap<>();
       valueMap.put("players_lm", IncomingPluginChannel.getLabyModPlayers().size());
-      valueMap.put("players_no_lm", Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
+      valueMap.put("players_no_lm",
+          Bukkit.getOnlinePlayers().size() - IncomingPluginChannel.getLabyModPlayers().size());
       return valueMap;
     }));
-    bstats.addCustomChart(new BStats.SingleLineChart("players_with_labymod_count_single", () -> IncomingPluginChannel.getLabyModPlayers().size()));
-    final List<String> labyModJoinCommands = configReader.getLabyModPlayerAction().getJoinCommands(false);
-    bstats.addCustomChart(new BStats.SimplePie("lmjoincmd_enabled", () -> {
+    bstats.addCustomChart(new Metrics.SingleLineChart("players_with_labymod_count_single",
+        () -> IncomingPluginChannel.getLabyModPlayers().size()));
+    final List<String> labyModJoinCommands =
+        configReader.getLabyModPlayerAction().getJoinCommands(false);
+    bstats.addCustomChart(new Metrics.SimplePie("lmjoincmd_enabled", () -> {
       if (labyModJoinCommands.isEmpty()) {
         return "false";
       } else {
         return "true";
       }
     }));
-    bstats.addCustomChart(new BStats.SingleLineChart("lmjoincmd_count", () -> labyModJoinCommands.size()));
+    bstats.addCustomChart(new Metrics.SingleLineChart("lmjoincmd_count",
+        labyModJoinCommands::size));
   }
 
 }

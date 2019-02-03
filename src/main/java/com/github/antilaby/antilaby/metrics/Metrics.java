@@ -29,6 +29,26 @@ package com.github.antilaby.antilaby.metrics;
  * either expressed or implied, of anybody else.
  */
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.zip.GZIPOutputStream;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -38,67 +58,63 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.io.*;
-import java.lang.reflect.Method;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.zip.GZIPOutputStream;
-
 public class Metrics {
 
   /**
-   * The current revision number
+   * The current revision number.
    */
-  private final static int REVISION = 7;
+  private static final int REVISION = 7;
   /**
-   * The base url of the metrics domain
+   * The base url of the metrics domain.
    */
   private static final String BASE_URL = "http://report.mcstats.org";
   /**
-   * The url used to report a server's status
+   * The url used to report a server's status.
    */
   private static final String REPORT_URL = "/plugin/%s";
   /**
-   * Interval of time to ping (in minutes)
+   * Interval of time to ping (in minutes).
    */
   private static final int PING_INTERVAL = 10;
   /**
-   * The plugin this metrics submits for
+   * The plugin this metrics submits for.
    */
   private final Plugin plugin;
   /**
-   * All of the custom graphs to submit to metrics
+   * All of the custom graphs to submit to metrics.
    */
-  private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<Graph>());
+  private final Set<Graph> graphs = Collections.synchronizedSet(new HashSet<>());
   /**
-   * The plugin configuration file
+   * The plugin configuration file.
    */
   private final YamlConfiguration configuration;
   /**
-   * The plugin configuration file
+   * The plugin configuration file.
    */
   private final File configurationFile;
   /**
-   * Unique server id
+   * Unique server id.
    */
   private final String guid;
   /**
-   * Debug mode
+   * Debug mode.
    */
   private final boolean debug;
   /**
-   * Lock for synchronization
+   * Lock for synchronization.
    */
   private final Object optOutLock = new Object();
   /**
-   * The scheduled task
+   * The scheduled task.
    */
   private volatile BukkitTask task = null;
 
+  /**
+   * Initializes new metrics for a specified plugin.
+   *
+   * @param plugin the plugin, must not be null
+   * @throws IOException if the config of the plugin could not be read
+   */
   public Metrics(final Plugin plugin) throws IOException {
     if (plugin == null) {
       throw new IllegalArgumentException("Plugin cannot be null");
@@ -129,12 +145,11 @@ public class Metrics {
   /**
    * Appends a json encoded key/value pair to the given string builder.
    *
-   * @param json
-   * @param key
-   * @param value
-   * @throws UnsupportedEncodingException
+   * @param json the {@code StringBuilder} to append to
+   * @param key the key to append
+   * @param value the value to append
    */
-  private static void appendJSONPair(StringBuilder json, String key, String value) throws UnsupportedEncodingException {
+  private static void appendJsonPair(StringBuilder json, String key, String value) {
     boolean isValueNumeric = false;
 
     try {
@@ -142,31 +157,31 @@ public class Metrics {
         Double.parseDouble(value);
         isValueNumeric = true;
       }
-    } catch (NumberFormatException e) {
-      isValueNumeric = false;
+    } catch (NumberFormatException ignored) {
+      // Ignore
     }
 
     if (json.charAt(json.length() - 1) != '{') {
       json.append(',');
     }
 
-    json.append(escapeJSON(key));
+    json.append(escapeJson(key));
     json.append(':');
 
     if (isValueNumeric) {
       json.append(value);
     } else {
-      json.append(escapeJSON(value));
+      json.append(escapeJson(value));
     }
   }
 
   /**
-   * Escape a string to create a valid JSON string
+   * Escape a string to create a valid JSON string.
    *
-   * @param text
-   * @return
+   * @param text the String to escape
+   * @return the escaped String
    */
-  private static String escapeJSON(String text) {
+  private static String escapeJson(String text) {
     StringBuilder builder = new StringBuilder();
 
     builder.append('"');
@@ -207,7 +222,7 @@ public class Metrics {
   }
 
   /**
-   * Encode text as UTF-8
+   * Encode text as UTF-8.
    *
    * @param text the text to encode
    * @return the encoded text, as UTF-8
@@ -217,40 +232,31 @@ public class Metrics {
   }
 
   /**
-   * GZip compress a string of bytes
+   * GZip compress a string of bytes.
    *
    * @param input The input String
    * @return the resulting byte-array
    */
-  public static byte[] gzip(String input) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    GZIPOutputStream gzos = null;
-
-    try {
-      gzos = new GZIPOutputStream(baos);
+  private static byte[] gzip(String input) {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      GZIPOutputStream gzos = new GZIPOutputStream(baos);
       gzos.write(input.getBytes("UTF-8"));
+      return baos.toByteArray();
     } catch (IOException e) {
       e.printStackTrace();
-    } finally {
-      if (gzos != null) {
-        try {
-          gzos.close();
-        } catch (IOException ignore) {
-        }
-      }
     }
-
-    return baos.toByteArray();
+    return null;
   }
 
   /**
-   * Gets the File object of the config file that should be used to store data such as the GUID and opt-out status
+   * Gets the File object of the config file that should be used to store data such as the GUID and
+   * opt-out status.
    *
    * @return the File object for the config file
    */
   public File getConfigFile() {
-    // I believe the easiest way to get the base folder (e.g craftbukkit set via -P) for plugins to use
-    // is to abuse the plugin object we already have
+    // I believe the easiest way to get the base folder (e.g craftbukkit set via -P)
+    // for plugins to use is to abuse the plugin object we already have
     // plugin.getDataFolder() => base/plugins/PluginA/
     // pluginsFolder => base/plugins/
     // The base is not necessarily relative to the startup directory.
@@ -261,10 +267,12 @@ public class Metrics {
   }
 
   /**
-   * Construct and create a Graph that can be used to separate specific plotters to their own graphs on the metrics website. Plotters can be added to the graph object returned.
+   * Construct and create a Graph that can be used to separate specific plotters to their own graphs
+   * on the metrics website. Plotters can be added to the graph object returned.
    *
    * @param name The name of the graph
-   * @return Graph object created. Will never return NULL under normal circumstances unless bad parameters are given
+   * @return Graph object created. Will never return NULL under normal circumstances
+   *     unless bad parameters are given
    */
   public Graph createGraph(final String name) {
     if (name == null) {
@@ -282,7 +290,8 @@ public class Metrics {
   }
 
   /**
-   * Add a Graph object to BukkitMetrics that represents data for the plugin that should be sent to the backend
+   * Add a Graph object to BukkitMetrics that represents data for the plugin that should be sent to
+   * the backend.
    *
    * @param graph The name of the graph
    */
@@ -295,7 +304,8 @@ public class Metrics {
   }
 
   /**
-   * Enables metrics for the server by setting "opt-out" to false in the config file and starting the metrics task.
+   * Enables metrics for the server by setting "opt-out" to false in the config file and starting
+   * the metrics task.
    *
    * @throws java.io.IOException If an IO-Error occurred
    */
@@ -316,7 +326,7 @@ public class Metrics {
   }
 
   /**
-   * Has the server owner denied plugin metrics?
+   * Gets whether the server owner denied plugin metrics.
    *
    * @return true if metrics should be opted out of it
    */
@@ -325,12 +335,7 @@ public class Metrics {
       try {
         // Reload the metrics file
         configuration.load(getConfigFile());
-      } catch (IOException ex) {
-        if (debug) {
-          Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
-        }
-        return true;
-      } catch (InvalidConfigurationException ex) {
+      } catch (IOException | InvalidConfigurationException ex) {
         if (debug) {
           Bukkit.getLogger().log(Level.INFO, "[Metrics] " + ex.getMessage());
         }
@@ -341,8 +346,9 @@ public class Metrics {
   }
 
   /**
-   * Start measuring statistics. This will immediately create an async repeating task as the plugin and send the initial data to the metrics backend, and then after that it will post in increments
-   * of PING_INTERVAL * 1200 ticks.
+   * Start measuring statistics. This will immediately create an async repeating task as the plugin
+   * and send the initial data to the metrics backend, and then after that it will post
+   * in increments of PING_INTERVAL * 1200 ticks.
    *
    * @return True if statistics measuring is running, otherwise false.
    */
@@ -400,51 +406,52 @@ public class Metrics {
   }
 
   /**
-   * Generic method that posts a plugin to the metrics website
+   * Generic method that posts a plugin to the metrics website.
    */
   private void postPlugin(final boolean isPing) throws IOException {
     // Server software specific section
     PluginDescriptionFile description = plugin.getDescription();
-    String pluginName = description.getName();
-    boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
-    String pluginVersion = description.getVersion();
-    String serverVersion = Bukkit.getVersion();
-    int playersOnline = getOnlinePlayers();
+    final boolean onlineMode = Bukkit.getServer().getOnlineMode(); // TRUE if online mode is enabled
+    final String pluginVersion = description.getVersion();
+    final String serverVersion = Bukkit.getVersion();
+    final int playersOnline = getOnlinePlayers();
 
-    // END server software specific section -- all code below does not use any code outside of this class / Java
+    // END server software specific section
+    // all code below does not use any code outside of this class / Java
 
     // Construct the post data
     StringBuilder json = new StringBuilder(1024);
     json.append('{');
 
-    // The plugin's description file containg all of the plugin data such as name, version, author, etc
-    appendJSONPair(json, "guid", guid);
-    appendJSONPair(json, "plugin_version", pluginVersion);
-    appendJSONPair(json, "server_version", serverVersion);
-    appendJSONPair(json, "players_online", Integer.toString(playersOnline));
+    // The plugin's description file containg all of the plugin data
+    // such as name, version, author, etc
+    appendJsonPair(json, "guid", guid);
+    appendJsonPair(json, "plugin_version", pluginVersion);
+    appendJsonPair(json, "server_version", serverVersion);
+    appendJsonPair(json, "players_online", Integer.toString(playersOnline));
 
     // New data as of R6
-    String osname = System.getProperty("os.name");
+    final String osname = System.getProperty("os.name");
     String osarch = System.getProperty("os.arch");
-    String osversion = System.getProperty("os.version");
-    String java_version = System.getProperty("java.version");
-    int coreCount = Runtime.getRuntime().availableProcessors();
+    final String osversion = System.getProperty("os.version");
+    final String javaVersion = System.getProperty("java.version");
+    final int coreCount = Runtime.getRuntime().availableProcessors();
 
     // normalize os arch .. amd64 -> x86_64
     if (osarch.equals("amd64")) {
       osarch = "x86_64";
     }
 
-    appendJSONPair(json, "osname", osname);
-    appendJSONPair(json, "osarch", osarch);
-    appendJSONPair(json, "osversion", osversion);
-    appendJSONPair(json, "cores", Integer.toString(coreCount));
-    appendJSONPair(json, "auth_mode", onlineMode ? "1" : "0");
-    appendJSONPair(json, "java_version", java_version);
+    appendJsonPair(json, "osname", osname);
+    appendJsonPair(json, "osarch", osarch);
+    appendJsonPair(json, "osversion", osversion);
+    appendJsonPair(json, "cores", Integer.toString(coreCount));
+    appendJsonPair(json, "auth_mode", onlineMode ? "1" : "0");
+    appendJsonPair(json, "java_version", javaVersion);
 
     // If we're pinging, append it
     if (isPing) {
-      appendJSONPair(json, "ping", "1");
+      appendJsonPair(json, "ping", "1");
     }
 
     if (graphs.size() > 0) {
@@ -458,16 +465,13 @@ public class Metrics {
 
         boolean firstGraph = true;
 
-        final Iterator<Graph> iter = graphs.iterator();
-
-        while (iter.hasNext()) {
-          Graph graph = iter.next();
-
+        for (Graph graph : graphs) {
           StringBuilder graphJson = new StringBuilder();
           graphJson.append('{');
 
           for (Plotter plotter : graph.getPlotters()) {
-            appendJSONPair(graphJson, plotter.getColumnName(), Integer.toString(plotter.getValue()));
+            appendJsonPair(graphJson, plotter.getColumnName(),
+                Integer.toString(plotter.getValue()));
           }
 
           graphJson.append('}');
@@ -476,7 +480,7 @@ public class Metrics {
             json.append(',');
           }
 
-          json.append(escapeJSON(graph.getName()));
+          json.append(escapeJson(graph.getName()));
           json.append(':');
           json.append(graphJson);
 
@@ -490,6 +494,7 @@ public class Metrics {
     // close json
     json.append('}');
 
+    String pluginName = description.getName();
     // Create the url
     URL url = new URL(BASE_URL + String.format(REPORT_URL, urlEncode(pluginName)));
 
@@ -519,7 +524,8 @@ public class Metrics {
     connection.setDoOutput(true);
 
     if (debug) {
-      System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed=" + uncompressed.length + " " + "compressed=" + compressed.length);
+      System.out.println("[Metrics] Prepared request for " + pluginName + " uncompressed="
+          + uncompressed.length + " " + "compressed=" + compressed.length);
     }
 
     // Write the data
@@ -528,7 +534,8 @@ public class Metrics {
     os.flush();
 
     // Now read the response
-    final BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+    final BufferedReader reader = new BufferedReader(
+        new InputStreamReader(connection.getInputStream()));
     String response = reader.readLine();
 
     // close resources
@@ -547,11 +554,8 @@ public class Metrics {
       // Is this the first update this hour?
       if (response.equals("1") || response.contains("This is your first update this hour")) {
         synchronized (graphs) {
-          final Iterator<Graph> iter = graphs.iterator();
 
-          while (iter.hasNext()) {
-            final Graph graph = iter.next();
-
+          for (Graph graph : graphs) {
             for (Plotter plotter : graph.getPlotters()) {
               plotter.reset();
             }
@@ -562,7 +566,7 @@ public class Metrics {
   }
 
   /**
-   * Gets the online player (backwards compatibility)
+   * Gets the online player (backwards compatibility).
    *
    * @return online player amount
    */
@@ -584,7 +588,7 @@ public class Metrics {
   }
 
   /**
-   * Check if mineshafter is present. If it is, we need to bypass it to send POST requests
+   * Check if mineshafter is present. If it is, we need to bypass it to send POST requests.
    *
    * @return true if mineshafter is installed on the server
    */
@@ -598,7 +602,8 @@ public class Metrics {
   }
 
   /**
-   * Disables metrics for the server by setting "opt-out" to true in the config file and canceling the metrics task.
+   * Disables metrics for the server by setting "opt-out" to true in the config file
+   * and canceling the metrics task.
    *
    * @throws java.io.IOException If an IO-Error occurred
    */
@@ -620,17 +625,18 @@ public class Metrics {
   }
 
   /**
-   * Represents a custom graph on the website
+   * Represents a custom graph on the website.
    */
   public static class Graph {
 
     /**
-     * The graph's name, alphanumeric and spaces only :) If it does not comply to the above when submitted, it is rejected
+     * The graph's name, alphanumeric and spaces only. :)
+     * If it does not comply to the above when submitted, it is rejected.
      */
     private final String name;
 
     /**
-     * The set of plotters that are contained within this graph
+     * The set of plotters that are contained within this graph.
      */
     private final Set<Plotter> plotters = new LinkedHashSet<>();
 
@@ -639,7 +645,7 @@ public class Metrics {
     }
 
     /**
-     * Gets the graph's name
+     * Gets the graph's name.
      *
      * @return the Graph's name
      */
@@ -648,7 +654,7 @@ public class Metrics {
     }
 
     /**
-     * Add a plotter to the graph, which will be used to plot entries
+     * Add a plotter to the graph, which will be used to plot entries.
      *
      * @param plotter the plotter to add to the graph
      */
@@ -657,7 +663,7 @@ public class Metrics {
     }
 
     /**
-     * Remove a plotter from the graph
+     * Remove a plotter from the graph.
      *
      * @param plotter the plotter to remove from the graph
      */
@@ -666,7 +672,7 @@ public class Metrics {
     }
 
     /**
-     * Gets an <b>unmodifiable</b> set of the plotter objects in the graph
+     * Gets an <b>unmodifiable</b> set of the plotter objects in the graph.
      *
      * @return an unmodifiable {@link java.util.Set} of the plotter objects
      */
@@ -697,24 +703,24 @@ public class Metrics {
   }
 
   /**
-   * Interface used to collect custom data for a plugin
+   * Interface used to collect custom data for a plugin.
    */
-  public static abstract class Plotter {
+  public abstract static class Plotter {
 
     /**
-     * The plot's name
+     * The plot's name.
      */
     private final String name;
 
     /**
-     * Construct a plotter with the default plot name
+     * Construct a plotter with the default plot name.
      */
     public Plotter() {
       this("Default");
     }
 
     /**
-     * Construct a plotter with a specific plot name
+     * Construct a plotter with a specific plot name.
      *
      * @param name the name of the plotter to use, which will show up on the website
      */
@@ -723,7 +729,7 @@ public class Metrics {
     }
 
     /**
-     * Called after the website graphs have been updated
+     * Called after the website graphs have been updated.
      */
     public void reset() {
     }
@@ -734,7 +740,7 @@ public class Metrics {
     }
 
     /**
-     * Get the column name for the plotted point
+     * Get the column name for the plotted point.
      *
      * @return the plotted point's column name
      */
@@ -753,9 +759,11 @@ public class Metrics {
     }
 
     /**
-     * Get the current value for the plotted point. Since this function defers to an external function it may or may not return immediately thus cannot be guaranteed to be thread friendly or
-     * safe.
-     * This function can be called from any thread so care should be taken when accessing resources that need to be synchronized.
+     * Get the current value for the plotted point.
+     * Since this function defers to an external function it may or may not return immediately
+     * thus cannot be guaranteed to be thread friendly or safe.
+     * This function can be called from any thread so care should be taken when accessing resources
+     * that need to be synchronized.
      *
      * @return the current value for the point to be plotted.
      */
