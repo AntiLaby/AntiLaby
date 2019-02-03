@@ -3,6 +3,8 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'java'
 
+    id 'checkstyle'
+
     // Apply IDE plugins for easy build
     id 'eclipse'
 
@@ -22,6 +24,10 @@ repositories {
     // For GlowStone
     maven {
         url 'https://repo.glowstone.net/content/repositories/snapshots/'
+    }
+    //Bukkit API
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
     // For JUnit
     mavenCentral()
@@ -46,13 +52,17 @@ processResources {
 }
 
 task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
+    from sourceSets.main.allSource, file("LICENSE")
     classifier = 'sources'
 }
 
 task javadocJar(type: Jar) {
     from javadoc
     classifier = 'javadoc'
+}
+
+jar {
+    from classes, processResources, file("LICENSE")
 }
 
 dependencies {
@@ -64,6 +74,8 @@ dependencies {
     compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompileOnly 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 }
+
+configurations.testCompileOnly.extendsFrom configurations.compileOnly
 
 publishing {
     repositories {
@@ -122,7 +134,20 @@ signing {
     sign publishing.publications.mavenJava
 }
 
-publish.dependsOn test
+publishMavenJavaPublicationToMavenRepository.dependsOn test
+publishMavenJavaPublicationToMavenLocal.dependsOn test
+
+classes {
+    doLast {
+        checkstyleMain
+    }
+}
+
+testClasses {
+    doLast {
+        checkstyleTest
+    }
+}
 
 test {
     useJUnit()
