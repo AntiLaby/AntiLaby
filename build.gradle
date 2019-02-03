@@ -65,6 +65,10 @@ task javadocJar(type: Jar) {
     classifier = 'javadoc'
 }
 
+shadowJar {
+    relocate 'org.bstats', 'com.github.antilaby.3rdparty.bstats'
+}
+
 jar {
     from classes, processResources, file("LICENSE")
 }
@@ -103,7 +107,7 @@ publishing {
                 url = 'https://www.spigotmc.org/resources/antilaby-1-8-1-12-1-disable-labymod-functions-api.21347'
                 licenses {
                     license {
-                        name = 'GNU GPL, Version 3'
+                        name = 'GPL-3.0'
                         url = 'https://www.gnu.org/licenses/gpl.txt'
                     }
                 }
@@ -111,7 +115,7 @@ publishing {
                     developer {
                         id = 'NathanNr'
                         name = 'NathanNr'
-                        email = '[n/a]'
+                        email = 'nathan.nr@outlook.com'
                         roles = ['developer']
                     }
                     developer {
