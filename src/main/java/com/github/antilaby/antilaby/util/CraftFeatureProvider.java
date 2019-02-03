@@ -19,40 +19,53 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 /**
- * The class for NMS reflection magic
+ * The FeatureProvider for CraftBukkit.
  *
  * @author heisluft
  */
 public final class CraftFeatureProvider extends FeatureProvider {
 
+  /** The packet class, used for casting. */
   private static Class<?> packet;
+  /** PacketDataSerializer Constructor. */
   private static Constructor<?> packetDataSerializer;
+  /** PacketPlayOutCustomPayload Constructor. */
   private static Constructor<?> packetPlayOutCustomPayload;
+  /** private EntityPlayer.locale field. */
   private static Field locale;
+  /** private EntityPlayer.playerConnection field. */
   private static Field playerConnection;
+  /** PlayerConnection.sendPacket() method. */
   private static Method sendPacket;
+  /** CraftPlayer.getHandle() method. */
   private static Method getHandle;
 
+  /** The singleton instance. */
   private static CraftFeatureProvider instance;
 
-  private static boolean init;
-
+  /**
+   * Get the singleton instance. If it does not exist, it is created.
+   *
+   * @return the singleton instance
+   */
   static CraftFeatureProvider getInstance() {
     return instance == null ? new CraftFeatureProvider() : instance;
   }
 
   /**
-   * Private constructor as this is a singleton.
+   * Construct a new FeatureProvider. Private as this is a singleton
+   *
+   * @throws IllegalStateException if an instance was already created
    */
   private CraftFeatureProvider() {
     if (instance != null) {
-      throw new UnsupportedOperationException("NMSUtils is a singleton");
+      throw new IllegalStateException("CraftFeatureProvider is a singleton");
     }
     try {
-      String nms = "net.minecraft.server.";
-      String obc = "org.bukkit.craftbukkit.";
-      String name = Bukkit.getServer().getClass().getPackage().getName();
-      String version = name.substring(name.lastIndexOf('.') + 1);
+      final String nms = "net.minecraft.server.";
+      final String obc = "org.bukkit.craftbukkit.";
+      final String name = Bukkit.getServer().getClass().getPackage().getName();
+      final String version = name.substring(name.lastIndexOf('.') + 1);
       packet = Class.forName(nms + version + ".Packet");
       Class<?> packetDataSerializerC = Class.forName(nms + version + ".PacketDataSerializer");
       packetDataSerializer = packetDataSerializerC.getConstructor(ByteBuf.class);
@@ -72,15 +85,19 @@ public final class CraftFeatureProvider extends FeatureProvider {
   }
 
   /**
-   * Sends all disabled LabyMod functions to the client
+   * Sends all disabled LabyMod functions to the client.
+   * <em>Will be removed.</em>
    *
-   * @param player           The {@link Player} to send the data to
-   * @param labymodFunctions A {@link Map} containing all {@link LabyModFeature}s and whether they are enabled
-   * @throws IOException                  If the connection to the client could somehow not be established
-   * @throws ReflectiveOperationException If something goes wrong during {@link #init}.
+   * @param player The {@link Player} to send the data to
+   * @param labymodFunctions A {@link Map} containing all {@link LabyModFeature}s and whether
+   *     they are enabled
+   * @throws IOException If the connection to the client could somehow not be established
+   * @throws ReflectiveOperationException If something goes wrong during reflection.
    */
+  //TODO: Remove this
   @SuppressWarnings("unchecked")
-  public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions) throws IOException, ReflectiveOperationException {
+  public static void setLabyModFeature(Player player, Map<LabyModFeature, Boolean> labymodFunctions)
+      throws Exception {
 
     //LabyMod 3 readable JSON object
     JSONObject jsonObject = new JSONObject();
@@ -104,15 +121,12 @@ public final class CraftFeatureProvider extends FeatureProvider {
     bb.writeBytes(byteOut.toByteArray());
 
     //Send LM2 stuff to Client
-    Object dataSerializer = packetDataSerializer.newInstance(bb);
-    Object packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
+    getInstance().sendPluginMessageImpl(player, Constants.LABYMOD_CHANNEL_OLD, bb);
 
     //LabyMod 3 Damage Indicator
     if (!labymodFunctions.get(LabyModFeature.DAMAGEINDICATOR)) {
-      dataSerializer = packetDataSerializer.newInstance(Unpooled.buffer().writeBoolean(false));
-      packet = packetPlayOutCustomPayload.newInstance("DAMAGEINDICATOR", dataSerializer);
-      sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
+      getInstance().sendPluginMessageImpl(
+          player, "DAMAGEINDICATOR", Unpooled.buffer().writeBoolean(false));
     }
 
     bb = Unpooled.buffer();
@@ -120,15 +134,11 @@ public final class CraftFeatureProvider extends FeatureProvider {
     bb.writeBytes(jsonObject.toJSONString().getBytes());
     System.out.println(bb.readableBytes());
 
-    dataSerializer = packetDataSerializer.newInstance(bb);
-
     //LabyMod 3 Features (OLD Channel)
-    packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL_OLD, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
+    getInstance().sendPluginMessageImpl(player, Constants.LABYMOD_CHANNEL_OLD, bb);
 
     //LabyMod 3 Features
-    packet = packetPlayOutCustomPayload.newInstance(Constants.LABYMOD_CHANNEL, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(player)), CraftFeatureProvider.packet.cast(packet));
+    getInstance().sendPluginMessageImpl(player, Constants.LABYMOD_CHANNEL, bb);
 
 
     //logback
@@ -138,18 +148,26 @@ public final class CraftFeatureProvider extends FeatureProvider {
         b.append(n.getKey()).append(", ");
       }
     }
-    AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ").append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
+    AntiLaby.LOG.info(b.replace(b.length() - 2, b.length(), "").append(") for player ")
+        .append(player.getName()).append(" (").append(player.getUniqueId()).append(')').toString());
     //close stream
     out.close();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void sendPluginMessageImpl(Player p, String channel, ByteBuf message) throws Exception {
     Object dataSerializer = packetDataSerializer.newInstance(message);
     Object packet = packetPlayOutCustomPayload.newInstance(channel, dataSerializer);
-    sendPacket.invoke(playerConnection.get(getHandle.invoke(p)), CraftFeatureProvider.packet.cast(packet));
+    sendPacket.invoke(playerConnection.get(getHandle.invoke(p)),
+        CraftFeatureProvider.packet.cast(packet));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected Locale getLanguageImpl(Player p) {
     try {
@@ -160,8 +178,11 @@ public final class CraftFeatureProvider extends FeatureProvider {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  protected String getMCVersionImpl() {
+  protected String getMinecraftVersionImpl() {
     return Bukkit.getVersion().split("\\(", 2)[1].replace(")", "");
   }
 }

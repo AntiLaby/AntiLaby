@@ -5,13 +5,13 @@ import com.github.antilaby.antilaby.config.ConfigUpdater;
 import org.bukkit.ChatColor;
 
 /**
- * Contains all relevant constants of AntiLaby
+ * Contains all relevant constants of AntiLaby.
  *
  * @author heisluft
  */
 public final class Constants {
   /**
-   * The download source file. Allowed values: github.com spigotmc.org dev.bukkit.org direct other
+   * The download source. Allowed values: github.com, spigotmc.org, dev.bukkit.org, direct, other.
    */
   public static final String DOWNLOAD_SOURCE = "github.com";
   /**
@@ -21,7 +21,8 @@ public final class Constants {
   /**
    * The SpigotMC.org resource link
    */
-  public static final String RESOURCE_LINK = "https://www.spigotmc.org/resources/" + RESOURCE_ID + '/';
+  public static final String RESOURCE_LINK =
+      "https://www.spigotmc.org/resources/" + RESOURCE_ID + '/';
   /**
    * The AntiLaby chat prefix.
    */

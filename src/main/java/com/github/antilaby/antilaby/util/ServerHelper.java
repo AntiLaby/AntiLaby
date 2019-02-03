@@ -3,9 +3,9 @@ package com.github.antilaby.antilaby.util;
 import java.lang.reflect.Field;
 
 /**
- * Provides Information about this Server
+ * Provides Information about this Server.
  *
- * @author NathanNr, heisluft
+ * @author heisluft
  */
 public final class ServerHelper {
 
@@ -14,14 +14,14 @@ public final class ServerHelper {
   private static ImplementationType implementation;
 
   /**
-   * Private constructor, no need to instantiate this class
+   * Private constructor, no need to instantiate this class.
    */
   private ServerHelper() {
     throw new UnsupportedOperationException();
   }
 
   /**
-   * Gets this servers Bukkit Api type
+   * Get this servers Bukkit Api type.
    *
    * @return the APIType
    */
@@ -33,7 +33,7 @@ public final class ServerHelper {
   }
 
   /**
-   * Gets this servers Bukkit implementation
+   * Get this servers Bukkit implementation.
    *
    * @return the ImplementationType
    */
@@ -44,13 +44,21 @@ public final class ServerHelper {
     return implementation;
   }
 
+  /**
+   * Resolves all fields.
+   */
   private static void init() {
     try {
       Class.forName("net.glowstone.GlowServer");
       type = ApiType.PAPER_SPIGOT;
       implementation = ImplementationType.GLOWSTONE;
     } catch (ClassNotFoundException e) {
-      implementation = ImplementationType.CRAFT_BUKKIT;
+      try {
+        Class.forName("org.bukkit.craftbukkit.Main");
+        implementation = ImplementationType.CRAFT_BUKKIT;
+      } catch (ClassNotFoundException e1) {
+        implementation = ImplementationType.UNKNOWN;
+      }
     }
     Class<?> spigotClass;
     try {
@@ -80,7 +88,7 @@ public final class ServerHelper {
   }
 
   /**
-   * Gets whether this Server is part of a BungeeCord network
+   * Gets whether this Server is part of a BungeeCord network.
    *
    * @return true if User enabled the bungeeCord option in the servers spigot.yml
    */
@@ -92,33 +100,37 @@ public final class ServerHelper {
   }
 
   /**
-   * The servers Bukkit implementation
+   * The servers Bukkit implementation.
    */
   public enum ImplementationType {
     /**
-     * Server is CraftBukkit based
+     * Server is CraftBukkit based.
      */
     CRAFT_BUKKIT,
     /**
-     * Server is Glowstone based
+     * Server is Glowstone based.
      */
-    GLOWSTONE
+    GLOWSTONE,
+    /**
+     * Bukkit implementation is unknown.
+     */
+    UNKNOWN
   }
 
   /**
-   * The servers Bukkit API type
+   * The servers Bukkit API type.
    */
   public enum ApiType {
     /**
-     * Server only implements Bukkit
+     * Server only implements Bukkit API.
      */
     BUKKIT,
     /**
-     * Server implements Spigot
+     * Server implements Bukkit + Spigot API.
      */
     SPIGOT,
     /**
-     * Server implements PaperSpigot
+     * Server implements Bukkit, Spigot + PaperSpigot API.
      */
     PAPER_SPIGOT
   }

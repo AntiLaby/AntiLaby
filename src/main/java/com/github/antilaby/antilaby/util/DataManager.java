@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
 
-public class DataManager {
+public final class DataManager {
 
   private static final Path PATH = AntiLaby.getInstance().getDataPath().resolve("/labyinfo.ser");
 
@@ -28,12 +28,12 @@ public class DataManager {
   /**
    * Reads the next object from the given {@link ObjectStreamException} as an instance of T.
    *
-   * @param <T>         The class to cast the read object to
+   * @param <T> The class to cast the read object to
    * @param inputStream The stream to read from
    * @return The read object, casted to T
    * @throws ClassNotFoundException Class of a serialized object cannot be found
-   * @throws IOException            Any of the usual Input/Output related exceptions
-   * @throws ClassCastException     The read object is not an instance of T
+   * @throws IOException Any of the usual Input/Output related exceptions
+   * @throws ClassCastException The read object is not an instance of T
    */
   @SuppressWarnings("unchecked")
   private static <T> T readObject(ObjectInputStream inputStream) throws ClassNotFoundException,
