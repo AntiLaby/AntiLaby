@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.metrics;
 
-import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.AntiLaby;
+import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.ServerHelper;

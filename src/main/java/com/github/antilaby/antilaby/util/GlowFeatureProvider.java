@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.util;
 
-import com.github.antilaby.antilaby.lang.Locale;
 import com.github.antilaby.antilaby.AntiLaby;
+import com.github.antilaby.antilaby.lang.Locale;
 import io.netty.buffer.ByteBuf;
 import java.lang.reflect.Field;
 import net.glowstone.GlowServer;

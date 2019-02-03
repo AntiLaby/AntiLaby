@@ -208,7 +208,7 @@ public class AntiLaby extends JavaPlugin {
     }
     // Init LanguageManager
     try {
-      LanguageManager.INSTANCE.initAL();
+      LanguageManager.INSTANCE.initTranslations();
     } catch (IOException e) {
       LOG.error("unable to setup languages");
     }

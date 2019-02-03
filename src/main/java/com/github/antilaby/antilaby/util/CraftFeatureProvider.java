@@ -1,8 +1,8 @@
 package com.github.antilaby.antilaby.util;
 
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.lang.Locale;
-import com.github.antilaby.antilaby.AntiLaby;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.io.ByteArrayOutputStream;
@@ -44,15 +44,6 @@ public final class CraftFeatureProvider extends FeatureProvider {
   private static CraftFeatureProvider instance;
 
   /**
-   * Get the singleton instance. If it does not exist, it is created.
-   *
-   * @return the singleton instance
-   */
-  static CraftFeatureProvider getInstance() {
-    return instance == null ? new CraftFeatureProvider() : instance;
-  }
-
-  /**
    * Construct a new FeatureProvider. Private as this is a singleton
    *
    * @throws IllegalStateException if an instance was already created
@@ -82,6 +73,15 @@ public final class CraftFeatureProvider extends FeatureProvider {
     } catch (final ReflectiveOperationException e) {
       LOG.error(e.getMessage());
     }
+  }
+
+  /**
+   * Get the singleton instance. If it does not exist, it is created.
+   *
+   * @return the singleton instance
+   */
+  static CraftFeatureProvider getInstance() {
+    return instance == null ? new CraftFeatureProvider() : instance;
   }
 
   /**

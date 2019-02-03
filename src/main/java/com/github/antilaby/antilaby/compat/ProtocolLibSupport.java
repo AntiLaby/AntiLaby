@@ -54,7 +54,7 @@ public class ProtocolLibSupport implements PacketListener {
     try {
       final String lang = (String) handle.getClass().getMethod("a").invoke(handle);
       if (!old.equals(lang)) {
-        lm.setLanguageForPlayer(event.getPlayer(), lang);
+        lm.setLocale(event.getPlayer(), lang);
       }
 
     } catch (final ReflectiveOperationException e) {

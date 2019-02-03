@@ -23,15 +23,28 @@ public enum Locale {
   AST_ES, FA_IR, SK_SK, KO_KR, MT_MT, CA_ES, ES_VE, CY_GB, EN_NZ, JA_JP, RO_RO, LOL_US, ZH_CN,
   UK_UA, UNDEFINED;
 
+  /** The singleton FileSystem, pointing at the root of the AntiLaby jar file. */
   private static FileSystem fs;
+  /** All translations provided by this language. */
   private final Map<String, String> translation = new HashMap<>();
 
-  static void closeInput() throws IOException {
+  /**
+   * Close the Jar FileSystem.
+   *
+   * @throws IOException if the FileSystem could not be closed
+   */
+  static void closeFileSys() throws IOException {
     if (fs != null) {
       fs.close();
     }
   }
 
+  /**
+   * Acquire the singleton FileSystem. Never use {@link Locale#fs} directly.
+   *
+   * @return the FileSystem
+   * @throws IOException if no FileSystem was there and construction of a new one failed
+   */
   private static FileSystem getFs() throws IOException {
     if (fs == null) {
       HashMap<String, Object> hm = new HashMap<>();
@@ -42,6 +55,13 @@ public enum Locale {
     return fs;
   }
 
+  /**
+   * Get a locale by name. Should be used instead of {@link #valueOf(String)}
+   *
+   * @param name the name to look for
+   * @param fallback the fallback locale to return
+   * @return the locale with the requested name or fallback, if no locale with that name exists
+   */
   public static Locale byName(String name, Locale fallback) {
     try {
       return valueOf(name.toUpperCase(java.util.Locale.ROOT));
@@ -50,6 +70,13 @@ public enum Locale {
     }
   }
 
+  /**
+   * Parse a language file.
+   *
+   * @param path the file's location
+   * @return a map containing all translations the file provides
+   * @throws IOException if the path could not be read
+   */
   private static Map<String, String> parse(Path path) throws IOException {
     List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
     String ln;
@@ -58,7 +85,8 @@ public enum Locale {
       ln = lines.get(line).trim();
       if (!ln.startsWith("#")) {
         if (!ln.contains("=")) {
-          LanguageManager.LOG.warn("Could not parse line " + (1 + line) + " in resource " + path.getFileName() + ": " + ln);
+          LanguageManager.LOG.warn("Could not parse line " + (1 + line) + " in resource "
+              + path.getFileName() + ": " + ln);
         } else {
           final String[] s = ln.split("=", 2);
           String value = s[1].replaceFirst("#.*", "").trim();
@@ -69,6 +97,26 @@ public enum Locale {
     return result;
   }
 
+  /**
+   * Determine if this is a no-op language. That means:
+   * <ul>
+   * <em>
+   * Either:
+   * </em>
+   * <li>
+   * The language == {@code UNDEFINED}
+   * </li>
+   * <em>
+   * Or:
+   * </em>
+   * <li>
+   * No corresponding translation file could be found either in the "/lang/" folder, or in the
+   * AntiLaby jar file.
+   * </li>
+   * </ul>
+   *
+   * @return whether this language is a no-op
+   */
   private boolean isNoOp() {
     if (this == UNDEFINED) {
       return true;
@@ -82,11 +130,23 @@ public enum Locale {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString() {
     return name().toLowerCase(java.util.Locale.ROOT);
   }
 
+  /**
+   * Format a base string with the given arguments. The n'th argument is referred to as {@code "%n"}
+   * so that arguments can be reused. If less args are provided than the format string requires, the
+   * remaining args are left untouched. If more are provided, unused args will be ignored.
+   *
+   * @param toFormat the string to format
+   * @param args the arguments to format the string with
+   * @return the formatted string
+   */
   private String format(String toFormat, Object... args) {
     for (int i = 0; i < args.length; i++) {
       toFormat = toFormat.replace("%" + (i + 1), args[i].toString());
@@ -94,6 +154,19 @@ public enum Locale {
     return toFormat;
   }
 
+  /**
+   * Translate a given translation key to this language, adding in arguments given in {@code args}.
+   * If this is a no-op, the EN_US translation will be returned.
+   *
+   * @param toTranslate the translation key. If no translation for the key is available in this
+   *     language, the EN_US translation will be used. If that also fails, a translation error
+   *     message is returned.
+   * @param args the arguments substitute with. If less args are provided than the translated
+   *     message requires, the remaining args are left untouched.
+   *     If more are provided, unused args will be ignored.
+   * @return the translated string.
+   * @see #format(String, Object...)
+   */
   public String translate(String toTranslate, Object... args) {
     if (isNoOp()) {
       return EN_US.translate(toTranslate, args);
@@ -109,6 +182,11 @@ public enum Locale {
         EN_US.translation.getOrDefault("translation.error", toTranslate));
   }
 
+  /**
+   * Read the language's translation file, creating it if necessary.
+   *
+   * @throws IOException if the file could not be parsed or copied
+   */
   void init() throws IOException {
     AntiLaby plugin = AntiLaby.getInstance();
     if (isNoOp()) {

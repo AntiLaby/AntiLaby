@@ -16,7 +16,7 @@ public class EventsPost18 implements Listener {
   @EventHandler
   public void onChangeLocale(PlayerLocaleChangeEvent event) {
     if (AntiLaby.getInstance().getLoadedFeatures().isEmpty()) {
-      LanguageManager.INSTANCE.setLanguageForPlayer(event.getPlayer(), event.getLocale());
+      LanguageManager.INSTANCE.setLocale(event.getPlayer(), event.getLocale());
     }
   }
 }

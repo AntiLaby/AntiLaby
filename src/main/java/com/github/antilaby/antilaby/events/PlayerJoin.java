@@ -14,7 +14,7 @@ public class PlayerJoin implements Listener {
 
   @EventHandler
   public void onPlayerQuit(PlayerQuitEvent event) {
-    LanguageManager.INSTANCE.unmapPlayerLanguage(event.getPlayer());
+    LanguageManager.INSTANCE.unsetLocale(event.getPlayer());
   }
 
   @EventHandler
