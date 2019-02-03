@@ -1,6 +1,7 @@
 package com.github.antilaby.antilaby.metrics;
 
 import com.github.antilaby.antilaby.config.ConfigReader;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.ServerHelper;
@@ -9,22 +10,27 @@ import java.util.List;
 import java.util.Map;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * A wrapper around the BStats API.
+ */
 public class BStatsHandler {
+  /** The config reader. */
+  private static final ConfigReader CONFIG_READER = new ConfigReader();
 
-  public static final ConfigReader configReader = new ConfigReader();
-
-  public static void initBStats(JavaPlugin javaPlugin) {
-    final Metrics bstats = new Metrics(javaPlugin);
+  /**
+   * Initializes BStats charts and starts data transmission.
+   */
+  public static void initBStats() {
+    final Metrics bstats = new Metrics(AntiLaby.getInstance());
     bstats.addCustomChart(new Metrics.SimplePie("autoupdate_enabled",
-        () -> String.valueOf(configReader.getAutoUpdate().release())));
+        () -> String.valueOf(CONFIG_READER.getAutoUpdate().release())));
     bstats.addCustomChart(new Metrics.SimplePie("is_bungee_server",
         () -> String.valueOf(ServerHelper.isBungeeCord())));
     bstats.addCustomChart(new Metrics.SimplePie("bypass_enabled",
-        () -> String.valueOf(configReader.getEnableBypassWithPermission())));
+        () -> String.valueOf(CONFIG_READER.getEnableBypassWithPermission())));
     bstats.addCustomChart(new Metrics.SimplePie("kick_enabled",
-        () -> String.valueOf(configReader.getLabyModPlayerAction().kickEnabled())));
+        () -> String.valueOf(CONFIG_READER.getLabyModPlayerAction().kickEnabled())));
     bstats.addCustomChart(new Metrics.SimplePie("download_source",
         () -> Constants.DOWNLOAD_SOURCE));
     // TODO add SimpleBarChart (if available at bStats)
@@ -64,7 +70,7 @@ public class BStatsHandler {
     bstats.addCustomChart(new Metrics.SingleLineChart("players_with_labymod_count_single",
         () -> IncomingPluginChannel.getLabyModPlayers().size()));
     final List<String> labyModJoinCommands =
-        configReader.getLabyModPlayerAction().getJoinCommands(false);
+        CONFIG_READER.getLabyModPlayerAction().getJoinCommands(false);
     bstats.addCustomChart(new Metrics.SimplePie("lmjoincmd_enabled", () -> {
       if (labyModJoinCommands.isEmpty()) {
         return "false";

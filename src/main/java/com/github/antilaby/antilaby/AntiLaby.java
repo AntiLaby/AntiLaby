@@ -1,4 +1,4 @@
-package com.github.antilaby.antilaby.main;
+package com.github.antilaby.antilaby;
 
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.command.AntiLabyCommand;
@@ -39,31 +39,21 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class AntiLaby extends JavaPlugin {
 
-  /**
-   * The main logger.
-   */
+  /** The main logger. */
   public static final Logger LOG = new Logger("Main");
-  /**
-   * The singleton instance.
-   */
+  /** The singleton instance. */
   private static AntiLaby instance;
-  /**
-   * The AntiLaby version as SemVer.
-   */
+  /** The AntiLaby version as SemVer. */
   private static Version version;
-  /**
-   * All loaded Features.
-   */
+  /** All loaded Features. */
   private final Set<PluginFeature> loadedFeatures = new HashSet<>(PluginFeature.values().length);
-  /**
-   * The cleanup Thread deletes the saved LabyPlayer data on server stop.
-   */
+  /** The cleanup Thread deletes the saved LabyPlayer data on server stop. */
   private final Thread cleanup = new Thread(DataManager::cleanup, "AntiLabyCleanup");
-  // Read from the configuration file
+  /** A config reader to get config values. */
   private ConfigReader configReader = new ConfigReader();
-  // Compatible?
+  /** Whether this server is supported by AL. */
   private boolean compatible;
-  // is this pre 1.9?
+  /** Whether the PlayerChangeLanguageEvent is unavailable. */
   private boolean changeLangUnavailable = false;
 
   /**
@@ -105,8 +95,6 @@ public class AntiLaby extends JavaPlugin {
 
   /**
    * {@inheritDoc}
-   *
-   * @return JavaPlugin#getFile
    */
   @Override
   public File getFile() {
@@ -114,6 +102,8 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
+   * Get Plugin file location as NIO path.
+   *
    * @return getFile as Path
    */
   public Path getPath() {
@@ -121,12 +111,17 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
+   * Get the data folder as NIO Path.
+   *
    * @return getDataFolder as Path
    */
   public Path getDataPath() {
     return getDataFolder().toPath();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void onDisable() {
     // Save Data if compatible
@@ -135,11 +130,11 @@ public class AntiLaby extends JavaPlugin {
     } else { // If not, we need to remove the cleanup thread
       Runtime.getRuntime().removeShutdownHook(cleanup);
     }
-    LOG.info("Disabled AntiLaby by the AntiLaby Team version " + getDescription().getVersion() + " successfully!");
+    LOG.info("Successfully disabled AntiLaby version " + getDescription().getVersion() + "!");
   }
 
   /**
-   * This method is called by PluginManager when the plugin is enabling.
+   * {@inheritDoc}
    */
   @Override
   public void onEnable() {
@@ -190,9 +185,12 @@ public class AntiLaby extends JavaPlugin {
       ProtocolLibSupport.init();
       loadedFeatures.add(PluginFeature.PROTOCOL_LIB);
     } else if (version > 8) {
-      LOG.debug("ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation.");
+      LOG.debug(
+          "ProtocolLib is not installed, falling back to possibly inaccurate legacy implementation."
+      );
     } else {
-      LOG.debug("ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
+      LOG.debug(
+          "ProtocolLib is not installed and version is < 1.9, using reflection to get locale...");
     }
     // Glowstone has addressed this issue, but the build is not out yet
     changeLangUnavailable = loadedFeatures.contains(PluginFeature.PROTOCOL_LIB) || version == 8
@@ -215,7 +213,7 @@ public class AntiLaby extends JavaPlugin {
       LOG.error("unable to setup languages");
     }
     // Start plug-in metrics for bStats.org
-    BStatsHandler.initBStats(this);
+    BStatsHandler.initBStats();
     // Resend AntiLaby packages (on reload)
     for (final Player all : Bukkit.getOnlinePlayers()) {
       new AntiLabyPackager(all).sendPackages();
@@ -224,6 +222,9 @@ public class AntiLaby extends JavaPlugin {
     LOG.info("If you want to support us visit " + Constants.GITHUB_URL);
   }
 
+  /**
+   * Loads and reads the configuration file.
+   */
   private void initConfig() {
     ConfigFile.load();
   }

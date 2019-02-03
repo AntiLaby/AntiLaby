@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.util;
 
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.lang.Locale;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.io.ByteArrayOutputStream;

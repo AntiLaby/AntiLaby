@@ -1,7 +1,7 @@
 package com.github.antilaby.antilaby.config;
 
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

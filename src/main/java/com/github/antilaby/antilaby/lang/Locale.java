@@ -1,6 +1,6 @@
 package com.github.antilaby.antilaby.lang;
 
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;

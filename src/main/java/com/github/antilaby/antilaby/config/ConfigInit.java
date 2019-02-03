@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.config;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.api.exceptions.InternalException;
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -28,9 +28,9 @@ public class ConfigInit {
   /**
    * Initialize the configuration file and update it from older versions.
    *
-   * @param file              the configuration file
+   * @param file the configuration file
    * @param fileConfiguration the file configuration instance of the configuration file
-   * @throws IOException      usually an error while saving the file
+   * @throws IOException usually an error while saving the file
    */
   public ConfigInit(File file, FileConfiguration fileConfiguration) throws IOException {
     this.file = file;
@@ -64,15 +64,19 @@ public class ConfigInit {
     fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Kick.Enable", false);
 
     fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Info",
-        "# AntiLaby allows you to ban players who are using LabyMod permanently from your server. More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL); // TODO
+        "# AntiLaby allows you to ban players who are using LabyMod permanently from your server." +
+            " More information about LabyModPlayerBan: " + Constants.WIKI_LABYMODPLAYERBAN_URL);
+    // TODO
     fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Enable", false);
-    fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% %reason%");
+    fileConfiguration.addDefault("AntiLaby.LabyModPlayerAction.Ban.Command", "/ban %player% " +
+        "%reason%");
 
     // Additional plug-in channels. Clients who use them, will be blocked.
     // TODO: implement Additional Plug-in Channels
     if (fileConfiguration.getStringList("AntiLaby.AdditionalPluginChannels") == null) {
       ArrayList<String> additionalPluginChannels = new ArrayList<>();
-      additionalPluginChannels.add("#Here you can add additional plug-in channels which will be blocked.");
+      additionalPluginChannels.add("#Here you can add additional plug-in channels which will be " +
+          "blocked.");
       fileConfiguration.set("AntiLaby.AdditionalPluginChannels", additionalPluginChannels);
     }
 
@@ -83,8 +87,10 @@ public class ConfigInit {
 
 
     // Add default values for the feature handling of LabyMod
-    final List<String> disabledFeatures = fileConfiguration.getStringList("AntiLaby.LabyModFeatures.Disable");
-    final List<String> enabledFeatures = fileConfiguration.getStringList("AntiLaby.LabyModFeatures.Enable");
+    final List<String> disabledFeatures = fileConfiguration.getStringList("AntiLaby" +
+        ".LabyModFeatures.Disable");
+    final List<String> enabledFeatures = fileConfiguration.getStringList("AntiLaby" +
+        ".LabyModFeatures.Enable");
     for (LabyModFeature labyModFeature : LabyModFeature.values()) {
       switch (labyModFeature.getDefaultValue()) {
         case "enabled":
@@ -94,7 +100,8 @@ public class ConfigInit {
           enabledFeatures.add(labyModFeature.toString());
           break;
         default:
-          throw new InternalException("Configuration", "Detected unknown default LabyMod feature value while creating the configuration file.", null);
+          throw new InternalException("Configuration", "Detected unknown default LabyMod feature " +
+              "value while creating the configuration file.", null);
       }
     }
 
@@ -106,10 +113,14 @@ public class ConfigInit {
       fileConfiguration.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
     }
     if (fileConfiguration.getList("AntiLaby.LabyModPlayerAction.ExecuteCommands") == null) {
-      final List<String> commands = fileConfiguration.getStringList("AntiLaby.LabyModPlayerAction.ExecuteCommands");
-      commands.add("#These commands will be executed once if a player with LabyMod joins the server.");
-      commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands won't be executed.");
-      commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to enable):");
+      final List<String> commands = fileConfiguration.getStringList("AntiLaby.LabyModPlayerAction" +
+          ".ExecuteCommands");
+      commands.add("#These commands will be executed once if a player with LabyMod joins the " +
+          "server.");
+      commands.add("#If the player has the permission \"antilaby.bypasscommands\" the commands " +
+          "won't be executed.");
+      commands.add("#You can use %PLAYER% to get the player's name. Example (remove \"#\" to " +
+          "enable):");
       commands.add("#/tellraw %PLAYER% {\"text\":\"Welcome LabyMod player!\"}");
       fileConfiguration.set("AntiLaby.LabyModPlayerAction.ExecuteCommands", commands);
     }
@@ -123,7 +134,8 @@ public class ConfigInit {
    */
   private void update() {
     int oldConfigVersion = fileConfiguration.getInt(ConfigReader.getConfigVersionPath());
-    FileConfiguration updatedConfiguration = new ConfigUpdater(fileConfiguration, oldConfigVersion, Constants.CURRENT_CONFIG_VERSION).getUpdatedData();
+    FileConfiguration updatedConfiguration = new ConfigUpdater(fileConfiguration,
+        oldConfigVersion, Constants.CURRENT_CONFIG_VERSION).getUpdatedData();
     fileConfiguration = fileConfiguration != null ? updatedConfiguration : new YamlConfiguration();
     logger.debug("Updated the config file.");
   }
@@ -139,7 +151,8 @@ public class ConfigInit {
   }
 
   /**
-   * Delete the configuration file. This method is used after updating the configuration file from an older version.
+   * Delete the configuration file. This method is used after updating the configuration file from
+   * an older version.
    */
   @SuppressWarnings("unused")
   private void delete() {

@@ -1,6 +1,6 @@
 package com.github.antilaby.antilaby.util;
 
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import java.io.Closeable;
 import java.io.IOException;

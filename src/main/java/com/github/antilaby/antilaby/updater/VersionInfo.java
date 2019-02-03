@@ -4,14 +4,16 @@ import com.github.zafarkhaja.semver.Version;
 import org.json.simple.JSONObject;
 
 /**
- * Version information for AntiLaby
+ * Version information for AntiLaby versions.
  *
  * @author heisluft
  */
 public class VersionInfo {
 
   final Version version;
-  final String downloadUrl, md5, sha1;
+  final String downloadUrl;
+  final String md5;
+  final String sha1;
 
   VersionInfo(String version, String downloadUrl, String sha1, String md5) {
     this.version = Version.valueOf(version);

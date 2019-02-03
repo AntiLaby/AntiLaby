@@ -1,6 +1,7 @@
 /**
  * This package contains the AntiLaby update checker and updater
  *
- * @author NathanNr
+ * @author heisluft
  */
+
 package com.github.antilaby.antilaby.updater;

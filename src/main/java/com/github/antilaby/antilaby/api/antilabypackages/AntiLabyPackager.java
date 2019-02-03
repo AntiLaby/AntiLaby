@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.api.antilabypackages;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import com.github.antilaby.antilaby.util.CraftFeatureProvider;
 import java.util.EnumMap;
@@ -47,7 +47,8 @@ public class AntiLabyPackager {
     this.labyModFeatureSettings = disabledLabyModFeatures;
   }
 
-  public AntiLabyPackager(Player player, Map<LabyModFeature, Boolean> disabledLabyModFeatures, boolean forceIgnoreBypassPermission) {
+  public AntiLabyPackager(Player player, Map<LabyModFeature, Boolean> disabledLabyModFeatures,
+                          boolean forceIgnoreBypassPermission) {
     this.player = player;
     this.labyModFeatureSettings = disabledLabyModFeatures;
     this.forceIgnoreBypassPermission = forceIgnoreBypassPermission;
@@ -64,14 +65,16 @@ public class AntiLabyPackager {
       try {
         labyModFeatureSettings.put(LabyModFeature.valueOf(disabledFeature), false);
       } catch (final IllegalArgumentException e) {
-        logger.error("MapLabyModSettings: Disabled LabyMod feature '" + disabledFeature + "' is no valid LabyMod feature and will be ignored.");
+        logger.error("MapLabyModSettings: Disabled LabyMod feature '" + disabledFeature + "' is " +
+            "no valid LabyMod feature and will be ignored.");
       }
     }
     for (final String enabledFeature : enabledFeatures) {
       try {
         labyModFeatureSettings.put(LabyModFeature.valueOf(enabledFeature), true);
       } catch (final IllegalArgumentException e) {
-        logger.error("MapLabyModSettings: Enabled LabyMod feature '" + enabledFeature + "' is no valid LabyMod feature and will be ignored.");
+        logger.error("MapLabyModSettings: Enabled LabyMod feature '" + enabledFeature + "' is no " +
+            "valid LabyMod feature and will be ignored.");
       }
     }
     this.labyModFeatureSettings = labyModFeatureSettings;
@@ -105,7 +108,8 @@ public class AntiLabyPackager {
   }
 
   /**
-   * The packages will be sent to the player even if he has the bypass permission and the bypass is enabled in the configuration file.
+   * The packages will be sent to the player even if he has the bypass permission and the bypass is
+   * enabled in the configuration file.
    *
    * @param forceIgnoreBypassPermission true to enable
    */
@@ -121,12 +125,14 @@ public class AntiLabyPackager {
    */
   public boolean sendPackages() {
     boolean ignorePlayer = false;
-    if (!forceIgnoreBypassPermission) { // Ignore players with the bypass permission if enabled in the configuration file
+    if (!forceIgnoreBypassPermission) { // Ignore players with the bypass permission if enabled
+      // in the configuration file
       if (player.hasPermission(Constants.PERMISSION_BYPASS)) {
         if (configReader.getEnableBypassWithPermission()) {
           useLabyModDefaults();
           ignorePlayer = true;
-          AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId() + ") has the permission 'antilaby.bypass' and has been ignored.");
+          AntiLaby.LOG.debug("Player " + player.getName() + " (" + player.getUniqueId() + ") has " +
+              "the permission 'antilaby.bypass' and has been ignored.");
         }
       }
     }
@@ -137,7 +143,8 @@ public class AntiLabyPackager {
         CraftFeatureProvider.setLabyModFeature(player, labyModFeatureSettings);
       } catch (final Exception e) {
         e.printStackTrace();
-        AntiLaby.LOG.error("Failed to send AntiLaby packages to player " + player.getName() + " (" + player.getUniqueId() + "): " + e.getMessage());
+        AntiLaby.LOG.error("Failed to send AntiLaby packages to player " + player.getName() + " " +
+            "(" + player.getUniqueId() + "): " + e.getMessage());
         return false;
       }
     }

@@ -3,7 +3,7 @@ package com.github.antilaby.antilaby.command;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.lang.LanguageManager;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.antilaby.antilaby.main.AntiLaby.LOG;
+import static com.github.antilaby.antilaby.AntiLaby.LOG;
 
 public class AntiLabyCommand extends CommandBase {
 
@@ -54,7 +54,8 @@ public class AntiLabyCommand extends CommandBase {
   }
 
   @Override
-  public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
+  public List<String> onTabComplete(CommandSender sender, Command cmd, String alias,
+                                    String[] args) {
     if (args.length == 1) {
       List<String> list = new ArrayList<>(2);
       if ("info".startsWith(args[0])) {
@@ -90,14 +91,17 @@ public class AntiLabyCommand extends CommandBase {
     if (sender instanceof Player) {
       final Player player = (Player) sender;
       if (!player.hasPermission("antilaby.reload")) {
-        player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.noPermission", player));
-        LOG.info("Player " + player.getName() + " (" + player.getUniqueId() + ") tried to reload AntiLaby: " + "Permission 'antilaby.reload' is missing!");
+        player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.noPermission",
+            player));
+        LOG.info("Player " + player.getName() + " (" + player.getUniqueId() + ") tried to reload " +
+            "AntiLaby: " + "Permission 'antilaby.reload' is missing!");
         return;
       }
     }
     if (sender instanceof Player) {
       final Player player = (Player) sender;
-      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload.start", player));
+      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload" +
+          ".start", player));
       LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
     } else {
       LOG.info("Reloading AntiLaby...");
@@ -108,7 +112,8 @@ public class AntiLabyCommand extends CommandBase {
     }
     if (sender instanceof Player) {
       final Player player = (Player) sender;
-      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload.complete", player));
+      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload" +
+          ".complete", player));
       LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
     } else {
       LOG.info("Reload complete!");

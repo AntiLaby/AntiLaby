@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.lang;
 
 import com.github.antilaby.antilaby.compat.PluginFeature;
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.util.FeatureProvider;
 import com.github.antilaby.antilaby.util.YamlConverter;
 import com.google.common.base.Joiner;
@@ -43,7 +43,8 @@ public class LanguageManager {
     }
     Path oldDataPath = dataFolder.resolve("language");
     if (Files.isDirectory(oldDataPath)) {
-      for (Path path : Files.walk(oldDataPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
+      for (Path path :
+          Files.walk(oldDataPath).sorted(Comparator.reverseOrder()).collect(Collectors.toList())) {
         if (Files.isDirectory(path)) {
           Files.delete(path);
           continue;
@@ -57,7 +58,8 @@ public class LanguageManager {
         String name = path.getFileName().toString().toLowerCase();
         Matcher m = YAML_ENDING.matcher(name);
         if (!m.find() || Locale.byName(m.replaceAll(""), Locale.UNDEFINED) == Locale.UNDEFINED) {
-          LOG.info("you have an invalid file in your language directory (" + rel + "). It wont be converted" + ".");
+          LOG.info("you have an invalid file in your language directory (" + rel + "). It wont be" +
+              " converted" + ".");
           Files.delete(path);
           continue;
         }
@@ -74,17 +76,21 @@ public class LanguageManager {
                 newKeys.put("antilaby.playerKickMessage", entry.getValue());
                 break;
               case "LabyInfo.LabyMod":
-                newKeys.put("antilaby.command.labyInfo.labyMod", entry.getValue().replaceAll("%PLAYER%", "%1"));
+                newKeys.put("antilaby.command.labyInfo.labyMod", entry.getValue().replaceAll(
+                    "%PLAYER%", "%1"));
                 break;
               case "LabyInfo.NoLabyMod":
-                newKeys.put("antilaby.command.labyInfo.noLabyMod", entry.getValue().replaceAll("%PLAYER%", "%1"));
+                newKeys.put("antilaby.command.labyInfo.noLabyMod", entry.getValue().replaceAll(
+                    "%PLAYER%", "%1"));
                 break;
               case "LabyInfo.PlayerOffline":
-                newKeys.put("antilaby.command.labyInfo.playerOffline", entry.getValue().replaceAll("%PLAYER%", "%1"));
+                newKeys.put("antilaby.command.labyInfo.playerOffline",
+                    entry.getValue().replaceAll("%PLAYER%", "%1"));
                 break;
             }
           }
-          Files.write(converted, Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
+          Files.write(converted,
+              Joiner.on("\n").withKeyValueSeparator('=').join(newKeys).getBytes("UTF-8"));
         } catch (YAMLException e) {
           LOG.warn("Could not convert '" + rel + "', " + e.getMessage());
         }

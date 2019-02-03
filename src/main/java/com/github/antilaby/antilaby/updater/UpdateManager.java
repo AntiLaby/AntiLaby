@@ -2,7 +2,7 @@ package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +19,8 @@ public class UpdateManager extends Thread {
   private boolean autoUpdate;
   private boolean includeBeta;
   private boolean includeTest;
-  private static final String URL = "http://localhost:8080/api/v1/com/github/antilaby/antilaby/update"; // TODO Insert final URL
+  private static final String URL = "http://localhost:8080/api/v1/com/github/antilaby/antilaby" +
+      "/update"; // TODO Insert final URL
 
   public UpdateManager() {
     // Get update information from the configuration file
@@ -56,7 +57,8 @@ public class UpdateManager extends Thread {
       logger.warn("Failed to check for updates.");
       return;
     }
-    // Check if a newer version is available; cancel the update process, if the most recent version is already installed
+    // Check if a newer version is available; cancel the update process, if the most recent
+    // version is already installed
     if (versionInfo.version.lessThanOrEqualTo(AntiLaby.getVersion())) {
       logger.info("The most recent version is already installed.");
       return;

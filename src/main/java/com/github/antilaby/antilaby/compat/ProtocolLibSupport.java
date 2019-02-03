@@ -6,7 +6,7 @@ import com.comphenix.protocol.events.ListeningWhitelist;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import com.github.antilaby.antilaby.lang.LanguageManager;
-import com.github.antilaby.antilaby.main.AntiLaby;
+import com.github.antilaby.antilaby.AntiLaby;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -49,7 +49,8 @@ public class ProtocolLibSupport implements PacketListener {
     final Object handle = event.getPacket().getHandle();
     final LanguageManager lm = LanguageManager.INSTANCE;
     final Player p = event.getPlayer();
-    final String old = lm.getLanguageForPlayer(p) != null ? lm.getLanguageForPlayer(p).name().toLowerCase(Locale.ROOT) : "";
+    final String old = lm.getLanguageForPlayer(p) != null ?
+        lm.getLanguageForPlayer(p).name().toLowerCase(Locale.ROOT) : "";
     try {
       final String lang = (String) handle.getClass().getMethod("a").invoke(handle);
       if (!old.equals(lang)) {
