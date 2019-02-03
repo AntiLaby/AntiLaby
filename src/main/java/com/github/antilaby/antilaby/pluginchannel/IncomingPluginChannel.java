@@ -18,23 +18,22 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 /**
- * Handles incoming packages from clients
+ * Handles incoming packages from clients.
  */
 public class IncomingPluginChannel implements PluginMessageListener, Listener {
-
+  /** The logger. */
   private static final Logger LOGGER = new Logger("IncomingPluginChannel");
-
+  /** The UUID variable replacement Pattern. */
   private static final Pattern UUID_PATTERN = Pattern.compile("%UUID%");
+  /** The player name variable replacement Pattern. */
   private static final Pattern PLAYER_PATTERN = Pattern.compile("%PLAYER%");
-  /**
-   * A map of players who are using LabyMod
-   */
+  /** A map of players who are using LabyMod. */
   private static HashMap<String, String> labyModPlayers = new HashMap<>();
-
+  /** The config. */
   private ConfigReader configReader = new ConfigReader();
 
   /**
-   * Get a map of players who are using LabyMod
+   * Get a map of players who are using LabyMod.
    *
    * @return HashMap with the player's UUID (as string) and name
    */
@@ -42,21 +41,33 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
     return labyModPlayers;
   }
 
+  /**
+   * Set the map of players using labymod.
+   *
+   * @param labyModPlayers the new value
+   */
   public static void setLabyModPlayers(HashMap<String, String> labyModPlayers) {
     IncomingPluginChannel.labyModPlayers = labyModPlayers;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  //TODO: Merge with Packager
   @Override
   public void onPluginMessageReceived(String channel, Player player, byte[] data) {
-    if (channel.equals(Constants.LABYMOD_CHANNEL) || channel.equals(Constants.LABYMOD_CHANNEL_OLD)) {
+    if (channel.equals(Constants.LABYMOD_CHANNEL)
+        || channel.equals(Constants.LABYMOD_CHANNEL_OLD)) {
       if (!labyModPlayers.containsKey(player.getUniqueId().toString())) {
-        LOGGER.debug("Player " + player.getName() + " (" + player.getUniqueId().toString() + ") uses " + new String(data) + '!');
+        LOGGER.debug("Player " + player.getName() + " (" + player.getUniqueId().toString()
+            + ") uses " + new String(data) + '!');
         labyModPlayers.put(player.getUniqueId().toString(), player.getName());
         // Send notification
         if (!configReader.getLabyModPlayerAction().kickEnabled()) {
           for (Player all : Bukkit.getOnlinePlayers()) {
             if (all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-              all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate("antilaby.command.labyInfo.labyMod", all, player.getName()));
+              all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE
+                  .translate("antilaby.command.labyInfo.labyMod", all, player.getName()));
             }
           }
         }
@@ -90,33 +101,37 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
 
       // Join commands
       if (!player.hasPermission(Constants.PERMISSION_BYPASS_JOIN_COMMANDS)) {
-        List<String> labyModJoinCommands = configReader.getLabyModPlayerAction().getJoinCommands(false);
+        List<String> labyModJoinCommands =
+            configReader.getLabyModPlayerAction().getJoinCommands(false);
         for (final String command : labyModJoinCommands) {
-          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(PLAYER_PATTERN.matcher(command).replaceAll(Matcher.quoteReplacement(player.getName())))
-              .replaceAll(Matcher.quoteReplacement(player.getUniqueId().toString())));
+          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(
+              PLAYER_PATTERN.matcher(command).replaceAll(Matcher.quoteReplacement(player.getName()
+              ))).replaceAll(Matcher.quoteReplacement(player.getUniqueId().toString())));
         }
       }
     }
   }
 
   /**
-   * Kick a player (who is not allowed to use LabyMod)
+   * Kick a player (who is not allowed to use LabyMod).
    *
    * @param player The player who should be kicked
    */
   private void kickPlayer(Player player) {
     player.kickPlayer(LanguageManager.INSTANCE.translate("labymod.playerKickMessage", player));
-    LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString() + ") is not allowed to use LabyMod and has been kicked.");
+    LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
+        + ") is not allowed to use LabyMod and has been kicked.");
     // Send notification
     for (Player all : Bukkit.getOnlinePlayers()) {
       if (all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-        all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate("antilaby.notifyKickMessage", all, player.getName()));
+        all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE
+            .translate("antilaby.notifyKickMessage", all, player.getName()));
       }
     }
   }
 
   /**
-   * Ban a player (who is not allowed to use LabyMod)
+   * Ban a player (who is not allowed to use LabyMod).
    *
    * @param player The player who should be banned
    */
@@ -137,6 +152,11 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
         + ChatColor.stripColor(commandLine) + "'");
   }
 
+  /**
+   * Remove leaving players from labyModPlayers.
+   *
+   * @param event the event to handle
+   */
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
     if (labyModPlayers.containsKey(event.getPlayer().getUniqueId().toString())) {
