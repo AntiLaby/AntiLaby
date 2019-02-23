@@ -1,8 +1,7 @@
 package com.github.antilaby.antilaby.updater;
 
 import com.github.antilaby.antilaby.log.Logger;
-
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -12,18 +11,18 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 /**
- * Downloads the updated file
+ * Downloads the updated file.
  *
  * @author NathanNr
  */
-public class UpdateDownloader {
+class UpdateDownloader {
 
   private static final Logger LOGGER = new Logger("UpdateDownloader");
 
   private final VersionInfo info;
   private final Path temporaryFileLocation;
 
-  protected UpdateDownloader(VersionInfo info, Path temporaryFileLocation) {
+  UpdateDownloader(VersionInfo info, Path temporaryFileLocation) {
     this.info = info;
     this.temporaryFileLocation = temporaryFileLocation;
   }
@@ -33,7 +32,7 @@ public class UpdateDownloader {
    *
    * @throws IOException if the transfer fails
    */
-  public void download() throws IOException {
+  void download() throws IOException {
     LOGGER.debug("Downloading update from download server...");
     if (Files.exists(temporaryFileLocation)) {
       Files.delete(temporaryFileLocation);

@@ -1,19 +1,47 @@
 package com.github.antilaby;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
-import org.bukkit.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import org.bukkit.BanList;
+import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
+import org.bukkit.UnsafeValues;
+import org.bukkit.Warning;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.command.*;
+import org.bukkit.command.CommandException;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.help.HelpMap;
-import org.bukkit.inventory.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemFactory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Merchant;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.map.MapView;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -22,13 +50,6 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.util.CachedServerIcon;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.*;
-import java.util.logging.Logger;
 
 public class DummyServer implements Server {
 
@@ -158,17 +179,17 @@ public class DummyServer implements Server {
   }
 
   @Override
+  public Player getPlayer(UUID uuid) {
+    return null;
+  }
+
+  @Override
   public Player getPlayerExact(String s) {
     return null;
   }
 
   @Override
   public List<Player> matchPlayer(String s) {
-    return null;
-  }
-
-  @Override
-  public Player getPlayer(UUID uuid) {
     return null;
   }
 
@@ -411,17 +432,20 @@ public class DummyServer implements Server {
   }
 
   @Override
-  public Inventory createInventory(InventoryHolder inventoryHolder, InventoryType inventoryType, String s) {
+  public Inventory createInventory(InventoryHolder inventoryHolder, InventoryType inventoryType,
+                                   String s) {
     return null;
   }
 
   @Override
-  public Inventory createInventory(InventoryHolder inventoryHolder, int i) throws IllegalArgumentException {
+  public Inventory createInventory(InventoryHolder inventoryHolder, int i)
+      throws IllegalArgumentException {
     return null;
   }
 
   @Override
-  public Inventory createInventory(InventoryHolder inventoryHolder, int i, String s) throws IllegalArgumentException {
+  public Inventory createInventory(InventoryHolder inventoryHolder, int i, String s)
+      throws IllegalArgumentException {
     return null;
   }
 
@@ -486,18 +510,13 @@ public class DummyServer implements Server {
   }
 
   @Override
-  public CachedServerIcon loadServerIcon(File file) throws IllegalArgumentException, Exception {
+  public CachedServerIcon loadServerIcon(File file) {
     return null;
   }
 
   @Override
-  public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) throws IllegalArgumentException, Exception {
+  public CachedServerIcon loadServerIcon(BufferedImage bufferedImage) {
     return null;
-  }
-
-  @Override
-  public void setIdleTimeout(int i) {
-
   }
 
   @Override
@@ -506,12 +525,18 @@ public class DummyServer implements Server {
   }
 
   @Override
+  public void setIdleTimeout(int i) {
+
+  }
+
+  @Override
   public ChunkGenerator.ChunkData createChunkData(World world) {
     return null;
   }
 
   @Override
-  public BossBar createBossBar(String s, BarColor barColor, BarStyle barStyle, BarFlag... barFlags) {
+  public BossBar createBossBar(String s, BarColor barColor, BarStyle barStyle,
+                               BarFlag... barFlags) {
     return null;
   }
 

@@ -34,6 +34,13 @@ public class ExecutableCommand {
     return execute(commandLine, sender);
   }
 
+  /**
+   * Execute the stored command.
+   *
+   * @param commandLine the command line string
+   * @param sender the sender to execute the command as
+   * @return whether the command could be executed
+   */
   public boolean execute(String commandLine, CommandSender sender) {
     if (commandLine.startsWith("/")) {
       commandLine = commandLine.substring(1);

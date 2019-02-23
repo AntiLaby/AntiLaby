@@ -1,20 +1,19 @@
 package com.github.antilaby.antilaby.command;
 
+import static com.github.antilaby.antilaby.AntiLaby.LOG;
+
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.config.ConfigFile;
 import com.github.antilaby.antilaby.lang.LanguageManager;
-import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.util.Constants;
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.github.antilaby.antilaby.AntiLaby.LOG;
 
 public class AntiLabyCommand extends CommandBase {
 
@@ -22,7 +21,8 @@ public class AntiLabyCommand extends CommandBase {
 
   static {
     CMD_INFO.add("&1-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
-    CMD_INFO.add("&9AntiLaby plugin version " + AntiLaby.getInstance().getDescription().getVersion() + " by the " + "AntiLaby Team&r");
+    CMD_INFO.add("&9AntiLaby plugin version " + AntiLaby.getInstance().getDescription().getVersion()
+        + " by the " + "AntiLaby Team&r");
     CMD_INFO.add("&9More information about the plugin: " + Constants.RESOURCE_LINK + "&r");
     CMD_INFO.add("&9Use '/antilaby reload' to reload the plugin.&r");
     CMD_INFO.add("&9Use '/labyinfo <player>' to check if a player uses LabyMod.&r");
@@ -70,7 +70,7 @@ public class AntiLabyCommand extends CommandBase {
   }
 
   /**
-   * Send information about this plug-in to a command sender (console / player)
+   * Send information about this plug-in to a command sender (console / player).
    */
   private void sendInfo(CommandSender sender) {
     CMD_INFO.forEach(s -> {
@@ -83,7 +83,7 @@ public class AntiLabyCommand extends CommandBase {
   }
 
   /**
-   * Reload the plug-in as instructed by the given CommandSender
+   * Reload the plug-in as instructed by the given CommandSender.
    *
    * @param sender the sender requesting the reload
    */
@@ -93,15 +93,15 @@ public class AntiLabyCommand extends CommandBase {
       if (!player.hasPermission("antilaby.reload")) {
         player.sendMessage(LanguageManager.INSTANCE.translate("antilaby.command.noPermission",
             player));
-        LOG.info("Player " + player.getName() + " (" + player.getUniqueId() + ") tried to reload " +
-            "AntiLaby: " + "Permission 'antilaby.reload' is missing!");
+        LOG.info("Player " + player.getName() + " (" + player.getUniqueId() + ") tried to reload "
+            + "AntiLaby: " + "Permission 'antilaby.reload' is missing!");
         return;
       }
     }
     if (sender instanceof Player) {
       final Player player = (Player) sender;
-      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload" +
-          ".start", player));
+      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix
+          + "reload.start", player));
       LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reloading AntiLaby...");
     } else {
       LOG.info("Reloading AntiLaby...");
@@ -112,8 +112,8 @@ public class AntiLabyCommand extends CommandBase {
     }
     if (sender instanceof Player) {
       final Player player = (Player) sender;
-      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix + "reload" +
-          ".complete", player));
+      player.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE.translate(prefix
+          + "reload.complete", player));
       LOG.info(player.getName() + " (" + player.getUniqueId() + "): Reload complete!");
     } else {
       LOG.info("Reload complete!");

@@ -9,7 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Verify that a file has been downloaded correctly by comparing the hash value
+ * Verify that a file has been downloaded correctly by comparing the hash value.
  *
  * @author NathanNr
  */
@@ -26,7 +26,7 @@ public class VerifyFile {
   }
 
   /**
-   * Get the SHA-256 value of a file
+   * Get the SHA-256 value of a file.
    *
    * @param path File
    * @return SHA-256
@@ -38,14 +38,15 @@ public class VerifyFile {
   }
 
   /**
-   * Compare the hash values
+   * Compare the hash values.
    *
    * @return true if the hash values are equal
    */
   public boolean validate() throws IOException, NoSuchAlgorithmException {
     String fileHash = getSha256(path);
     if (!fileHash.equals(sha256)) {
-      logger.debug("Hash values are not equal: calculated '" + fileHash + "' but expected '" + sha256 + "'");
+      logger.debug("Hash values are not equal: calculated '"
+          + fileHash + "' but expected '" + sha256 + "'");
       return false;
     }
     return true;

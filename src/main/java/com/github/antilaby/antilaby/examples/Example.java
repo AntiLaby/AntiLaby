@@ -3,19 +3,21 @@ package com.github.antilaby.antilaby.examples;
 import com.github.antilaby.antilaby.api.LabyModFeature;
 import com.github.antilaby.antilaby.api.antilabypackages.AntiLabyPackager;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
-import com.github.antilaby.antilaby.util.CraftFeatureProvider;
+import com.github.antilaby.antilaby.util.FeatureProvider;
+import java.util.EnumMap;
 import org.bukkit.entity.Player;
 
-import java.util.EnumMap;
-
 /**
- * This class gives a few examples on how to use the AntiLaby API<br> WARNING: It's highly recommended to use only methods from the package 'com.github.antilaby.antilaby.api', or, if you really know
- * what you are doing, use {@link CraftFeatureProvider} directly and handle the exceptions properly! Other solutions may or may not work or be compatible for multiple Minecraft versions!
+ * This class gives a few examples on how to use the AntiLaby API<br> WARNING: It's highly
+ * recommended to use only methods from the package 'com.github.antilaby.antilaby.api', or, if you
+ * really know
+ * what you are doing, use {@link FeatureProvider} directly and handle the exceptions properly!
+ * Other solutions may or may not work or be compatible for multiple Minecraft versions!
  */
 public class Example {
 
   /**
-   * same as {@link #antiLabyPackageExample(Player)}, but uses chaining
+   * Same as {@link #antiLabyPackageExample(Player)}, but uses chaining.
    *
    * @param player the Player to send to
    * @return same as {@link #antiLabyPackageExample(Player)}
@@ -24,11 +26,12 @@ public class Example {
     final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
     myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
     myPackageSettings.put(LabyModFeature.POTIONS, true);
-    return new AntiLabyPackager(player).setLabyModFeatureSettings(myPackageSettings).setForceIgnoreBypassPermission(true).sendPackages();
+    return new AntiLabyPackager(player).setRuleset(myPackageSettings)
+        .setForceIgnoreBypassPermission(true).sendPackages();
   }
 
   /**
-   * Example AntiLaby API method
+   * Example AntiLaby API method.
    *
    * @param player the Player to send to
    * @return if the {@link AntiLabyPackager} completed successfully
@@ -41,7 +44,7 @@ public class Example {
     final EnumMap<LabyModFeature, Boolean> myPackageSettings = new EnumMap<>(LabyModFeature.class);
     myPackageSettings.put(LabyModFeature.DAMAGEINDICATOR, true);
     myPackageSettings.put(LabyModFeature.POTIONS, true);
-    antiLabyPackager.setLabyModFeatureSettings(myPackageSettings);
+    antiLabyPackager.setRuleset(myPackageSettings);
     /*
      * Send the packages even if the player has the permission
      * 'antilaby.bypass' and bypassing is enabled in the config file
@@ -52,7 +55,7 @@ public class Example {
   }
 
   /**
-   * Test if a player uses LabyMod
+   * Test if a player uses LabyMod.
    *
    * @param player The Player to test
    * @return true the player uses LabyMod, false otherwise
@@ -62,7 +65,7 @@ public class Example {
   }
 
   /**
-   * Example simple AntiLaby API method
+   * Example simple AntiLaby API method.
    *
    * @param player the Player to send to
    * @return same as {@link #antiLabyPackageExample(Player)}

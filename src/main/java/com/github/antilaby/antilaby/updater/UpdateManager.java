@@ -1,27 +1,30 @@
 package com.github.antilaby.antilaby.updater;
 
+import com.github.antilaby.antilaby.AntiLaby;
 import com.github.antilaby.antilaby.config.ConfigReader;
 import com.github.antilaby.antilaby.log.Logger;
-import com.github.antilaby.antilaby.AntiLaby;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Manage the auto-update process
+ * Manage the auto-update process.
  *
  * @author NathanNr
  */
 public class UpdateManager extends Thread {
 
   private static final Logger logger = new Logger("UpdateManager");
+  private static final String URL = "http://localhost:8080/api/v1/com/github/antilaby/antilaby"
+      + "/update"; // TODO Insert final URL
   private final Path tempFile = AntiLaby.getInstance().getDataPath().resolve("tmp/AntiLaby.tmp");
   private boolean autoUpdate;
   private boolean includeBeta;
   private boolean includeTest;
-  private static final String URL = "http://localhost:8080/api/v1/com/github/antilaby/antilaby" +
-      "/update"; // TODO Insert final URL
 
+  /**
+   * Construct the UpdateManager.
+   */
   public UpdateManager() {
     // Get update information from the configuration file
     ConfigReader configReader = new ConfigReader();
