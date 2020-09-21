@@ -1,7 +1,6 @@
 package com.github.antilaby.antilaby.log;
 
 import com.github.antilaby.antilaby.config.ConfigReader;
-import org.apache.logging.log4j.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 
@@ -26,63 +25,49 @@ public class Logger {
   }
 
   /**
-   * Logs the given message at {@link Level#ERROR ERROR} level.
+   * Logs the given message at ERROR level.
    *
    * @param message The log message
    */
   public void error(String message) {
-    log(Level.ERROR, message);
+    CONSOLE_COMMAND_SENDER.sendMessage("§4[AntiLaby/" + name + "] [ERROR]: " + message + "§r");
   }
 
   /**
-   * Logs the given message with the specified {@link Level}.
-   *
-   * @param level   The Level to use
-   * @param message The log message
-   */
-  public void log(Level level, String message) {
-    final String color = level == Level.ERROR || level == Level.FATAL ? "§4"
-        : level == Level.WARN ? "§e" : level == Level.DEBUG ? "§1" : "";
-    if (level == Level.DEBUG && !configReader.getDebugMode()) {
-      return;
-    }
-    CONSOLE_COMMAND_SENDER.sendMessage(
-        color + "[AntiLaby/" + name + "] [" + level.name() + "]: " + message + "§r");
-  }
-
-  /**
-   * Logs the given message at {@link Level#FATAL FATAL} level.
+   * Logs the given message at FATAL level.
    *
    * @param message The log message
    */
   public void fatal(String message) {
-    log(Level.FATAL, message);
+    CONSOLE_COMMAND_SENDER.sendMessage("§4[AntiLaby/" + name + "] [FATAL]: " + message + "§r");
   }
 
   /**
-   * Logs the given message at {@link Level#INFO INFO} level.
+   * Logs the given message at INFO level.
    *
    * @param message The log message
    */
   public void info(String message) {
-    log(Level.INFO, message);
+    CONSOLE_COMMAND_SENDER.sendMessage("[AntiLaby/" + name + "] [INFO]: " + message + "§r");
   }
 
   /**
-   * Logs the given message at {@link Level#WARN WARN} level.
+   * Logs the given message at WARN level.
    *
    * @param message The log message
    */
   public void warn(String message) {
-    log(Level.WARN, message);
+    CONSOLE_COMMAND_SENDER.sendMessage("§e[AntiLaby/" + name + "] [WARN]: " + message + "§r");
   }
 
   /**
-   * Logs the given message at {@link Level#DEBUG DEBUG} level.
+   * Logs the given message at DEBUG level.
    *
    * @param message The log message
    */
   public void debug(String message) {
-    log(Level.DEBUG, message);
+    if (configReader.getDebugMode()) {
+      CONSOLE_COMMAND_SENDER.sendMessage("[AntiLaby/" + name + "] [DEBUG]: " + message + "§r");
+    }
   }
 }

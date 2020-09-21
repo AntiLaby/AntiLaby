@@ -1,6 +1,6 @@
 plugins {
     // Apply shadow to do shaded jars (merge semver)
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     id 'java'
 
     id 'checkstyle'
@@ -33,11 +33,11 @@ repositories {
     mavenCentral()
     // For ProtocolLib
     maven {
-        url 'http://repo.dmulloy2.net/content/groups/public/'
+        url 'https://repo.dmulloy2.net/nexus/repository/public/'
     }
     // For JSemVer
     maven {
-        url 'http://heisluft.bplaced.net/maven/'
+        url 'https://heisluft.de/maven/'
     }
     //For bstats
     maven {
@@ -57,12 +57,12 @@ processResources {
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource, file("LICENSE")
-    classifier = 'sources'
+    archiveClassifier.set 'sources'
 }
 
 task javadocJar(type: Jar) {
     from javadoc
-    classifier = 'javadoc'
+    archiveClassifier.set 'javadoc'
 }
 
 shadowJar {
@@ -74,14 +74,13 @@ jar {
 }
 
 dependencies {
-    compile 'com.github.zafarkhaja:java-semver:0.10.0-SNAPSHOT'
+    compile 'com.github.zafarkhaja:java-semver:0.10.0'
     compile 'org.bstats:bstats-bukkit:1.4'
-    compileOnly 'net.glowstone:glowstone:2018.8.0-SNAPSHOT'
-    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0-SNAPSHOT') {
+    //glowstone may not be the primary target, but it provides us with all mc deps
+    compileOnly 'net.glowstone:glowstone:2018.10.0-SNAPSHOT'
+    compileOnly('com.comphenix.protocol:ProtocolLib-API:4.4.0') {
         transitive = false
     }
-    testCompileOnly 'net.glowstone:glowstone:2018.8.0-SNAPSHOT'
-    compileOnly 'org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT'
     testCompileOnly 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 }
 
