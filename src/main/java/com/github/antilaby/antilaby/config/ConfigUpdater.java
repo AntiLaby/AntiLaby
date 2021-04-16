@@ -30,7 +30,8 @@ public class ConfigUpdater {
   /**
    * Update the {@link FileConfiguration} to the new version, provided in the constructor
    *
-   * @return the provided {@link FileConfiguration} in the provided (usually the latest) config format
+   * @return the provided {@link FileConfiguration} in the provided (usually the latest) config
+   * format
    */
   public FileConfiguration getUpdatedData() {
     FileConfiguration updatedData = initialConfigData;
@@ -58,8 +59,10 @@ public class ConfigUpdater {
 
 
       // Getting the old data from oldFileConfiguration
-      boolean bypassWithPermission = oldFileConfiguration.getBoolean("AntiLaby.EnableBypassWithPermission");
-      boolean labyModPlayerKickEnabled = oldFileConfiguration.getBoolean("AntiLaby.LabyModPlayerKick.Enable");
+      boolean bypassWithPermission = oldFileConfiguration.getBoolean("AntiLaby" +
+          ".EnableBypassWithPermission");
+      boolean labyModPlayerKickEnabled = oldFileConfiguration.getBoolean("AntiLaby" +
+          ".LabyModPlayerKick.Enable");
 
       ArrayList<String> disabledFeatures = new ArrayList<>();
       ArrayList<String> enabledFeatures = new ArrayList<>();
@@ -78,7 +81,8 @@ public class ConfigUpdater {
 
       // Setting the new data to newFileConfiguration
       newFileConfiguration.set("AntiLaby.EnableBypassWithPermission", bypassWithPermission);
-      newFileConfiguration.set("AntiLaby.LabyModPlayerAction.Kick.Enable", labyModPlayerKickEnabled);
+      newFileConfiguration.set("AntiLaby.LabyModPlayerAction.Kick.Enable",
+          labyModPlayerKickEnabled);
 
       newFileConfiguration.set("AntiLaby.LabyModFeatures.Disable", disabledFeatures);
       newFileConfiguration.set("AntiLaby.LabyModFeatures.Enable", enabledFeatures);
@@ -87,7 +91,8 @@ public class ConfigUpdater {
       newFileConfiguration.set("AntiLaby.Update.AutoUpdate.Release", autoUpdate);
       newFileConfiguration.set("AntiLaby.DebugMode", debugMode);
     } else {
-      logger.error("Updating from config version " + oldVersion + " is not supported. You config settings will be reset to the defaults.");
+      logger.warn("Updating from config version " + oldVersion + " is not supported. You config " +
+          "settings will be reset.");
       newFileConfiguration = null;
     }
 

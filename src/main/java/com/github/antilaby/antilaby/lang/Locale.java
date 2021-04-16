@@ -110,7 +110,7 @@ public enum Locale {
    * Or:
    * </em>
    * <li>
-   * No corresponding translation file could be found either in the "/lang/" folder, or in the
+   * A corresponding translation file could be found neither in the "/lang/" folder, nor in the
    * AntiLaby jar file.
    * </li>
    * </ul>

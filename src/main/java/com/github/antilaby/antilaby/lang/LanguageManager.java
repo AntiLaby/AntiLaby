@@ -41,6 +41,48 @@ public class LanguageManager {
   }
 
   /**
+   * Like {@link Bukkit#broadcast(String, String)}, but uses translations and a prefix.
+   *
+   * @param unlocalized the translation key
+   * @param permission the permission each player has to have to get sent the message
+   * @param prefix the prefix to send
+   * @param args the arguments to replace with
+   */
+  public void broadcast(String unlocalized, String permission, String prefix, Object... args) {
+    Bukkit.getOnlinePlayers().forEach(player -> {
+      if (player.hasPermission(permission)) {
+        player.sendMessage(translate(unlocalized, player, args));
+      }
+    });
+  }
+
+  /**
+   * Like {@link Bukkit#broadcastMessage(String)}, but uses translations.
+   *
+   * @param unlocalized the translation key
+   * @param args the arguments to replace with
+   */
+  public void broadcast(String unlocalized, Object... args) {
+    Bukkit.getOnlinePlayers().forEach(player ->
+        player.sendMessage(translate(unlocalized, player, args)));
+  }
+
+  /**
+   * Like {@link Bukkit#broadcast(String, String)}, but uses translations.
+   *
+   * @param unlocalized the translation key
+   * @param permission the permission each player has to have to get sent the message
+   * @param args the arguments to replace with
+   */
+  public void broadcast(String unlocalized, String permission, Object... args) {
+    Bukkit.getOnlinePlayers().forEach(player -> {
+      if (player.hasPermission(permission)) {
+        player.sendMessage(translate(unlocalized, player, args));
+      }
+    });
+  }
+
+  /**
    * Initializes all AntiLaby translations and converts old yaml files to new system.
    * This operation is atomic by any means; if it fails, you will likely have to check every file
    * for validity (based on the exception message).

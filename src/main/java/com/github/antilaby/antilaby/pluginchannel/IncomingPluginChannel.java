@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,12 +63,8 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
         labyModPlayers.put(player.getUniqueId().toString(), player.getName());
         // Send notification
         if (!configReader.getLabyModPlayerAction().kickEnabled()) {
-          for (Player all : Bukkit.getOnlinePlayers()) {
-            if (all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-              all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE
-                  .translate("antilaby.command.labyInfo.labyMod", all, player.getName()));
-            }
-          }
+          LanguageManager.INSTANCE.broadcast("antilaby.command.labyInfo.labyMod",
+              Constants.PERMISSION_LABYINFO_NOTIFICATIONS, Constants.PREFIX, player.getName());
         }
       }
 
@@ -104,9 +99,9 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
         List<String> labyModJoinCommands =
             configReader.getLabyModPlayerAction().getJoinCommands(false);
         for (final String command : labyModJoinCommands) {
-          Bukkit.dispatchCommand(Bukkit.getConsoleSender(), UUID_PATTERN.matcher(
-              PLAYER_PATTERN.matcher(command).replaceAll(Matcher.quoteReplacement(player.getName()
-              ))).replaceAll(Matcher.quoteReplacement(player.getUniqueId().toString())));
+          new ExecutableCommand(UUID_PATTERN.matcher(PLAYER_PATTERN.matcher(command).replaceAll(
+              Matcher.quoteReplacement(player.getName()))).replaceAll(Matcher.quoteReplacement(
+              player.getUniqueId().toString()))).execute();
         }
       }
     }
@@ -122,12 +117,8 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
     LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
         + ") is not allowed to use LabyMod and has been kicked.");
     // Send notification
-    for (Player all : Bukkit.getOnlinePlayers()) {
-      if (all.hasPermission(Constants.PERMISSION_LABYINFO_NOTIFICATIONS)) {
-        all.sendMessage(Constants.PREFIX + LanguageManager.INSTANCE
-            .translate("antilaby.notifyKickMessage", all, player.getName()));
-      }
-    }
+    LanguageManager.INSTANCE.broadcast("antilaby.notifyKickMessage",
+        Constants.PERMISSION_LABYINFO_NOTIFICATIONS, Constants.PREFIX, player.getName());
   }
 
   /**
@@ -146,7 +137,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
       commandLine = ChatColor.translateAlternateColorCodes('&', commandLine);
     } catch (Exception e) { /* Ignore */ }
     // Execute ban
-    new ExecutableCommand(commandLine, Bukkit.getConsoleSender()).execute();
+    new ExecutableCommand(commandLine).execute();
     LOGGER.info("Player " + player.getName() + " (" + player.getUniqueId().toString()
         + ") is not allowed to use LabyMod and has been banned using the following command: '"
         + ChatColor.stripColor(commandLine) + "'");
@@ -159,9 +150,7 @@ public class IncomingPluginChannel implements PluginMessageListener, Listener {
    */
   @EventHandler
   public void onQuit(PlayerQuitEvent event) {
-    if (labyModPlayers.containsKey(event.getPlayer().getUniqueId().toString())) {
-      labyModPlayers.remove(event.getPlayer().getUniqueId().toString());
-    }
+    labyModPlayers.remove(event.getPlayer().getUniqueId().toString());
   }
 
 }

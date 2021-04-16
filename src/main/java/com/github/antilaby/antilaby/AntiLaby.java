@@ -12,7 +12,6 @@ import com.github.antilaby.antilaby.events.PlayerJoin;
 import com.github.antilaby.antilaby.lang.LanguageManager;
 import com.github.antilaby.antilaby.log.Logger;
 import com.github.antilaby.antilaby.metrics.BStatsHandler;
-import com.github.antilaby.antilaby.metrics.Metrics;
 import com.github.antilaby.antilaby.pluginchannel.IncomingPluginChannel;
 import com.github.antilaby.antilaby.updater.UpdateManager;
 import com.github.antilaby.antilaby.util.Constants;
@@ -20,7 +19,6 @@ import com.github.antilaby.antilaby.util.DataManager;
 import com.github.antilaby.antilaby.util.FeatureProvider;
 import com.github.antilaby.antilaby.util.ServerHelper;
 import com.github.zafarkhaja.semver.Version;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -94,14 +92,6 @@ public class AntiLaby extends JavaPlugin {
   }
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public File getFile() {
-    return super.getFile();
-  }
-
-  /**
    * Get Plugin file location as NIO path.
    *
    * @return getFile as Path
@@ -150,7 +140,7 @@ public class AntiLaby extends JavaPlugin {
       compatible = false;
       getPluginLoader().disablePlugin(this);
     }
-    if (version >= 8) {
+    if (version >= 8 && version < 13) {
       // Ensure the DataFolder exists
       Path dataPath = getDataPath();
       if (!Files.isDirectory(dataPath)) {
@@ -170,7 +160,7 @@ public class AntiLaby extends JavaPlugin {
     // Try to update AntiLaby
     new UpdateManager().run();
     // Init files, commands and events
-    initConfig();
+    ConfigFile.load();
     // Register plug-in channels
     Bukkit.getMessenger().registerOutgoingPluginChannel(this, "DAMAGEINDICATOR");
     Bukkit.getMessenger().registerIncomingPluginChannel(this, Constants.LABYMOD_CHANNEL,
@@ -199,13 +189,6 @@ public class AntiLaby extends JavaPlugin {
     initEvents();
     // Load data
     DataManager.loadData();
-    // Start plug-in metrics for MCStats.org
-    try {
-      Metrics metrics = new Metrics(this);
-      metrics.start();
-    } catch (final IOException e) {
-      LOG.error(e.getMessage());
-    }
     // Init LanguageManager
     try {
       LanguageManager.INSTANCE.initTranslations();
@@ -220,13 +203,6 @@ public class AntiLaby extends JavaPlugin {
     }
     LOG.info("Successfully enabled AntiLaby version " + getDescription().getVersion() + "!");
     LOG.info("If you want to support us visit " + Constants.GITHUB_URL);
-  }
-
-  /**
-   * Loads and reads the configuration file.
-   */
-  private void initConfig() {
-    ConfigFile.load();
   }
 
   /**

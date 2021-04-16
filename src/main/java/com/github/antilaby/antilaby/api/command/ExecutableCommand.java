@@ -41,7 +41,7 @@ public class ExecutableCommand {
    * @param sender the sender to execute the command as
    * @return whether the command could be executed
    */
-  public boolean execute(String commandLine, CommandSender sender) {
+  public static boolean execute(String commandLine, CommandSender sender) {
     if (commandLine.startsWith("/")) {
       commandLine = commandLine.substring(1);
     } else if (commandLine.startsWith("#")) {
